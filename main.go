@@ -23,6 +23,7 @@ import (
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/config"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/logger"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/netris"
+	"github.com/rh-ecosystem-edge/enclave-wizard/internal/nico"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/plugins"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/tasks"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/validation"
@@ -81,7 +82,11 @@ func SetupAPI(mux *http.ServeMux, enclaveDir string, authStore *auth.Store, opts
 	api.NewConfigHandler(reader, writer, validator).Register(humaAPI)
 	api.NewDefaultsHandler(enclaveDir).Register(humaAPI)
 	api.NewPluginsHandler(registry).Register(humaAPI)
-	api.NewNetrisHandler(netris.NewMockClient()).Register(humaAPI)
+	nicoClient := nico.NewMockClient()
+	netrisHandler := api.NewNetrisHandler(netris.NewMockClient())
+	netrisHandler.SetNicoClient(nicoClient)
+	netrisHandler.Register(humaAPI)
+	api.NewNicoHandler(nicoClient).Register(humaAPI)
 
 	return humaAPI, runner, nil
 }

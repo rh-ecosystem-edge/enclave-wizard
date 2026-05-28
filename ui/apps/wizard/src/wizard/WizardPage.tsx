@@ -114,7 +114,7 @@ interface StepDef {
   label: string;
 }
 
-interface ConfigSubStep {
+interface SubStep {
   id: string;
   label: string;
 }
@@ -129,13 +129,21 @@ const TOP_STEPS: StepDef[] = [
   { id: "deploy", label: "Deploy" },
 ];
 
-const BASE_CONFIG_SUBSTEPS: ConfigSubStep[] = [
+const DISCOVERY_SUBSTEPS: SubStep[] = [
+  { id: "netris", label: "Netris" },
+  { id: "nvidia", label: "NVIDIA Carbide / NICo" },
+  { id: "metal3", label: "Metal3 / Ironic" },
+  { id: "openstack", label: "OpenStack" },
+  { id: "netbox", label: "NetBox" },
+];
+
+const BASE_CONFIG_SUBSTEPS: SubStep[] = [
   { id: "landing-zone", label: "Landing Zone" },
   { id: "storage", label: "Storage" },
   { id: "hub-cluster", label: "Hub Cluster" },
 ];
 
-function buildConfigSubSteps(selectedFlavors: Set<string>): ConfigSubStep[] {
+function buildConfigSubSteps(selectedFlavors: Set<string>): SubStep[] {
   const subs = [...BASE_CONFIG_SUBSTEPS];
   if (selectedFlavors.has("cluster")) {
     subs.push({ id: "caas", label: "Cluster as a Service" });
@@ -158,24 +166,29 @@ function SubStepContent({ subStepId }: { subStepId: string }): React.ReactElemen
   }
 }
 
-function ConfigureStep({
+function SubStepLayout({
+  title,
+  subtitle,
   subSteps,
   activeSubStep,
   onSubStepChange,
+  children,
 }: {
-  subSteps: ConfigSubStep[];
+  title: string;
+  subtitle: string;
+  subSteps: SubStep[];
   activeSubStep: number;
   onSubStepChange: (index: number) => void;
+  children: React.ReactNode;
 }): React.ReactElement {
   const currentSub = subSteps[activeSubStep];
-
   return (
     <div>
       <Title headingLevel="h2" size="xl" style={{ marginBottom: "0.25rem" }}>
-        Configure your deployment
+        {title}
       </Title>
       <p style={{ color: "var(--pf-t--global--text--color--subtle)", marginBottom: "1.5rem" }}>
-        Answer a few questions to set up your chosen services.
+        {subtitle}
       </p>
 
       <div className={configLayout}>
@@ -203,7 +216,7 @@ function ConfigureStep({
           <p style={{ color: "var(--pf-t--global--text--color--subtle)", marginBottom: "1rem", fontSize: "0.875rem" }}>
             Step {activeSubStep + 1} of {subSteps.length} &middot; {currentSub?.label}
           </p>
-          <SubStepContent subStepId={currentSub?.id ?? ""} />
+          {children}
         </div>
       </div>
     </div>
@@ -213,13 +226,17 @@ function ConfigureStep({
 function StepContent({
   stepId,
   configSubSteps,
-  activeSubStep,
-  onSubStepChange,
+  activeConfigSubStep,
+  onConfigSubStepChange,
+  activeDiscoverySubStep,
+  onDiscoverySubStepChange,
 }: {
   stepId: string;
-  configSubSteps: ConfigSubStep[];
-  activeSubStep: number;
-  onSubStepChange: (index: number) => void;
+  configSubSteps: SubStep[];
+  activeConfigSubStep: number;
+  onConfigSubStepChange: (index: number) => void;
+  activeDiscoverySubStep: number;
+  onDiscoverySubStepChange: (index: number) => void;
 }): React.ReactElement {
   switch (stepId) {
     case "welcome":
@@ -227,16 +244,30 @@ function StepContent({
     case "flavor":
       return <SelectFlavorStep />;
     case "discovery":
-      return <NetworkDiscoveryStep />;
+      return (
+        <SubStepLayout
+          title="Infrastructure Discovery"
+          subtitle="Connect to your infrastructure providers to discover existing inventory. All providers are optional."
+          subSteps={DISCOVERY_SUBSTEPS}
+          activeSubStep={activeDiscoverySubStep}
+          onSubStepChange={onDiscoverySubStepChange}
+        >
+          <NetworkDiscoveryStep providerId={DISCOVERY_SUBSTEPS[activeDiscoverySubStep]?.id ?? "netris"} />
+        </SubStepLayout>
+      );
     case "infrastructure":
       return <InfrastructureStep />;
     case "configure":
       return (
-        <ConfigureStep
+        <SubStepLayout
+          title="Configure your deployment"
+          subtitle="Answer a few questions to set up your chosen services."
           subSteps={configSubSteps}
-          activeSubStep={activeSubStep}
-          onSubStepChange={onSubStepChange}
-        />
+          activeSubStep={activeConfigSubStep}
+          onSubStepChange={onConfigSubStepChange}
+        >
+          <SubStepContent subStepId={configSubSteps[activeConfigSubStep]?.id ?? ""} />
+        </SubStepLayout>
       );
     case "review":
       return <ReviewStep />;
@@ -253,7 +284,8 @@ function WizardContent(): React.ReactElement {
   const api = useEnclaveApi();
   const [initDone, setInitDone] = useState(false);
   const [stepErrors, setStepErrors] = useState<StepValidationError[]>([]);
-  const [activeSubStep, setActiveSubStep] = useState(0);
+  const [activeConfigSubStep, setActiveConfigSubStep] = useState(0);
+  const [activeDiscoverySubStep, setActiveDiscoverySubStep] = useState(0);
 
   const configSubSteps = useMemo(
     () => buildConfigSubSteps(state.selectedFlavors),
@@ -306,21 +338,28 @@ function WizardContent(): React.ReactElement {
   const isFirst = state.currentStep === 0;
   const isLast = state.currentStep === TOP_STEPS.length - 1;
   const isConfigure = currentStepId === "configure";
-  const isLastSubStep = activeSubStep === configSubSteps.length - 1;
+  const isDiscovery = currentStepId === "discovery";
+  const hasSubSteps = isConfigure || isDiscovery;
+
+  const currentSubSteps = isConfigure ? configSubSteps : isDiscovery ? DISCOVERY_SUBSTEPS : [];
+  const activeSubStep = isConfigure ? activeConfigSubStep : activeDiscoverySubStep;
+  const setActiveSubStep = isConfigure ? setActiveConfigSubStep : setActiveDiscoverySubStep;
+
+  const isLastSubStep = activeSubStep === currentSubSteps.length - 1;
   const isFirstSubStep = activeSubStep === 0;
 
-  const currentSubStepId = isConfigure ? configSubSteps[activeSubStep]?.id : currentStepId;
+  const currentSubStepId = hasSubSteps ? currentSubSteps[activeSubStep]?.id : currentStepId;
 
   const goBack = () => {
     setStepErrors([]);
     dispatch({ type: "SET_SHOW_VALIDATION", show: false });
 
-    if (isConfigure && !isFirstSubStep) {
-      setActiveSubStep((s) => s - 1);
+    if (hasSubSteps && !isFirstSubStep) {
+      setActiveSubStep((s: number) => s - 1);
       return;
     }
 
-    if (isConfigure && isFirstSubStep) {
+    if (hasSubSteps && isFirstSubStep) {
       setActiveSubStep(0);
     }
 
@@ -390,18 +429,20 @@ function WizardContent(): React.ReactElement {
   }, [currentSubStepId, state.schema, state.configData, skipValidation]);
 
   const goNext = useCallback(() => {
-    if (isConfigure) {
-      const errors = validateCurrentSubStep();
-      if (errors.length > 0) {
-        setStepErrors(errors);
-        dispatch({ type: "SET_SHOW_VALIDATION", show: true });
-        return;
+    if (hasSubSteps) {
+      if (isConfigure) {
+        const errors = validateCurrentSubStep();
+        if (errors.length > 0) {
+          setStepErrors(errors);
+          dispatch({ type: "SET_SHOW_VALIDATION", show: true });
+          return;
+        }
       }
       setStepErrors([]);
       dispatch({ type: "SET_SHOW_VALIDATION", show: false });
 
       if (!isLastSubStep) {
-        setActiveSubStep((s) => s + 1);
+        setActiveSubStep((s: number) => s + 1);
         return;
       }
     }
@@ -410,10 +451,10 @@ function WizardContent(): React.ReactElement {
     dispatch({ type: "SET_SHOW_VALIDATION", show: false });
     dispatch({ type: "SET_STEP", step: Math.min(TOP_STEPS.length - 1, state.currentStep + 1) });
 
-    if (state.currentStep + 1 === TOP_STEPS.findIndex((s) => s.id === "configure")) {
-      setActiveSubStep(0);
-    }
-  }, [isConfigure, isLastSubStep, state.currentStep, dispatch, validateCurrentSubStep]);
+    const nextStepId = TOP_STEPS[state.currentStep + 1]?.id;
+    if (nextStepId === "configure") setActiveConfigSubStep(0);
+    if (nextStepId === "discovery") setActiveDiscoverySubStep(0);
+  }, [hasSubSteps, isConfigure, isLastSubStep, state.currentStep, dispatch, validateCurrentSubStep, setActiveSubStep]);
 
   if (schemaLoading) {
     return <Spinner aria-label="Loading wizard..." />;
@@ -471,8 +512,10 @@ function WizardContent(): React.ReactElement {
               <StepContent
                 stepId={currentStepId ?? "welcome"}
                 configSubSteps={configSubSteps}
-                activeSubStep={activeSubStep}
-                onSubStepChange={setActiveSubStep}
+                activeConfigSubStep={activeConfigSubStep}
+                onConfigSubStepChange={setActiveConfigSubStep}
+                activeDiscoverySubStep={activeDiscoverySubStep}
+                onDiscoverySubStepChange={setActiveDiscoverySubStep}
               />
             </CardBody>
           </Card>
@@ -488,7 +531,7 @@ function WizardContent(): React.ReactElement {
               </FlexItem>
               <FlexItem>
                 <Button variant="primary" onClick={goNext} isDisabled={isLast}>
-                  {isConfigure && !isLastSubStep ? "Continue" : "Next"}
+                  {hasSubSteps && !isLastSubStep ? "Continue" : "Next"}
                 </Button>
               </FlexItem>
             </Flex>

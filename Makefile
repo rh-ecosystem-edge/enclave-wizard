@@ -1,8 +1,10 @@
 BINARY := enclave-wizard
 GO := go
 CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
+HTTPS_PORT ?= 3443
+HTTP_PORT ?= 3001
 
-.PHONY: build build-linux build-ui run test lint clean tidy deploy teardown generate
+.PHONY: build build-linux build-ui build-dev run run-demo dev test lint clean tidy deploy teardown generate
 
 build-ui:
 	$(CONTAINER_RUNTIME) run --rm -v $(PWD)/ui:/app:z -w /app node:22-alpine \
@@ -22,6 +24,26 @@ run: build
 run-demo: build-ui
 	$(GO) build -ldflags="-w -s" -tags dev -o $(BINARY) .
 	./$(BINARY) --demo-deploy --enclave-dir ../enclave --tls-cert hack/tls/server.crt --tls-key hack/tls/server.key
+
+build-dev: build-ui
+	$(CONTAINER_RUNTIME) run --rm -v $(PWD):/app:z -w /app golang:latest \
+		sh -c "CGO_ENABLED=0 go build -ldflags='-w -s' -tags dev -o $(BINARY) ."
+
+dev: build-dev
+	@-fuser -k $(HTTPS_PORT)/tcp 2>/dev/null; sleep 1
+	@mkdir -p /tmp/enclave-wizard-dev
+	@rm -f /tmp/enclave-wizard-dev/password /tmp/enclave-wizard-init-pass
+	@nohup ./$(BINARY) --demo-deploy \
+		--enclave-dir /tmp/enclave-wizard-dev \
+		--tls-cert hack/tls/server.crt --tls-key hack/tls/server.key \
+		--password-file /tmp/enclave-wizard-dev/password \
+		--https-port $(HTTPS_PORT) --http-port $(HTTP_PORT) \
+		> /tmp/enclave-wizard-dev/server.log 2>&1 &
+	@sleep 2
+	@echo ""
+	@echo "  Wizard running at https://localhost:$(HTTPS_PORT)"
+	@echo "  Password: $$(cat /tmp/enclave-wizard-init-pass 2>/dev/null || echo '(check /tmp/enclave-wizard-dev/server.log)')"
+	@echo ""
 
 test:
 	$(GO) test -cover ./...

@@ -8,14 +8,20 @@ import (
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/discovery"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/models"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/netris"
+	"github.com/rh-ecosystem-edge/enclave-wizard/internal/nico"
 )
 
 type NetrisHandler struct {
-	client netris.Client
+	client     netris.Client
+	nicoClient nico.Client
 }
 
 func NewNetrisHandler(client netris.Client) *NetrisHandler {
 	return &NetrisHandler{client: client}
+}
+
+func (h *NetrisHandler) SetNicoClient(c nico.Client) {
+	h.nicoClient = c
 }
 
 type NetrisConnectInput struct {
@@ -178,5 +184,13 @@ func (h *NetrisHandler) mergedInventory(_ context.Context, _ *struct{}) (*Discov
 		return nil, huma.Error502BadGateway("failed to list IPAM", err)
 	}
 	merged := discovery.MergeFromNetris(sites, inv, ipam)
+
+	if h.nicoClient != nil {
+		nicoInv, err := h.nicoClient.Inventory()
+		if err == nil {
+			discovery.MergeNicoInto(merged, nicoInv)
+		}
+	}
+
 	return &DiscoveryOutput{Body: *merged}, nil
 }

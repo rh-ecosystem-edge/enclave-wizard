@@ -45,8 +45,15 @@ type DiscoveredNetwork struct {
 	Sources []string `json:"sources"`
 }
 
+type DiscoveredNVLinkDomain struct {
+	Name     string   `json:"name"`
+	Servers  []string `json:"servers"`
+	GPUCount int      `json:"gpuCount"`
+}
+
 type DiscoveredInventory struct {
-	Sites    []DiscoveredSite    `json:"sites"`
-	Nodes    []DiscoveredNode    `json:"nodes"`
-	Networks []DiscoveredNetwork `json:"networks"`
+	Sites         []DiscoveredSite         `json:"sites"`
+	Nodes         []DiscoveredNode         `json:"nodes"`
+	Networks      []DiscoveredNetwork      `json:"networks"`
+	NVLinkDomains []DiscoveredNVLinkDomain `json:"nvlinkDomains,omitempty"`
 }
