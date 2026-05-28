@@ -1,0 +1,230 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <user@host>"
+    echo "Example: $0 root@myserver.example.com"
+    exit 1
+fi
+
+TARGET="$1"
+SSH="ssh -o StrictHostKeyChecking=no"
+SCP="scp -o StrictHostKeyChecking=no -q"
+
+VM_NAME="enclave-wizard-lz"
+VM_MEMORY=4096
+VM_CPUS=2
+VM_DISK_SIZE=60
+HTTP_PORT=3001
+HTTPS_PORT=3443
+CLOUD_IMAGE_URL="https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-latest.x86_64.qcow2"
+
+echo "=== Deploying Enclave Wizard to ${TARGET} (in VM) ==="
+
+# --- Find RPMs ---
+ENCLAVE_RPM=$(ls -t "${REPO_DIR}/out/"enclave-0*.rpm 2>/dev/null | head -1)
+WIZARD_RPM=$(ls -t "${REPO_DIR}/out/"enclave-wizard-*.rpm 2>/dev/null | head -1)
+if [ -z "${WIZARD_RPM}" ]; then
+    echo "ERROR: No RPMs found in out/. Run 'make rpm' first."
+    exit 1
+fi
+[ -n "${ENCLAVE_RPM}" ] && echo "  Enclave RPM: $(basename ${ENCLAVE_RPM})"
+echo "  Wizard RPM:  $(basename ${WIZARD_RPM})"
+
+# --- Step 1: Transfer RPMs to target host ---
+echo ""
+echo "[1/6] Transferring RPMs to target host..."
+[ -n "${ENCLAVE_RPM}" ] && ${SCP} "${ENCLAVE_RPM}" "${TARGET}:/tmp/enclave.rpm"
+${SCP} "${WIZARD_RPM}" "${TARGET}:/tmp/enclave-wizard.rpm"
+
+# --- Step 2: Download Fedora Cloud image on target ---
+echo "[2/6] Preparing VM image on target..."
+${SSH} "${TARGET}" "
+  set -e
+  IMG_DIR=/var/lib/libvirt/images
+  IMAGE_CACHE=\${IMG_DIR}/CentOS-Stream-9-GenericCloud.qcow2
+
+  if [ ! -f \${IMAGE_CACHE} ]; then
+    echo '  Downloading CentOS Stream 9 Cloud image...'
+    curl -L -o \${IMAGE_CACHE} '${CLOUD_IMAGE_URL}'
+  else
+    echo '  CentOS image cached'
+  fi
+
+  # Destroy old VM if present
+  virsh destroy ${VM_NAME} 2>/dev/null || true
+  virsh undefine ${VM_NAME} --remove-all-storage --nvram 2>/dev/null || true
+  sleep 1
+
+  # Create VM disk
+  qemu-img create -f qcow2 -b \${IMAGE_CACHE} -F qcow2 \
+    \${IMG_DIR}/${VM_NAME}.qcow2 ${VM_DISK_SIZE}G
+"
+
+# --- Step 3: Create cloud-init and boot VM ---
+echo "[3/6] Booting VM..."
+LOCAL_SSH_KEY=$(cat ~/.ssh/id_rsa.pub)
+${SSH} "${TARGET}" "
+  set -e
+  IMG_DIR=/var/lib/libvirt/images
+  CI_DIR=\$(mktemp -d)
+
+  cat > \${CI_DIR}/meta-data <<CIEOF
+instance-id: ${VM_NAME}
+local-hostname: ${VM_NAME}
+CIEOF
+
+  cat > \${CI_DIR}/user-data <<CIEOF
+#cloud-config
+users:
+  - name: wizard
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${LOCAL_SSH_KEY}
+      - \$(cat ~/.ssh/id_rsa.pub 2>/dev/null || echo '')
+
+packages:
+  - curl
+  - openssl
+CIEOF
+
+  mkisofs -output \${IMG_DIR}/${VM_NAME}-cidata.iso \
+    -volid cidata -joliet -rock \
+    \${CI_DIR}/meta-data \${CI_DIR}/user-data 2>/dev/null
+  rm -rf \${CI_DIR}
+
+  virt-install \
+    --name ${VM_NAME} \
+    --memory ${VM_MEMORY} \
+    --vcpus ${VM_CPUS} \
+    --disk path=\${IMG_DIR}/${VM_NAME}.qcow2,format=qcow2 \
+    --disk path=\${IMG_DIR}/${VM_NAME}-cidata.iso,device=cdrom \
+    --os-variant centos-stream9 \
+    --network default \
+    --graphics none \
+    --console pty,target_type=serial \
+    --noautoconsole \
+    --import \
+    --quiet
+"
+
+# --- Step 4: Wait for VM IP and SSH ---
+echo "[4/6] Waiting for VM..."
+VM_IP=""
+for i in $(seq 1 60); do
+    VM_IP=$(${SSH} "${TARGET}" "virsh domifaddr ${VM_NAME} 2>/dev/null | grep -oP '(\d+\.){3}\d+' | head -1" 2>/dev/null) || true
+    if [ -n "${VM_IP}" ]; then
+        break
+    fi
+    sleep 2
+done
+
+if [ -z "${VM_IP}" ]; then
+    echo "ERROR: VM did not get an IP after 120 seconds"
+    exit 1
+fi
+echo "  VM IP: ${VM_IP}"
+
+# Wait for SSH inside VM (via target as jump host)
+echo "  Waiting for SSH..."
+for i in $(seq 1 30); do
+    ${SSH} -J "${TARGET}" wizard@"${VM_IP}" "echo ready" 2>/dev/null && break
+    sleep 2
+done
+
+# --- Step 5: Provision inside VM ---
+echo "[5/6] Provisioning VM..."
+
+# Transfer RPM from target host into VM and install
+${SSH} "${TARGET}" "
+  scp -o StrictHostKeyChecking=no /tmp/enclave*.rpm wizard@${VM_IP}:/tmp/
+"
+
+${SSH} -J "${TARGET}" wizard@"${VM_IP}" "
+  sudo cloud-init status --wait 2>/dev/null || sleep 10
+  ls /tmp/enclave.rpm &>/dev/null && sudo dnf install -y /tmp/enclave.rpm 2>&1 | tail -5
+  sudo dnf install -y /tmp/enclave-wizard.rpm 2>&1 | tail -5
+" 2>&1 | grep -v "^$"
+
+# --- Step 6: Set up port forwarding and verify ---
+echo "[6/6] Setting up port forwarding and verifying..."
+
+# Set up port forwarding using iptables NAT (works with external access,
+# PREROUTING DNAT bypasses firewalld zone rules)
+${SSH} "${TARGET}" "
+  sysctl -w net.ipv4.ip_forward=1 >/dev/null
+
+  # Clean up ALL existing rules for our ports (from any previous VM)
+  cleanup_rules() {
+    local table=\$1 chain=\$2 port=\$3
+    while true; do
+      LINE=\$(iptables -t \$table -L \$chain -n --line-numbers 2>/dev/null | grep \"dpt:\$port\" | head -1 | awk '{print \$1}')
+      [ -z \"\$LINE\" ] && break
+      iptables -t \$table -D \$chain \$LINE
+    done
+  }
+  cleanup_rules nat PREROUTING ${HTTPS_PORT}
+  cleanup_rules nat PREROUTING ${HTTP_PORT}
+  cleanup_rules nat OUTPUT ${HTTPS_PORT}
+  cleanup_rules nat OUTPUT ${HTTP_PORT}
+
+  # Clean up old FORWARD and MASQUERADE rules for wizard VMs
+  while true; do
+    LINE=\$(iptables -L FORWARD -n --line-numbers 2>/dev/null | grep -E '${HTTP_PORT}|${HTTPS_PORT}' | head -1 | awk '{print \$1}')
+    [ -z \"\$LINE\" ] && break
+    iptables -D FORWARD \$LINE
+  done
+  while true; do
+    LINE=\$(iptables -t nat -L POSTROUTING -n --line-numbers 2>/dev/null | grep '192.168.122' | grep MASQUERADE | head -1 | awk '{print \$1}')
+    [ -z \"\$LINE\" ] && break
+    iptables -t nat -D POSTROUTING \$LINE
+  done
+
+  # DNAT external + local traffic to the VM
+  iptables -t nat -A PREROUTING -p tcp --dport ${HTTPS_PORT} -j DNAT --to-destination ${VM_IP}:${HTTPS_PORT}
+  iptables -t nat -A PREROUTING -p tcp --dport ${HTTP_PORT} -j DNAT --to-destination ${VM_IP}:${HTTP_PORT}
+  iptables -t nat -A OUTPUT -p tcp --dport ${HTTPS_PORT} -j DNAT --to-destination ${VM_IP}:${HTTPS_PORT}
+  iptables -t nat -A OUTPUT -p tcp --dport ${HTTP_PORT} -j DNAT --to-destination ${VM_IP}:${HTTP_PORT}
+  iptables -t nat -A POSTROUTING -d ${VM_IP} -j MASQUERADE
+  iptables -I FORWARD 1 -d ${VM_IP} -p tcp -m multiport --dports ${HTTP_PORT},${HTTPS_PORT} -j ACCEPT
+
+  # Save VM IP for teardown
+  echo '${VM_IP}' > /tmp/enclave-wizard-vm-ip
+"
+
+sleep 3
+
+# Verify
+TARGET_HOST=$(echo "${TARGET}" | cut -d@ -f2)
+
+HTTPS_OK=false
+REDIRECT_OK=false
+EXT_OK=false
+
+${SSH} -J "${TARGET}" wizard@"${VM_IP}" "curl -sfk https://localhost:${HTTPS_PORT}/wizard" > /dev/null 2>&1 && HTTPS_OK=true
+REDIRECT_CODE=$(${SSH} -J "${TARGET}" wizard@"${VM_IP}" "curl -so /dev/null -w '%{http_code}' http://localhost:${HTTP_PORT}" 2>/dev/null || true)
+[ "${REDIRECT_CODE}" = "301" ] && REDIRECT_OK=true
+curl -sfk --connect-timeout 5 "https://${TARGET_HOST}:${HTTPS_PORT}/wizard" > /dev/null 2>&1 && EXT_OK=true
+
+echo ""
+echo "  HTTPS (VM):          $( $HTTPS_OK && echo 'OK' || echo 'FAIL' )"
+echo "  HTTP→HTTPS redirect: $( $REDIRECT_OK && echo 'OK (301)' || echo "FAIL (got ${REDIRECT_CODE})" )"
+echo "  HTTPS (external):   $( $EXT_OK && echo 'OK' || echo 'FAIL - check port forwarding' )"
+echo ""
+
+if $HTTPS_OK; then
+    echo "Wizard URL: https://${TARGET_HOST}:${HTTPS_PORT}/wizard"
+    echo "VM SSH:     ssh -J ${TARGET} wizard@${VM_IP}"
+    echo ""
+    echo "  (Self-signed cert — accept the browser warning)"
+    echo ""
+    echo "To remove:  ./hack/teardown-wizard ${TARGET}"
+else
+    echo "Deployment failed. Check logs with:"
+    echo "  ssh -J ${TARGET} wizard@${VM_IP} 'sudo journalctl -u enclave-wizard-api -u enclave-wizard-ui --no-pager -n 20'"
+    exit 1
+fi
