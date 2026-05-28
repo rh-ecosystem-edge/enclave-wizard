@@ -132,7 +132,6 @@ const TOP_STEPS: StepDef[] = [
 const DISCOVERY_SUBSTEPS: SubStep[] = [
   { id: "netris", label: "Netris" },
   { id: "nvidia", label: "NVIDIA Carbide / NICo" },
-  { id: "metal3", label: "Metal3 / Ironic" },
   { id: "openstack", label: "OpenStack" },
   { id: "netbox", label: "NetBox" },
 ];

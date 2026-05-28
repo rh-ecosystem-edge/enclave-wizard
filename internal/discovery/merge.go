@@ -118,6 +118,109 @@ func MergeNicoInto(inv *models.DiscoveredInventory, nicoInv *models.NicoInventor
 	}
 }
 
+func MergeOpenStackInto(inv *models.DiscoveredInventory, osInv *models.OSInventory) {
+	if osInv == nil {
+		return
+	}
+
+	for _, az := range osInv.AvailabilityZones {
+		nodeCount := 0
+		for _, n := range osInv.BaremetalNodes {
+			if n.AvailabilityZone == az.Name {
+				nodeCount++
+			}
+		}
+		inv.Sites = append(inv.Sites, models.DiscoveredSite{
+			ID:        len(inv.Sites) + 1,
+			Name:      az.Name,
+			NodeCount: nodeCount,
+			Sources:   []string{"openstack"},
+		})
+	}
+
+	serverIndex := make(map[string]int)
+	for i, n := range inv.Nodes {
+		serverIndex[n.Name] = i
+	}
+
+	for _, node := range osInv.BaremetalNodes {
+		bmcIP := node.BmcAddress
+		if idx := len("redfish://"); len(bmcIP) > idx {
+			if slashIdx := indexOf(bmcIP[idx:], '/'); slashIdx > 0 {
+				bmcIP = bmcIP[idx : idx+slashIdx]
+			}
+		}
+
+		if idx, ok := serverIndex[node.Name]; ok {
+			n := &inv.Nodes[idx]
+			if n.BmcIP == "" {
+				n.BmcIP = bmcIP
+			}
+			if n.BmcUser == "" {
+				n.BmcUser = node.BmcUser
+			}
+			if n.BmcPassword == "" {
+				n.BmcPassword = node.BmcPassword
+			}
+			if n.MACAddress == "" {
+				n.MACAddress = node.BootMACAddress
+			}
+			if n.RootDisk == "" || n.RootDisk == "/dev/sda" {
+				n.RootDisk = node.RootDisk
+			}
+			if n.CPUs == 0 {
+				n.CPUs = node.CPUs
+			}
+			if n.RAMGB == 0 {
+				n.RAMGB = node.RAMGB
+			}
+			if n.Description == "" {
+				n.Description = node.Model
+			}
+			if !containsSource(n.Sources, "openstack") {
+				n.Sources = append(n.Sources, "openstack")
+			}
+			continue
+		}
+
+		inv.Nodes = append(inv.Nodes, models.DiscoveredNode{
+			ID:          fmt.Sprintf("os-%s", node.UUID),
+			Name:        node.Name,
+			BmcIP:       bmcIP,
+			BmcUser:     node.BmcUser,
+			BmcPassword: node.BmcPassword,
+			MACAddress:  node.BootMACAddress,
+			RootDisk:    node.RootDisk,
+			Description: node.Model,
+			CPUs:        node.CPUs,
+			RAMGB:       node.RAMGB,
+			Sources:     []string{"openstack"},
+		})
+	}
+
+	for _, net := range osInv.Networks {
+		for _, sub := range net.Subnets {
+			inv.Networks = append(inv.Networks, models.DiscoveredNetwork{
+				ID:      len(inv.Networks) + 1,
+				Name:    sub.Name,
+				Prefix:  sub.CIDR,
+				Gateway: sub.Gateway,
+				Purpose: net.NetworkType,
+				Sources: []string{"openstack"},
+			})
+		}
+	}
+}
+
+func indexOf(s string, c byte) int {
+	for i := 0; i < len(s); i++ {
+		if s[i] == c {
+			return i
+		}
+	}
+	return -1
+}
+
 func containsSource(sources []string, s string) bool {
 	for _, src := range sources {
 		if src == s {
