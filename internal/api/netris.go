@@ -32,7 +32,7 @@ type NetrisSitesOutput struct {
 }
 
 type NetrisInventoryInput struct {
-	SiteID *int `query:"siteId" doc:"Filter by site ID"`
+	SiteID int `query:"siteId" doc:"Filter by site ID (0 = all)" default:"0"`
 }
 
 type NetrisInventoryOutput struct {
@@ -46,7 +46,7 @@ type NetrisVPCsOutput struct {
 }
 
 type NetrisIPAMInput struct {
-	SiteID *int `query:"siteId" doc:"Filter by site ID"`
+	SiteID int `query:"siteId" doc:"Filter by site ID (0 = all)" default:"0"`
 }
 
 type NetrisIPAMOutput struct {
@@ -117,7 +117,11 @@ func (h *NetrisHandler) sites(_ context.Context, _ *struct{}) (*NetrisSitesOutpu
 }
 
 func (h *NetrisHandler) inventory(_ context.Context, input *NetrisInventoryInput) (*NetrisInventoryOutput, error) {
-	inv, err := h.client.Inventory(input.SiteID)
+	var siteID *int
+	if input.SiteID > 0 {
+		siteID = &input.SiteID
+	}
+	inv, err := h.client.Inventory(siteID)
 	if err != nil {
 		return nil, huma.Error502BadGateway("failed to list inventory", err)
 	}
@@ -135,7 +139,11 @@ func (h *NetrisHandler) vpcs(_ context.Context, _ *struct{}) (*NetrisVPCsOutput,
 }
 
 func (h *NetrisHandler) ipam(_ context.Context, input *NetrisIPAMInput) (*NetrisIPAMOutput, error) {
-	ipam, err := h.client.IPAM(input.SiteID)
+	var siteID *int
+	if input.SiteID > 0 {
+		siteID = &input.SiteID
+	}
+	ipam, err := h.client.IPAM(siteID)
 	if err != nil {
 		return nil, huma.Error502BadGateway("failed to list IPAM", err)
 	}
