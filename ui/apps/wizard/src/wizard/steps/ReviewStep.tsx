@@ -53,6 +53,7 @@ const CONFIG_FILES: ConfigFile[] = [
   { key: "global", label: "global.yaml", path: "global" },
   { key: "cloudInfra", label: "cloud_infra.yaml", path: "cloudInfra" },
   { key: "certificates", label: "certificates.yaml", path: "certificates" },
+  { key: "topology", label: "topology.yaml", path: "topology" },
 ];
 
 function configToYaml(data: unknown): string {

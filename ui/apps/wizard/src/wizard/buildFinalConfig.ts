@@ -14,6 +14,7 @@ export function buildFinalConfig(state: WizardState): EnclaveConfig {
     },
     certificates: state.configData.certificates ?? {},
     cloudInfra: state.configData.cloudInfra ?? { discovery_hosts: [] },
+    topology: state.configData.topology ?? { availability_zones: [] },
   };
 
   return EnclaveConfigFromJSON(raw);
