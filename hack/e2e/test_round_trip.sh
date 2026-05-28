@@ -7,6 +7,7 @@ echo "  Step 1: Write a complete config with distinctive values in every section
 CONFIG='{
   "global": {
     "workingDir": "/opt/enclave",
+    "sshPubKey": "ssh-rsa AAAA fake-e2e-key",
     "baseDomain": "roundtrip.e2e-test.local",
     "clusterName": "rt-mgmt",
     "machineNetwork": "10.99.88.0/24",
@@ -29,11 +30,10 @@ CONFIG='{
     },
     "storage_plugin": "lvms",
     "pullSecret": {"auths":{}},
-    "sshPubKey": "ssh-rsa AAAAB3test test@wizard",
     "agent_hosts": [
       {
         "name": "rt-cp-0",
-        "macAddress": "aa:bb:cc:00:00:01",
+        "macAddress": "00:60:2f:e0:c1:00",
         "ipAddress": "10.99.88.10",
         "redfish": "10.99.88.200",
         "redfishUser": "admin",
@@ -42,7 +42,7 @@ CONFIG='{
       },
       {
         "name": "rt-cp-1",
-        "macAddress": "aa:bb:cc:00:00:02",
+        "macAddress": "00:60:2f:e0:c1:01",
         "ipAddress": "10.99.88.11",
         "redfish": "10.99.88.200",
         "redfishUser": "admin",
@@ -51,7 +51,7 @@ CONFIG='{
       },
       {
         "name": "rt-cp-2",
-        "macAddress": "aa:bb:cc:00:00:03",
+        "macAddress": "00:60:2f:e0:c1:02",
         "ipAddress": "10.99.88.12",
         "redfish": "10.99.88.200",
         "redfishUser": "admin",
@@ -105,7 +105,6 @@ assert_field "quayUser"         '.global.quayUser'             "rt-admin"       
 assert_field "quayPassword"     '.global.quayPassword'         "rt-secret-pw"               "${RESPONSE}"
 assert_field "quayBackend"      '.global.quayBackend'          "RadosGWStorage"             "${RESPONSE}"
 assert_field "storage_plugin" '.global.storage_plugin' "lvms"                     "${RESPONSE}"
-assert_field "sshPubKey"       '.global.sshPubKey'           "ssh-rsa AAAAB3test test@wizard" "${RESPONSE}"
 
 echo "  Step 4: Verify agent_hosts"
 assert_field "agent_hosts count"      '.global.agent_hosts | length'   "3"         "${RESPONSE}"

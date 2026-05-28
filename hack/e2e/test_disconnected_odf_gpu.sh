@@ -11,6 +11,7 @@ echo "  Step 2: Write a complete config via the wizard API"
 CONFIG='{
   "global": {
     "workingDir": "/opt/enclave",
+    "sshPubKey": "ssh-rsa AAAA fake-e2e-key",
     "baseDomain": "odf-gpu.enclave.io",
     "clusterName": "gpu-mgmt",
     "machineNetwork": "172.20.0.0/24",
@@ -25,16 +26,14 @@ CONFIG='{
     "quayPassword": "odf-gpu-secret",
     "quayBackend": "LocalStorage",
     "storage_plugin": "odf",
-    "storage_plugin": "odf",
     "odfExternalConfig": "{\"clusterID\":\"e2e-ceph-cluster-id\",\"monitors\":[\"172.20.0.50:6789\"]}",
     "disconnected": true,
     "enabled_plugins": ["lvms", "odf", "nvidia-gpu"],
     "pullSecret": {"auths":{}},
-    "sshPubKey": "ssh-rsa AAAAB3test test@wizard",
     "agent_hosts": [
       {
         "name": "gpu-node-01",
-        "macAddress": "00:60:2f:dd:01:01",
+        "macAddress": "00:60:2f:e0:c1:00",
         "ipAddress": "172.20.0.10",
         "redfish": "172.20.0.1",
         "redfishUser": "admin",
@@ -43,7 +42,7 @@ CONFIG='{
       },
       {
         "name": "gpu-node-02",
-        "macAddress": "00:60:2f:dd:01:02",
+        "macAddress": "00:60:2f:e0:c1:01",
         "ipAddress": "172.20.0.11",
         "redfish": "172.20.0.1",
         "redfishUser": "admin",
@@ -52,7 +51,7 @@ CONFIG='{
       },
       {
         "name": "gpu-node-03",
-        "macAddress": "00:60:2f:dd:01:03",
+        "macAddress": "00:60:2f:e0:c1:02",
         "ipAddress": "172.20.0.12",
         "redfish": "172.20.0.1",
         "redfishUser": "admin",

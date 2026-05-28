@@ -68,14 +68,16 @@ api_get() {
 
 api_put() {
     local path="$1"
-    local data="$2"
-    vm_exec "curl -sfk -X PUT https://localhost:3443${path} -H 'Content-Type: application/json' -H 'Authorization: Bearer ${TOKEN}' -d '${data}'"
+    local data
+    data=$(echo "$2" | jq -c . | base64 -w0)
+    vm_exec "echo ${data} | base64 -d > /tmp/_api_body.json && curl -sfk -X PUT https://localhost:3443${path} -H 'Content-Type: application/json' -H 'Authorization: Bearer ${TOKEN}' -d @/tmp/_api_body.json && rm -f /tmp/_api_body.json"
 }
 
 api_post() {
     local path="$1"
-    local data="$2"
-    vm_exec "curl -sfk -X POST https://localhost:3443${path} -H 'Content-Type: application/json' -H 'Authorization: Bearer ${TOKEN}' -d '${data}'"
+    local data
+    data=$(echo "$2" | jq -c . | base64 -w0)
+    vm_exec "echo ${data} | base64 -d > /tmp/_api_body.json && curl -sfk -X POST https://localhost:3443${path} -H 'Content-Type: application/json' -H 'Authorization: Bearer ${TOKEN}' -d @/tmp/_api_body.json && rm -f /tmp/_api_body.json"
 }
 
 # Assert a command succeeds

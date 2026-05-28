@@ -11,6 +11,7 @@ echo "  Step 2: Write a config with distinctive values"
 CONFIG='{
   "global": {
     "workingDir": "/opt/enclave",
+    "sshPubKey": "ssh-rsa AAAA fake-e2e-key",
     "baseDomain": "download-test.example.com",
     "clusterName": "dl-cluster",
     "machineNetwork": "10.77.88.0/24",
@@ -25,15 +26,13 @@ CONFIG='{
     "quayPassword": "dl-secret",
     "quayBackend": "LocalStorage",
     "storage_plugin": "lvms",
-    "storage_plugin": "lvms",
     "disconnected": true,
     "enabled_plugins": ["lvms", "nvidia-gpu"],
     "pullSecret": {"auths":{}},
-    "sshPubKey": "ssh-rsa AAAAB3test test@wizard",
     "agent_hosts": [
       {
         "name": "dl-node-01",
-        "macAddress": "00:60:2f:ff:01:01",
+        "macAddress": "00:60:2f:e0:c1:00",
         "ipAddress": "10.77.88.10",
         "redfish": "10.77.88.1",
         "redfishUser": "admin",
@@ -42,7 +41,7 @@ CONFIG='{
       },
       {
         "name": "dl-node-02",
-        "macAddress": "00:60:2f:ff:01:02",
+        "macAddress": "00:60:2f:e0:c1:01",
         "ipAddress": "10.77.88.11",
         "redfish": "10.77.88.1",
         "redfishUser": "admin",
@@ -51,7 +50,7 @@ CONFIG='{
       },
       {
         "name": "dl-node-03",
-        "macAddress": "00:60:2f:ff:01:03",
+        "macAddress": "00:60:2f:e0:c1:02",
         "ipAddress": "10.77.88.12",
         "redfish": "10.77.88.1",
         "redfishUser": "admin",

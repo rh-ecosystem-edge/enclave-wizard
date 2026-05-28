@@ -11,6 +11,7 @@ echo "  Step 2: Write a complete config via the wizard API"
 CONFIG='{
   "global": {
     "workingDir": "/opt/enclave",
+    "sshPubKey": "ssh-rsa AAAA fake-e2e-key",
     "baseDomain": "rhoai.lab.example.com",
     "clusterName": "ai-edge",
     "machineNetwork": "192.168.100.0/24",
@@ -25,15 +26,13 @@ CONFIG='{
     "quayPassword": "unused",
     "quayBackend": "LocalStorage",
     "storage_plugin": "lvms",
-    "storage_plugin": "lvms",
     "disconnected": false,
     "enabled_plugins": ["lvms", "nvidia-gpu", "openshift-ai"],
     "pullSecret": {"auths":{}},
-    "sshPubKey": "ssh-rsa AAAAB3test test@wizard",
     "agent_hosts": [
       {
         "name": "ai-node-01",
-        "macAddress": "00:60:2f:ee:01:01",
+        "macAddress": "00:60:2f:e0:c1:00",
         "ipAddress": "192.168.100.10",
         "redfish": "192.168.100.1",
         "redfishUser": "admin",
@@ -42,7 +41,7 @@ CONFIG='{
       },
       {
         "name": "ai-node-02",
-        "macAddress": "00:60:2f:ee:01:02",
+        "macAddress": "00:60:2f:e0:c1:01",
         "ipAddress": "192.168.100.11",
         "redfish": "192.168.100.1",
         "redfishUser": "admin",
@@ -51,7 +50,7 @@ CONFIG='{
       },
       {
         "name": "ai-node-03",
-        "macAddress": "00:60:2f:ee:01:03",
+        "macAddress": "00:60:2f:e0:c1:02",
         "ipAddress": "192.168.100.12",
         "redfish": "192.168.100.1",
         "redfishUser": "admin",

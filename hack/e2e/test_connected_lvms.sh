@@ -11,6 +11,7 @@ echo "  Step 2: Write a connected LVMS config via the wizard API"
 CONFIG='{
   "global": {
     "workingDir": "/opt/enclave",
+    "sshPubKey": "ssh-rsa AAAA fake-e2e-key",
     "baseDomain": "connected-lvms.lab.local",
     "clusterName": "edge-conn",
     "machineNetwork": "10.10.50.0/24",
@@ -25,15 +26,13 @@ CONFIG='{
     "quayPassword": "unused",
     "quayBackend": "LocalStorage",
     "storage_plugin": "lvms",
-    "storage_plugin": "lvms",
     "disconnected": false,
     "enabled_plugins": ["lvms"],
     "pullSecret": {"auths":{}},
-    "sshPubKey": "ssh-rsa AAAAB3test test@wizard",
     "agent_hosts": [
       {
         "name": "ctrl-01",
-        "macAddress": "00:60:2f:cc:01:01",
+        "macAddress": "00:60:2f:e0:c1:00",
         "ipAddress": "10.10.50.10",
         "redfish": "10.10.50.1",
         "redfishUser": "admin",
@@ -42,7 +41,7 @@ CONFIG='{
       },
       {
         "name": "ctrl-02",
-        "macAddress": "00:60:2f:cc:01:02",
+        "macAddress": "00:60:2f:e0:c1:01",
         "ipAddress": "10.10.50.11",
         "redfish": "10.10.50.1",
         "redfishUser": "admin",
@@ -51,7 +50,7 @@ CONFIG='{
       },
       {
         "name": "ctrl-03",
-        "macAddress": "00:60:2f:cc:01:03",
+        "macAddress": "00:60:2f:e0:c1:02",
         "ipAddress": "10.10.50.12",
         "redfish": "10.10.50.1",
         "redfishUser": "admin",

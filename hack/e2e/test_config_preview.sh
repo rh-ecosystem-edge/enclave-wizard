@@ -7,6 +7,7 @@ echo "  Step 1: Write a config via the wizard API"
 CONFIG='{
   "global": {
     "workingDir": "/opt/enclave",
+    "sshPubKey": "ssh-rsa AAAA fake-e2e-key",
     "baseDomain": "preview-test.local",
     "clusterName": "preview-cl",
     "machineNetwork": "192.168.200.0/24",
@@ -21,15 +22,13 @@ CONFIG='{
     "quayPassword": "testpassword",
     "quayBackend": "LocalStorage",
     "storage_plugin": "lvms",
-    "storage_plugin": "lvms",
     "disconnected": true,
     "enabled_plugins": ["lvms"],
     "pullSecret": {"auths":{}},
-    "sshPubKey": "ssh-rsa AAAAB3test test@wizard",
     "agent_hosts": [
       {
         "name": "node-01",
-        "macAddress": "00:60:2f:cc:dd:01",
+        "macAddress": "00:60:2f:e0:c1:00",
         "ipAddress": "192.168.200.10",
         "redfish": "192.168.200.1",
         "redfishUser": "admin",
@@ -38,7 +37,7 @@ CONFIG='{
       },
       {
         "name": "node-02",
-        "macAddress": "00:60:2f:cc:dd:02",
+        "macAddress": "00:60:2f:e0:c1:01",
         "ipAddress": "192.168.200.11",
         "redfish": "192.168.200.1",
         "redfishUser": "admin",
@@ -47,7 +46,7 @@ CONFIG='{
       },
       {
         "name": "node-03",
-        "macAddress": "00:60:2f:cc:dd:03",
+        "macAddress": "00:60:2f:e0:c1:02",
         "ipAddress": "192.168.200.12",
         "redfish": "192.168.200.1",
         "redfishUser": "admin",
