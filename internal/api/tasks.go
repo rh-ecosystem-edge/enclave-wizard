@@ -168,6 +168,15 @@ func (h *TasksHandler) Register(api huma.API) {
 		Description: "Runs the enclave operational validation script that checks DNS, Redfish, certificates, and registry connectivity.",
 		Tags:        []string{"Tasks"},
 	}, h.startValidate)
+
+	huma.Register(api, huma.Operation{
+		OperationID: "start-apply-topology",
+		Method:      http.MethodPost,
+		Path:        "/api/v1/tasks/apply-topology",
+		Summary:     "Apply network topology configuration",
+		Description: "Runs the apply-topology.yaml playbook to configure network topology for deployed clusters.",
+		Tags:        []string{"Tasks"},
+	}, h.startApplyTopology)
 }
 
 // --- Handlers ---
@@ -270,10 +279,26 @@ func (h *TasksHandler) deleteTask(_ context.Context, input *DeleteTaskInput) (*s
 
 type StartValidateInput struct{}
 
+type StartApplyTopologyInput struct{}
+
 func (h *TasksHandler) startValidate(ctx context.Context, _ *StartValidateInput) (*StartTaskOutput, error) {
 	run, err := h.runner.Start(tasks.StartRequest{
 		Type:     models.TaskTypeValidate,
 		Playbook: "validations.sh",
+	})
+	if err != nil {
+		return nil, mapTaskError(err)
+	}
+	return &StartTaskOutput{Body: *run}, nil
+}
+
+func (h *TasksHandler) startApplyTopology(ctx context.Context, _ *StartApplyTopologyInput) (*StartTaskOutput, error) {
+	run, err := h.runner.Start(tasks.StartRequest{
+		Type:     models.TaskTypeApplyTopology,
+		Playbook: "playbooks/apply-topology.yaml",
+		ExtraVars: map[string]string{
+			"workingDir": h.enclaveDir,
+		},
 	})
 	if err != nil {
 		return nil, mapTaskError(err)
