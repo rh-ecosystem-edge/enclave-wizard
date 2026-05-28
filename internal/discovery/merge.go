@@ -212,6 +212,77 @@ func MergeOpenStackInto(inv *models.DiscoveredInventory, osInv *models.OSInvento
 	}
 }
 
+func MergeNetboxInto(inv *models.DiscoveredInventory, nbInv *models.NetboxInventory) {
+	if nbInv == nil {
+		return
+	}
+
+	for _, site := range nbInv.Sites {
+		deviceCount := 0
+		for _, d := range nbInv.Devices {
+			if d.Site == site.Name {
+				deviceCount++
+			}
+		}
+		inv.Sites = append(inv.Sites, models.DiscoveredSite{
+			ID:        len(inv.Sites) + 1,
+			Name:      site.Name,
+			ASN:       site.ASN,
+			NodeCount: deviceCount,
+			Sources:   []string{"netbox"},
+		})
+	}
+
+	serverIndex := make(map[string]int)
+	for i, n := range inv.Nodes {
+		serverIndex[n.Name] = i
+	}
+
+	for _, dev := range nbInv.Devices {
+		rackPos := ""
+		if dev.Rack != "" && dev.Position > 0 {
+			rackPos = fmt.Sprintf("%s U%.0f", dev.Rack, dev.Position)
+		}
+
+		if idx, ok := serverIndex[dev.Name]; ok {
+			n := &inv.Nodes[idx]
+			if n.RackPosition == "" {
+				n.RackPosition = rackPos
+			}
+			if n.Description == "" {
+				n.Description = fmt.Sprintf("%s %s", dev.Manufacturer, dev.DeviceType)
+			}
+			if !containsSource(n.Sources, "netbox") {
+				n.Sources = append(n.Sources, "netbox")
+			}
+			continue
+		}
+
+		inv.Nodes = append(inv.Nodes, models.DiscoveredNode{
+			ID:           fmt.Sprintf("nb-%d", dev.ID),
+			Name:         dev.Name,
+			Description:  fmt.Sprintf("%s %s", dev.Manufacturer, dev.DeviceType),
+			IPAddress:    dev.PrimaryIP,
+			RackPosition: rackPos,
+			Sources:      []string{"netbox"},
+		})
+	}
+
+	for _, pfx := range nbInv.Prefixes {
+		if pfx.Status == "container" {
+			continue
+		}
+		inv.Networks = append(inv.Networks, models.DiscoveredNetwork{
+			ID:      len(inv.Networks) + 1,
+			Name:    pfx.Prefix,
+			Prefix:  pfx.Prefix,
+			Purpose: pfx.Role,
+			VPCName: pfx.VRF,
+			Sources: []string{"netbox"},
+		})
+	}
+}
+
 func indexOf(s string, c byte) int {
 	for i := 0; i < len(s); i++ {
 		if s[i] == c {

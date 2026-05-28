@@ -38,6 +38,10 @@ import {
   useOpenStackApi,
   type OSInventory,
 } from "../../api/useOpenStackApi.ts";
+import {
+  useNetboxApi,
+  type NetboxInventory,
+} from "../../api/useNetboxApi.ts";
 import { useWizard } from "../WizardContext.tsx";
 import { networkDiscoveryStyles as styles } from "./networkDiscoveryStyles.ts";
 
@@ -586,11 +590,226 @@ const OpenStackProvider: React.FC = () => {
   );
 };
 
-const PlaceholderProvider: React.FC<{ name: string; description: string }> = ({ name, description }) => (
-  <Content component="p" style={{ color: "var(--pf-t--global--text--color--subtle)" }}>
-    {name} integration coming soon. {description}
-  </Content>
-);
+const NetboxProvider: React.FC = () => {
+  const { dispatch } = useWizard();
+  const nbApi = useNetboxApi();
+  const discoveryApi = useDiscoveryApi();
+
+  const [status, setStatus] = useState<ConnectionState>("disconnected");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [nbUrl, setNbUrl] = useState("https://netbox.example.com");
+  const [apiToken, setApiToken] = useState("");
+  const [endpoint, setEndpoint] = useState("");
+  const [inventory, setInventory] = useState<NetboxInventory | null>(null);
+  const [expandedSites, setExpandedSites] = useState<Record<string, boolean>>({});
+
+  const handleConnect = async () => {
+    setStatus("connecting");
+    setErrorMsg("");
+    try {
+      const result = await nbApi.connect(nbUrl, apiToken);
+      if (!result.connected) {
+        setStatus("error");
+        setErrorMsg("Authentication failed.");
+        return;
+      }
+      setEndpoint(result.endpoint);
+      const inv = await nbApi.getInventory();
+      setInventory(inv);
+
+      const merged = await discoveryApi.getMergedInventory();
+      dispatch({ type: "SET_FIELD", path: "discovery", value: merged });
+      setStatus("connected");
+    } catch (err) {
+      setStatus("error");
+      setErrorMsg(err instanceof Error ? err.message : "Connection failed");
+    }
+  };
+
+  const handleDisconnect = () => {
+    setStatus("disconnected");
+    setInventory(null);
+  };
+
+  const toggleSite = (name: string) =>
+    setExpandedSites((p) => ({ ...p, [name]: !p[name] }));
+
+  const devicesForSite = (siteName: string) =>
+    inventory?.devices.filter((d) => d.site === siteName) ?? [];
+
+  const racksForSite = (siteName: string) =>
+    inventory?.racks.filter((r) => r.site === siteName) ?? [];
+
+  const prefixesForSite = (siteName: string) =>
+    inventory?.prefixes.filter((p) => p.site === siteName && p.status !== "container") ?? [];
+
+  if (status === "connected" && inventory) {
+    const serverCount = inventory.devices.filter((d) => d.role.includes("server")).length;
+    const switchCount = inventory.devices.filter((d) => ["spine", "leaf"].includes(d.role)).length;
+
+    return (
+      <>
+        <div className={styles.summaryBar}>
+          <ConnectedIcon color="var(--pf-t--global--color--status--success--default)" />
+          <span>Connected to <strong>{endpoint}</strong></span>
+          <Badge className={styles.summaryBadge}>{inventory.sites.length} Sites</Badge>
+          <Badge className={styles.summaryBadge}>{serverCount} Servers</Badge>
+          <Badge className={styles.summaryBadge}>{switchCount} Switches</Badge>
+          <Badge className={styles.summaryBadge}>{inventory.racks.length} Racks</Badge>
+          <Badge className={styles.summaryBadge}>{inventory.prefixes.length} Prefixes</Badge>
+          <FlexItem align={{ default: "alignRight" }}>
+            <Button variant="link" icon={<DisconnectedIcon />} onClick={handleDisconnect}>
+              Disconnect
+            </Button>
+          </FlexItem>
+        </div>
+
+        {inventory.vrfs.length > 0 && (
+          <>
+            <Title headingLevel="h4" size="md" style={{ marginTop: "0.75rem", marginBottom: "0.5rem" }}>
+              VRFs
+            </Title>
+            <div className={styles.inventoryList}>
+              {inventory.vrfs.map((vrf) => (
+                <div key={vrf.id} className={styles.inventoryItem}>
+                  <span className={styles.serverName}>{vrf.name}</span>
+                  <span className={styles.serverDetail}>RD: {vrf.rd}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        <Title headingLevel="h4" size="md" style={{ marginTop: "0.75rem", marginBottom: "0.5rem" }}>
+          Sites &amp; Inventory
+        </Title>
+        <div className={styles.siteGrid}>
+          {inventory.sites.map((site) => {
+            const siteDevices = devicesForSite(site.name);
+            const siteRacks = racksForSite(site.name);
+            const sitePrefixes = prefixesForSite(site.name);
+            const servers = siteDevices.filter((d) => d.role.includes("server"));
+            const switches = siteDevices.filter((d) => ["spine", "leaf"].includes(d.role));
+
+            return (
+              <Card key={site.id} isRounded isCompact isFlat className={styles.siteCard}>
+                <CardBody>
+                  <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }} style={{ marginBottom: "0.25rem" }}>
+                    <ServerIcon />
+                    <strong>{site.name}</strong>
+                    {site.region && <Badge isRead>{site.region}</Badge>}
+                  </Flex>
+                  <div style={{ fontSize: "0.875rem", color: "var(--pf-t--global--text--color--subtle)", marginBottom: "0.25rem" }}>
+                    {site.facility && <>{site.facility} &middot; </>}
+                    {servers.length} servers &middot; {switches.length} switches &middot; {siteRacks.length} racks
+                    {site.asn > 0 && <> &middot; ASN {site.asn}</>}
+                  </div>
+
+                  <ExpandableSection
+                    toggleText={expandedSites[site.name] ? "Hide details" : "Show details"}
+                    isExpanded={expandedSites[site.name] ?? false}
+                    onToggle={() => toggleSite(site.name)}
+                  >
+                    {siteRacks.length > 0 && (
+                      <>
+                        <Title headingLevel="h5" size="sm" style={{ marginTop: "0.25rem" }}>Racks</Title>
+                        <div className={styles.inventoryList}>
+                          {siteRacks.map((rack) => (
+                            <div key={rack.id} className={styles.inventoryItem}>
+                              <span className={styles.serverName}>{rack.name}</span>
+                              <span className={styles.serverDetail}>
+                                {rack.uHeight}U &middot; {rack.devices} devices &middot; {rack.utilizationPercent.toFixed(0)}% utilized
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {servers.length > 0 && (
+                      <>
+                        <Title headingLevel="h5" size="sm" style={{ marginTop: "0.5rem" }}>Servers</Title>
+                        <div className={styles.inventoryList}>
+                          {servers.map((dev) => (
+                            <div key={dev.id} className={styles.inventoryItem}>
+                              <div>
+                                <span className={styles.serverName}>{dev.name}</span>
+                                <span className={styles.serverDetail}>
+                                  {" "}{dev.manufacturer} {dev.deviceType}
+                                  {dev.rack && <> &middot; {dev.rack} U{dev.position}</>}
+                                  {dev.serialNumber && <> &middot; S/N {dev.serialNumber}</>}
+                                </span>
+                                {dev.primaryIp && <div className={styles.serverDetail}>IP: {dev.primaryIp}</div>}
+                                {dev.tags?.length > 0 && (
+                                  <div style={{ marginTop: "0.125rem" }}>
+                                    {dev.tags.map((t) => (
+                                      <span key={t} className={styles.labelChip}>{t}</span>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                              <span style={{ color: "var(--pf-t--global--color--status--success--default)", fontSize: "0.8125rem" }}>
+                                {dev.status}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {sitePrefixes.length > 0 && (
+                      <>
+                        <Title headingLevel="h5" size="sm" style={{ marginTop: "0.5rem" }}>Prefixes</Title>
+                        <div className={styles.inventoryList}>
+                          {sitePrefixes.map((pfx) => (
+                            <div key={pfx.id} className={styles.subnetRow}>
+                              <span>
+                                <strong>{pfx.prefix}</strong>
+                                {pfx.vrf && <> &middot; VRF {pfx.vrf}</>}
+                                {pfx.tenant && <> &middot; {pfx.tenant}</>}
+                              </span>
+                              <span className={styles.purposeBadge} style={{
+                                color: pfx.role === "management" ? "var(--pf-t--global--color--status--info--default)" : "var(--pf-t--global--color--status--success--default)",
+                                border: `1px solid ${pfx.role === "management" ? "var(--pf-t--global--color--status--info--default)" : "var(--pf-t--global--color--status--success--default)"}`,
+                              }}>
+                                {pfx.role}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </ExpandableSection>
+                </CardBody>
+              </Card>
+            );
+          })}
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <div className={styles.connectionForm}>
+      <Content component="p" style={{ marginBottom: "1rem", color: "var(--pf-t--global--text--color--subtle)" }}>
+        Connect to NetBox to discover sites, devices, racks, IPAM prefixes, and VRFs.
+      </Content>
+      <FormGroup label="NetBox URL" isRequired fieldId="nb-url">
+        <TextInput id="nb-url" value={nbUrl} onChange={(_e, v) => setNbUrl(v)}
+          placeholder="https://netbox.example.com" isDisabled={status === "connecting"} />
+      </FormGroup>
+      <FormGroup label="API Token" isRequired fieldId="nb-token">
+        <TextInput id="nb-token" type="password" value={apiToken} onChange={(_e, v) => setApiToken(v)}
+          placeholder="Enter API token" isDisabled={status === "connecting"} />
+      </FormGroup>
+      {status === "error" && <Alert variant="danger" title="Connection failed" isInline>{errorMsg}</Alert>}
+      <Button variant="primary" onClick={handleConnect} isLoading={status === "connecting"}
+        isDisabled={status === "connecting"} style={{ marginTop: "0.75rem" }}>
+        {status === "connecting" ? "Connecting..." : "Connect"}
+      </Button>
+    </div>
+  );
+};
 
 interface NetworkDiscoveryStepProps {
   providerId: string;
@@ -605,7 +824,7 @@ export const NetworkDiscoveryStep: React.FC<NetworkDiscoveryStepProps> = ({ prov
     case "openstack":
       return <OpenStackProvider />;
     case "netbox":
-      return <PlaceholderProvider name="NetBox" description="Will discover devices, rack positions, IPAM prefixes, and VRF assignments." />;
+      return <NetboxProvider />;
     default:
       return <div>Unknown provider</div>;
   }

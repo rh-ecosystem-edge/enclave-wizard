@@ -22,6 +22,7 @@ import (
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/auth"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/config"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/logger"
+	"github.com/rh-ecosystem-edge/enclave-wizard/internal/netbox"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/netris"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/nico"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/openstack"
@@ -92,6 +93,10 @@ func SetupAPI(mux *http.ServeMux, enclaveDir string, authStore *auth.Store, opts
 	osClient := openstack.NewMockClient()
 	netrisHandler.SetOpenStackClient(osClient)
 	api.NewOpenStackHandler(osClient).Register(humaAPI)
+
+	nbClient := netbox.NewMockClient()
+	netrisHandler.SetNetboxClient(nbClient)
+	api.NewNetboxHandler(nbClient).Register(humaAPI)
 
 	return humaAPI, runner, nil
 }

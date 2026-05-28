@@ -7,6 +7,7 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/discovery"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/models"
+	"github.com/rh-ecosystem-edge/enclave-wizard/internal/netbox"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/netris"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/nico"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/openstack"
@@ -16,6 +17,7 @@ type NetrisHandler struct {
 	client     netris.Client
 	nicoClient nico.Client
 	osClient   openstack.Client
+	nbClient   netbox.Client
 }
 
 func NewNetrisHandler(client netris.Client) *NetrisHandler {
@@ -28,6 +30,10 @@ func (h *NetrisHandler) SetNicoClient(c nico.Client) {
 
 func (h *NetrisHandler) SetOpenStackClient(c openstack.Client) {
 	h.osClient = c
+}
+
+func (h *NetrisHandler) SetNetboxClient(c netbox.Client) {
+	h.nbClient = c
 }
 
 type NetrisConnectInput struct {
@@ -202,6 +208,13 @@ func (h *NetrisHandler) mergedInventory(_ context.Context, _ *struct{}) (*Discov
 		osInv, err := h.osClient.Inventory()
 		if err == nil {
 			discovery.MergeOpenStackInto(merged, osInv)
+		}
+	}
+
+	if h.nbClient != nil {
+		nbInv, err := h.nbClient.Inventory()
+		if err == nil {
+			discovery.MergeNetboxInto(merged, nbInv)
 		}
 	}
 
