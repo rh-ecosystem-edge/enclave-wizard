@@ -43,16 +43,16 @@ rpm: build-linux
 	hack/rpm/build-rpm.sh
 
 deploy: build-linux
-	@test -n "$(TARGET)" || (echo "Usage: make deploy TARGET=root@host" && exit 1)
-	hack/deploy-wizard $(TARGET)
+	@test -n "$(TARGET)" || (echo "Usage: make deploy TARGET=root@host [LZ_IP=x.x.x.x]" && exit 1)
+	hack/deploy-wizard $(TARGET) $(if $(LZ_IP),--lz-ip $(LZ_IP))
 
 teardown:
 	@test -n "$(TARGET)" || (echo "Usage: make teardown TARGET=root@host" && exit 1)
 	hack/teardown-wizard $(TARGET)
 
 e2e: rpm
-	@test -n "$(TARGET)" || (echo "Usage: make e2e TARGET=root@host" && exit 1)
-	hack/e2e/run-e2e.sh --host $(TARGET)
+	@test -n "$(TARGET)" || (echo "Usage: make e2e TARGET=root@host [LZ_IP=x.x.x.x]" && exit 1)
+	hack/e2e/run-e2e.sh --host $(TARGET) $(if $(LZ_IP),--lz-ip $(LZ_IP))
 
 e2e-rerun:
 	@test -n "$(TARGET)" || (echo "Usage: make e2e-rerun TARGET=root@host" && exit 1)

@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 # Shared helpers for e2e tests
 
-SSH_VM="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -J ${TARGET} wizard@${VM_IP}"
+SSH_TARGET="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+SSH_LZ_CMD="ssh -o StrictHostKeyChecking=no cloud-user@${VM_IP}"
 API="https://localhost:3443"
 TOKEN=""
 E2E_PASSWORD="e2e-test-password-$(date +%s)"
 
-# Run a command inside the VM
+# Run a command inside the VM (via target host, not jump)
 vm_exec() {
-    ${SSH_VM} "$@"
+    ${SSH_TARGET} "${TARGET}" "${SSH_LZ_CMD} '$*'"
 }
 
 # Run a command on the target host
