@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 # Shared helpers for e2e tests
 
-SSH_VM="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -J ${TARGET} wizard@${VM_IP}"
+SSH_OPTS="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 API="https://localhost:3443"
 TOKEN=""
 E2E_PASSWORD="e2e-test-password-$(date +%s)"
 
-# Run a command inside the VM
+# Run a command inside the VM (via target host, base64-encoded to avoid quoting issues)
 vm_exec() {
-    ${SSH_VM} "$@"
+    local encoded
+    encoded=$(echo "$*" | base64 -w0)
+    ssh ${SSH_OPTS} "${TARGET}" "ssh ${SSH_OPTS} cloud-user@${VM_IP} 'echo ${encoded} | base64 -d | bash'"
 }
 
 # Run a command on the target host

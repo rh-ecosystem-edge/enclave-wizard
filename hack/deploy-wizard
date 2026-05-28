@@ -4,25 +4,43 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-if [ $# -lt 1 ]; then
-    echo "Usage: $0 <user@host>"
-    echo "Example: $0 root@myserver.example.com"
+usage() {
+    echo "Deploy enclave wizard on a target host."
+    echo ""
+    echo "Usage: $0 <user@host> [--lz-ip <ip>]"
+    echo ""
+    echo "Modes (set DEPLOY_MODE env var):"
+    echo "  DEPLOY_MODE=standalone  Boot a lightweight VM via virt-install (fast, no masters/BMC)"
+    echo "  DEPLOY_MODE=enclave    Use enclave's e2e-test-env (full infra: LZ + masters + BMC)"
+    echo ""
+    echo "  Default: standalone"
+    echo ""
+    echo "Options:"
+    echo "  --lz-ip <ip>   Skip VM/infra creation, install on existing VM"
     exit 1
-fi
+}
 
-TARGET="$1"
+TARGET=""
+LZ_IP=""
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --lz-ip)    LZ_IP="$2"; shift 2;;
+        -h|--help)  usage;;
+        -*)         echo "Unknown option: $1"; usage;;
+        *)          [ -z "${TARGET}" ] && TARGET="$1" && shift || usage;;
+    esac
+done
+
+[ -z "${TARGET}" ] && usage
+
+DEPLOY_MODE="${DEPLOY_MODE:-standalone}"
 SSH="ssh -o StrictHostKeyChecking=no"
 SCP="scp -o StrictHostKeyChecking=no -q"
-
-VM_NAME="enclave-wizard-lz"
-VM_MEMORY=4096
-VM_CPUS=2
-VM_DISK_SIZE=60
-HTTP_PORT=3001
 HTTPS_PORT=3443
-CLOUD_IMAGE_URL="https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-latest.x86_64.qcow2"
-
-echo "=== Deploying Enclave Wizard to ${TARGET} (in VM) ==="
+HTTP_PORT=3001
+LZ_USER="cloud-user"
+TOTAL_START=$(date +%s)
 
 # --- Find RPMs ---
 ENCLAVE_RPM=$(ls -t "${REPO_DIR}/out/"enclave-0*.rpm 2>/dev/null | head -1)
@@ -34,57 +52,72 @@ fi
 [ -n "${ENCLAVE_RPM}" ] && echo "  Enclave RPM: $(basename ${ENCLAVE_RPM})"
 echo "  Wizard RPM:  $(basename ${WIZARD_RPM})"
 
-# --- Step 1: Transfer RPMs to target host ---
-echo ""
-echo "[1/6] Transferring RPMs to target host..."
-[ -n "${ENCLAVE_RPM}" ] && ${SCP} "${ENCLAVE_RPM}" "${TARGET}:/tmp/enclave.rpm"
-${SCP} "${WIZARD_RPM}" "${TARGET}:/tmp/enclave-wizard.rpm"
+ENV_DURATION=0
 
-# --- Step 2: Download Fedora Cloud image on target ---
-echo "[2/6] Preparing VM image on target..."
-${SSH} "${TARGET}" "
-  set -e
-  IMG_DIR=/var/lib/libvirt/images
-  IMAGE_CACHE=\${IMG_DIR}/CentOS-Stream-9-GenericCloud.qcow2
+if [ -n "${LZ_IP}" ]; then
+    # === BYO-VM mode ===
+    echo ""
+    echo "=== Mode: Bring-your-own VM (LZ_IP=${LZ_IP}) ==="
+    echo ""
+    MODE="byo"
+    ENCLAVE_CLUSTER_NAME=""
 
-  if [ ! -f \${IMAGE_CACHE} ]; then
-    echo '  Downloading CentOS Stream 9 Cloud image...'
-    curl -L -o \${IMAGE_CACHE} '${CLOUD_IMAGE_URL}'
-  else
-    echo '  CentOS image cached'
-  fi
+elif [ "${DEPLOY_MODE}" = "standalone" ]; then
+    # === Standalone mode: boot a lightweight VM directly ===
+    echo ""
+    echo "=== Mode: Standalone (lightweight VM) ==="
+    echo ""
 
-  # Destroy old VM if present
-  virsh destroy ${VM_NAME} 2>/dev/null || true
-  virsh undefine ${VM_NAME} --remove-all-storage --nvram 2>/dev/null || true
-  sleep 1
+    VM_NAME="enclave-wizard-lz"
+    VM_MEMORY=4096
+    VM_CPUS=2
+    VM_DISK_SIZE=60
+    CLOUD_IMAGE_URL="https://cloud.centos.org/centos/10-stream/x86_64/images/CentOS-Stream-GenericCloud-10-latest.x86_64.qcow2"
 
-  # Create VM disk
-  qemu-img create -f qcow2 -b \${IMAGE_CACHE} -F qcow2 \
-    \${IMG_DIR}/${VM_NAME}.qcow2 ${VM_DISK_SIZE}G
-"
+    echo "[1/6] Transferring RPMs to target host..."
+    [ -n "${ENCLAVE_RPM}" ] && ${SCP} "${ENCLAVE_RPM}" "${TARGET}:/tmp/enclave.rpm"
+    ${SCP} "${WIZARD_RPM}" "${TARGET}:/tmp/enclave-wizard.rpm"
 
-# --- Step 3: Create cloud-init and boot VM ---
-echo "[3/6] Booting VM..."
-LOCAL_SSH_KEY=$(cat ~/.ssh/id_rsa.pub)
-${SSH} "${TARGET}" "
-  set -e
-  IMG_DIR=/var/lib/libvirt/images
-  CI_DIR=\$(mktemp -d)
+    echo "[2/6] Preparing VM image on target..."
+    ENV_START=$(date +%s)
+    ${SSH} "${TARGET}" "
+        set -e
+        IMG_DIR=/var/lib/libvirt/images
+        IMAGE_CACHE=\${IMG_DIR}/CentOS-Stream-10-GenericCloud.qcow2
 
-  cat > \${CI_DIR}/meta-data <<CIEOF
+        if [ ! -f \${IMAGE_CACHE} ]; then
+            echo '  Downloading CentOS Stream 10 Cloud image...'
+            curl -L -o \${IMAGE_CACHE} '${CLOUD_IMAGE_URL}'
+        else
+            echo '  CentOS image cached'
+        fi
+
+        virsh destroy ${VM_NAME} 2>/dev/null || true
+        virsh undefine ${VM_NAME} --remove-all-storage --nvram 2>/dev/null || true
+        sleep 1
+
+        qemu-img create -f qcow2 -b \${IMAGE_CACHE} -F qcow2 \
+            \${IMG_DIR}/${VM_NAME}.qcow2 ${VM_DISK_SIZE}G
+    "
+
+    echo "[3/6] Booting VM..."
+    ${SSH} "${TARGET}" "
+        set -e
+        IMG_DIR=/var/lib/libvirt/images
+        CI_DIR=\$(mktemp -d)
+
+        cat > \${CI_DIR}/meta-data <<CIEOF
 instance-id: ${VM_NAME}
 local-hostname: ${VM_NAME}
 CIEOF
 
-  cat > \${CI_DIR}/user-data <<CIEOF
+        cat > \${CI_DIR}/user-data <<CIEOF
 #cloud-config
 users:
-  - name: wizard
+  - name: ${LZ_USER}
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
     ssh_authorized_keys:
-      - ${LOCAL_SSH_KEY}
       - \$(cat ~/.ssh/id_rsa.pub 2>/dev/null || echo '')
 
 packages:
@@ -92,139 +125,218 @@ packages:
   - openssl
 CIEOF
 
-  mkisofs -output \${IMG_DIR}/${VM_NAME}-cidata.iso \
-    -volid cidata -joliet -rock \
-    \${CI_DIR}/meta-data \${CI_DIR}/user-data 2>/dev/null
-  rm -rf \${CI_DIR}
+        mkisofs -output \${IMG_DIR}/${VM_NAME}-cidata.iso \
+            -volid cidata -joliet -rock \
+            \${CI_DIR}/meta-data \${CI_DIR}/user-data 2>/dev/null
+        rm -rf \${CI_DIR}
 
-  virt-install \
-    --name ${VM_NAME} \
-    --memory ${VM_MEMORY} \
-    --vcpus ${VM_CPUS} \
-    --disk path=\${IMG_DIR}/${VM_NAME}.qcow2,format=qcow2 \
-    --disk path=\${IMG_DIR}/${VM_NAME}-cidata.iso,device=cdrom \
-    --os-variant centos-stream9 \
-    --network default \
-    --graphics none \
-    --console pty,target_type=serial \
-    --noautoconsole \
-    --import \
-    --quiet
-"
+        virt-install \
+            --name ${VM_NAME} \
+            --memory ${VM_MEMORY} \
+            --vcpus ${VM_CPUS} \
+            --disk path=\${IMG_DIR}/${VM_NAME}.qcow2,format=qcow2 \
+            --disk path=\${IMG_DIR}/${VM_NAME}-cidata.iso,device=cdrom \
+            --os-variant centos-stream9 \
+            --network default \
+            --graphics none \
+            --console pty,target_type=serial \
+            --noautoconsole \
+            --import \
+            --quiet
+    "
 
-# --- Step 4: Wait for VM IP and SSH ---
-echo "[4/6] Waiting for VM..."
-VM_IP=""
-for i in $(seq 1 60); do
-    VM_IP=$(${SSH} "${TARGET}" "virsh domifaddr ${VM_NAME} 2>/dev/null | grep -oP '(\d+\.){3}\d+' | head -1" 2>/dev/null) || true
-    if [ -n "${VM_IP}" ]; then
-        break
+    echo "[4/6] Waiting for VM..."
+    LZ_IP=""
+    for i in $(seq 1 60); do
+        LZ_IP=$(${SSH} "${TARGET}" "virsh domifaddr ${VM_NAME} 2>/dev/null | grep -oP '(\d+\.){3}\d+' | head -1" 2>/dev/null) || true
+        if [ -n "${LZ_IP}" ]; then
+            break
+        fi
+        sleep 2
+    done
+
+    if [ -z "${LZ_IP}" ]; then
+        echo "ERROR: VM did not get an IP after 120 seconds"
+        exit 1
     fi
-    sleep 2
-done
+    echo "  VM IP: ${LZ_IP}"
 
-if [ -z "${VM_IP}" ]; then
-    echo "ERROR: VM did not get an IP after 120 seconds"
+    echo "  Waiting for SSH..."
+    for i in $(seq 1 30); do
+        ${SSH} "${TARGET}" "ssh -o StrictHostKeyChecking=no ${LZ_USER}@${LZ_IP} 'echo ready'" 2>/dev/null && break
+        sleep 2
+    done
+
+    echo "  Setting up BMC emulation (sushy-tools + master VMs)..."
+    ${SCP} "${SCRIPT_DIR}/infra/setup-bm-emulation.sh" "${TARGET}:/tmp/setup-bm-emulation.sh"
+    ${SSH} "${TARGET}" "bash /tmp/setup-bm-emulation.sh"
+
+    # Attach BMC network to LZ VM so it can reach sushy-tools
+    ${SSH} "${TARGET}" "
+        if ! virsh domiflist ${VM_NAME} | grep -q enclave-bmc; then
+            virsh attach-interface ${VM_NAME} --type network --source enclave-bmc --model virtio --persistent 2>/dev/null || true
+        fi
+    "
+
+    ENV_END=$(date +%s)
+    ENV_DURATION=$(( ENV_END - ENV_START ))
+    echo "  Infra ready in ${ENV_DURATION}s ($(( ENV_DURATION / 60 ))m $(( ENV_DURATION % 60 ))s)"
+
+    MODE="standalone"
+    ENCLAVE_CLUSTER_NAME=""
+
+elif [ "${DEPLOY_MODE}" = "enclave" ]; then
+    # === Enclave mode: full infra via e2e-test-env ===
+    echo ""
+    echo "=== Mode: Enclave (full infra) ==="
+    echo ""
+
+    ENCLAVE_REPO="https://github.com/rh-ecosystem-edge/enclave.git"
+    ENCLAVE_REMOTE_DIR="\${HOME}/enclave"
+    ENCLAVE_BRANCH="${ENCLAVE_BRANCH:-main}"
+
+    echo "[1/6] Ensuring enclave repo on target (branch: ${ENCLAVE_BRANCH})..."
+    ${SSH} "${TARGET}" "
+        if [ -d ${ENCLAVE_REMOTE_DIR} ]; then
+            echo '  Enclave repo exists, updating...'
+            cd ${ENCLAVE_REMOTE_DIR} && git fetch origin && git checkout ${ENCLAVE_BRANCH} && git pull --ff-only 2>/dev/null || true
+        else
+            echo '  Cloning enclave repo...'
+            git clone -b ${ENCLAVE_BRANCH} ${ENCLAVE_REPO} ${ENCLAVE_REMOTE_DIR}
+        fi
+    "
+
+    echo "[2/6] Running enclave e2e-test-env (this may take a while)..."
+    ENV_START=$(date +%s)
+    ${SSH} "${TARGET}" "cd ${ENCLAVE_REMOTE_DIR} && DEV_SCRIPTS_PATH=\${DEV_SCRIPTS_PATH:-\${HOME}/dev-scripts} BASE_WORKING_DIR=\${BASE_WORKING_DIR:-/opt/clusters} OPENSHIFT_CI=true CI_TOKEN= make -f Makefile.ci e2e-test-env"
+    ENV_END=$(date +%s)
+    ENV_DURATION=$(( ENV_END - ENV_START ))
+    echo "  e2e-test-env completed in ${ENV_DURATION}s ($(( ENV_DURATION / 60 ))m $(( ENV_DURATION % 60 ))s)"
+
+    echo "[3/6] Getting Landing Zone IP..."
+    LZ_IP=$(${SSH} "${TARGET}" "cd ${ENCLAVE_REMOTE_DIR} && DEV_SCRIPTS_PATH=\${DEV_SCRIPTS_PATH:-\${HOME}/dev-scripts} BASE_WORKING_DIR=\${BASE_WORKING_DIR:-/opt/clusters} ENCLAVE_CLUSTER_NAME=\${ENCLAVE_CLUSTER_NAME:-enclave-test} ./scripts/utils/get_landing_zone_ip.sh")
+    if [ -z "${LZ_IP}" ]; then
+        echo "ERROR: Could not determine Landing Zone IP"
+        exit 1
+    fi
+    echo "  LZ IP: ${LZ_IP}"
+
+    MODE="enclave"
+    ENCLAVE_CLUSTER_NAME=$(${SSH} "${TARGET}" "cat ${ENCLAVE_REMOTE_DIR}/.enclave-cluster-name 2>/dev/null || echo enclave-test")
+
+else
+    echo "ERROR: Unknown DEPLOY_MODE: ${DEPLOY_MODE}"
+    echo "  Valid values: standalone, enclave"
     exit 1
 fi
-echo "  VM IP: ${VM_IP}"
 
-# Wait for SSH inside VM (via target as jump host)
-echo "  Waiting for SSH..."
-for i in $(seq 1 30); do
-    ${SSH} -J "${TARGET}" wizard@"${VM_IP}" "echo ready" 2>/dev/null && break
-    sleep 2
-done
+# --- Transfer and install RPMs ---
+if [ "${MODE}" != "standalone" ]; then
+    echo "[4/6] Transferring RPMs..."
+    [ -n "${ENCLAVE_RPM}" ] && ${SCP} "${ENCLAVE_RPM}" "${TARGET}:/tmp/enclave.rpm"
+    ${SCP} "${WIZARD_RPM}" "${TARGET}:/tmp/enclave-wizard.rpm"
+fi
 
-# --- Step 5: Provision inside VM ---
-echo "[5/6] Provisioning VM..."
-
-# Transfer RPM from target host into VM and install
 ${SSH} "${TARGET}" "
-  scp -o StrictHostKeyChecking=no /tmp/enclave*.rpm wizard@${VM_IP}:/tmp/
+    scp -o StrictHostKeyChecking=no /tmp/enclave*.rpm ${LZ_USER}@${LZ_IP}:/tmp/
 "
 
-${SSH} -J "${TARGET}" wizard@"${VM_IP}" "
-  sudo cloud-init status --wait 2>/dev/null || sleep 10
-  ls /tmp/enclave.rpm &>/dev/null && sudo dnf install -y /tmp/enclave.rpm 2>&1 | tail -5
-  sudo dnf install -y /tmp/enclave-wizard.rpm 2>&1 | tail -5
-" 2>&1 | grep -v "^$"
+echo "[5/6] Installing RPMs on Landing Zone..."
+RPM_START=$(date +%s)
+${SSH} "${TARGET}" "ssh -o StrictHostKeyChecking=no ${LZ_USER}@${LZ_IP} '
+    sudo cloud-init status --wait 2>/dev/null || sleep 5
+    ls /tmp/enclave.rpm &>/dev/null && sudo dnf install -y /tmp/enclave.rpm 2>&1 | tail -5
+    sudo dnf install -y /tmp/enclave-wizard.rpm 2>&1 | tail -5
+'" 2>&1 | grep -v "^$"
+RPM_END=$(date +%s)
+RPM_DURATION=$(( RPM_END - RPM_START ))
+echo "  RPM install completed in ${RPM_DURATION}s"
 
-# --- Step 6: Set up port forwarding and verify ---
+# --- Port forwarding ---
 echo "[6/6] Setting up port forwarding and verifying..."
-
-# Set up port forwarding using iptables NAT (works with external access,
-# PREROUTING DNAT bypasses firewalld zone rules)
 ${SSH} "${TARGET}" "
-  sysctl -w net.ipv4.ip_forward=1 >/dev/null
+    sysctl -w net.ipv4.ip_forward=1 >/dev/null
 
-  # Clean up ALL existing rules for our ports (from any previous VM)
-  cleanup_rules() {
-    local table=\$1 chain=\$2 port=\$3
+    cleanup_rules() {
+        local table=\$1 chain=\$2 port=\$3
+        while true; do
+            LINE=\$(iptables -t \$table -L \$chain -n --line-numbers 2>/dev/null | grep \"dpt:\$port\" | head -1 | awk '{print \$1}')
+            [ -z \"\$LINE\" ] && break
+            iptables -t \$table -D \$chain \$LINE
+        done
+    }
+    cleanup_rules nat PREROUTING ${HTTPS_PORT}
+    cleanup_rules nat PREROUTING ${HTTP_PORT}
+    cleanup_rules nat OUTPUT ${HTTPS_PORT}
+    cleanup_rules nat OUTPUT ${HTTP_PORT}
+
     while true; do
-      LINE=\$(iptables -t \$table -L \$chain -n --line-numbers 2>/dev/null | grep \"dpt:\$port\" | head -1 | awk '{print \$1}')
-      [ -z \"\$LINE\" ] && break
-      iptables -t \$table -D \$chain \$LINE
+        LINE=\$(iptables -L FORWARD -n --line-numbers 2>/dev/null | grep -E '${HTTP_PORT}|${HTTPS_PORT}' | head -1 | awk '{print \$1}')
+        [ -z \"\$LINE\" ] && break
+        iptables -D FORWARD \$LINE
     done
-  }
-  cleanup_rules nat PREROUTING ${HTTPS_PORT}
-  cleanup_rules nat PREROUTING ${HTTP_PORT}
-  cleanup_rules nat OUTPUT ${HTTPS_PORT}
-  cleanup_rules nat OUTPUT ${HTTP_PORT}
+    while true; do
+        LINE=\$(iptables -t nat -L POSTROUTING -n --line-numbers 2>/dev/null | grep MASQUERADE | grep '${LZ_IP}' | head -1 | awk '{print \$1}')
+        [ -z \"\$LINE\" ] && break
+        iptables -t nat -D POSTROUTING \$LINE
+    done
 
-  # Clean up old FORWARD and MASQUERADE rules for wizard VMs
-  while true; do
-    LINE=\$(iptables -L FORWARD -n --line-numbers 2>/dev/null | grep -E '${HTTP_PORT}|${HTTPS_PORT}' | head -1 | awk '{print \$1}')
-    [ -z \"\$LINE\" ] && break
-    iptables -D FORWARD \$LINE
-  done
-  while true; do
-    LINE=\$(iptables -t nat -L POSTROUTING -n --line-numbers 2>/dev/null | grep '192.168.122' | grep MASQUERADE | head -1 | awk '{print \$1}')
-    [ -z \"\$LINE\" ] && break
-    iptables -t nat -D POSTROUTING \$LINE
-  done
-
-  # DNAT external + local traffic to the VM
-  iptables -t nat -A PREROUTING -p tcp --dport ${HTTPS_PORT} -j DNAT --to-destination ${VM_IP}:${HTTPS_PORT}
-  iptables -t nat -A PREROUTING -p tcp --dport ${HTTP_PORT} -j DNAT --to-destination ${VM_IP}:${HTTP_PORT}
-  iptables -t nat -A OUTPUT -p tcp --dport ${HTTPS_PORT} -j DNAT --to-destination ${VM_IP}:${HTTPS_PORT}
-  iptables -t nat -A OUTPUT -p tcp --dport ${HTTP_PORT} -j DNAT --to-destination ${VM_IP}:${HTTP_PORT}
-  iptables -t nat -A POSTROUTING -d ${VM_IP} -j MASQUERADE
-  iptables -I FORWARD 1 -d ${VM_IP} -p tcp -m multiport --dports ${HTTP_PORT},${HTTPS_PORT} -j ACCEPT
-
-  # Save VM IP for teardown
-  echo '${VM_IP}' > /tmp/enclave-wizard-vm-ip
+    iptables -t nat -A PREROUTING -p tcp --dport ${HTTPS_PORT} -j DNAT --to-destination ${LZ_IP}:${HTTPS_PORT}
+    iptables -t nat -A PREROUTING -p tcp --dport ${HTTP_PORT} -j DNAT --to-destination ${LZ_IP}:${HTTP_PORT}
+    iptables -t nat -A OUTPUT -p tcp --dport ${HTTPS_PORT} -j DNAT --to-destination ${LZ_IP}:${HTTPS_PORT}
+    iptables -t nat -A OUTPUT -p tcp --dport ${HTTP_PORT} -j DNAT --to-destination ${LZ_IP}:${HTTP_PORT}
+    iptables -t nat -A POSTROUTING -d ${LZ_IP} -j MASQUERADE
+    iptables -I FORWARD 1 -d ${LZ_IP} -p tcp -m multiport --dports ${HTTP_PORT},${HTTPS_PORT} -j ACCEPT
 "
+
+# --- Save state file ---
+${SSH} "${TARGET}" "cat > /tmp/enclave-wizard-env <<STEOF
+MODE=${MODE}
+LZ_IP=${LZ_IP}
+LZ_USER=${LZ_USER}
+ENCLAVE_CLUSTER_NAME=${ENCLAVE_CLUSTER_NAME:-}
+VM_NAME=${VM_NAME:-}
+STEOF"
 
 sleep 3
 
-# Verify
+# --- Verify ---
 TARGET_HOST=$(echo "${TARGET}" | cut -d@ -f2)
 
 HTTPS_OK=false
 REDIRECT_OK=false
 EXT_OK=false
 
-${SSH} -J "${TARGET}" wizard@"${VM_IP}" "curl -sfk https://localhost:${HTTPS_PORT}/wizard" > /dev/null 2>&1 && HTTPS_OK=true
-REDIRECT_CODE=$(${SSH} -J "${TARGET}" wizard@"${VM_IP}" "curl -so /dev/null -w '%{http_code}' http://localhost:${HTTP_PORT}" 2>/dev/null || true)
+${SSH} "${TARGET}" "ssh -o StrictHostKeyChecking=no ${LZ_USER}@${LZ_IP} 'curl -sfk https://localhost:${HTTPS_PORT}/wizard'" > /dev/null 2>&1 && HTTPS_OK=true
+REDIRECT_CODE=$(${SSH} "${TARGET}" "ssh -o StrictHostKeyChecking=no ${LZ_USER}@${LZ_IP} 'curl -so /dev/null -w \"%{http_code}\" http://localhost:${HTTP_PORT}'" 2>/dev/null || true)
 [ "${REDIRECT_CODE}" = "301" ] && REDIRECT_OK=true
 curl -sfk --connect-timeout 5 "https://${TARGET_HOST}:${HTTPS_PORT}/wizard" > /dev/null 2>&1 && EXT_OK=true
+
+TOTAL_END=$(date +%s)
+TOTAL_DURATION=$(( TOTAL_END - TOTAL_START ))
 
 echo ""
 echo "  HTTPS (VM):          $( $HTTPS_OK && echo 'OK' || echo 'FAIL' )"
 echo "  HTTP→HTTPS redirect: $( $REDIRECT_OK && echo 'OK (301)' || echo "FAIL (got ${REDIRECT_CODE})" )"
-echo "  HTTPS (external):   $( $EXT_OK && echo 'OK' || echo 'FAIL - check port forwarding' )"
+echo "  HTTPS (external):    $( $EXT_OK && echo 'OK' || echo 'FAIL - check port forwarding' )"
 echo ""
 
 if $HTTPS_OK; then
-    echo "Wizard URL: https://${TARGET_HOST}:${HTTPS_PORT}/wizard"
-    echo "VM SSH:     ssh -J ${TARGET} wizard@${VM_IP}"
+    echo "=== Deployment Summary ==="
+    echo "  Wizard URL:  https://${TARGET_HOST}:${HTTPS_PORT}/wizard"
+    echo "  LZ SSH:      ssh -J ${TARGET} ${LZ_USER}@${LZ_IP}"
+    echo "  Mode:        ${MODE}"
+    echo ""
+    echo "  Timing:"
+    [ "${ENV_DURATION}" -gt 0 ] && echo "    Infra setup:   ${ENV_DURATION}s ($(( ENV_DURATION / 60 ))m $(( ENV_DURATION % 60 ))s)"
+    echo "    RPM install:   ${RPM_DURATION}s"
+    echo "    Total:         ${TOTAL_DURATION}s ($(( TOTAL_DURATION / 60 ))m $(( TOTAL_DURATION % 60 ))s)"
     echo ""
     echo "  (Self-signed cert — accept the browser warning)"
     echo ""
-    echo "To remove:  ./hack/teardown-wizard ${TARGET}"
+    echo "To remove:  make teardown TARGET=${TARGET}"
 else
     echo "Deployment failed. Check logs with:"
-    echo "  ssh -J ${TARGET} wizard@${VM_IP} 'sudo journalctl -u enclave-wizard-api -u enclave-wizard-ui --no-pager -n 20'"
+    echo "  ssh -J ${TARGET} ${LZ_USER}@${LZ_IP} 'sudo journalctl -u enclave-wizard-api -u enclave-wizard-ui --no-pager -n 20'"
     exit 1
 fi

@@ -29,11 +29,13 @@ TARGET=""
 TEST_FILTER=""
 SKIP_DEPLOY=false
 SKIP_TEARDOWN=false
+LZ_IP=""
 
 while [ $# -gt 0 ]; do
     case "$1" in
         --host)         TARGET="$2"; shift 2;;
         --test)         TEST_FILTER="$2"; shift 2;;
+        --lz-ip)        LZ_IP="$2"; shift 2;;
         --skip-deploy)  SKIP_DEPLOY=true; shift;;
         --skip-teardown) SKIP_TEARDOWN=true; shift;;
         -h|--help)      usage;;
@@ -44,10 +46,11 @@ done
 [ -z "${TARGET}" ] && usage
 
 SSH="ssh -o StrictHostKeyChecking=no"
-VM_NAME="enclave-wizard-lz"
+LZ_IP_ARGS=""
+[ -n "${LZ_IP}" ] && LZ_IP_ARGS="--lz-ip ${LZ_IP}"
 
 # --- Helpers available to test scripts ---
-export TARGET SSH VM_NAME REPO_DIR SCRIPT_DIR
+export TARGET SSH REPO_DIR SCRIPT_DIR
 
 PASS=0
 FAIL=0
@@ -70,7 +73,7 @@ run_test() {
 
 # --- Get VM IP ---
 get_vm_ip() {
-    ${SSH} "${TARGET}" "virsh domifaddr ${VM_NAME} 2>/dev/null | grep -oP '(\d+\.){3}\d+' | head -1"
+    ${SSH} "${TARGET}" "grep '^LZ_IP=' /tmp/enclave-wizard-env 2>/dev/null | cut -d= -f2"
 }
 
 export -f get_vm_ip
@@ -78,7 +81,7 @@ export -f get_vm_ip
 # --- Deploy if needed ---
 if ! $SKIP_DEPLOY; then
     echo "=== Deploying wizard stack ==="
-    "${REPO_DIR}/hack/deploy-wizard" "${TARGET}"
+    "${REPO_DIR}/hack/deploy-wizard" "${TARGET}" ${LZ_IP_ARGS}
 fi
 
 VM_IP=$(get_vm_ip)

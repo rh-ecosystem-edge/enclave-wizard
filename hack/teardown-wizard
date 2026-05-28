@@ -8,14 +8,23 @@ if [ $# -lt 1 ]; then
 fi
 
 TARGET="$1"
-VM_NAME="enclave-wizard-lz"
 HTTP_PORT=3001
 HTTPS_PORT=3443
 
 echo "=== Tearing down Enclave Wizard on ${TARGET} ==="
 
+# Read state file
+STATE=$(ssh -o StrictHostKeyChecking=no "${TARGET}" "cat /tmp/enclave-wizard-env 2>/dev/null" || true)
+if [ -z "${STATE}" ]; then
+    echo "WARNING: No state file found at /tmp/enclave-wizard-env"
+    echo "  Cleaning up iptables rules only"
+fi
+
+MODE=$(echo "${STATE}" | grep '^MODE=' | cut -d= -f2 || echo "")
+LZ_IP=$(echo "${STATE}" | grep '^LZ_IP=' | cut -d= -f2 || echo "")
+
+# Clean up iptables rules
 ssh -o StrictHostKeyChecking=no "${TARGET}" "
-    # Clean up ALL iptables rules for wizard ports (any VM IP)
     cleanup_rules() {
         local table=\$1 chain=\$2 port=\$3
         while true; do
@@ -35,17 +44,36 @@ ssh -o StrictHostKeyChecking=no "${TARGET}" "
         iptables -D FORWARD \$LINE
     done
     while true; do
-        LINE=\$(iptables -t nat -L POSTROUTING -n --line-numbers 2>/dev/null | grep '192.168.122' | grep MASQUERADE | head -1 | awk '{print \$1}')
+        LINE=\$(iptables -t nat -L POSTROUTING -n --line-numbers 2>/dev/null | grep MASQUERADE | head -1 | awk '{print \$1}')
         [ -z \"\$LINE\" ] && break
         iptables -t nat -D POSTROUTING \$LINE
     done
+"
 
-    # Destroy VM
-    virsh destroy ${VM_NAME} 2>/dev/null || true
-    virsh undefine ${VM_NAME} --remove-all-storage --nvram 2>/dev/null || true
+VM_NAME=$(echo "${STATE}" | grep '^VM_NAME=' | cut -d= -f2 || echo "")
 
-    # Clean up temp files
-    rm -f /tmp/enclave-wizard.rpm /tmp/enclave-wizard-vm-ip
+# Mode-specific cleanup
+if [ "${MODE}" = "enclave" ]; then
+    echo "Cleaning up enclave infrastructure..."
+    ssh -o StrictHostKeyChecking=no "${TARGET}" "
+        cd \${HOME}/enclave 2>/dev/null && DEV_SCRIPTS_PATH=\${DEV_SCRIPTS_PATH:-\${HOME}/dev-scripts} make -f Makefile.ci clean || echo 'Enclave cleanup skipped (repo not found)'
+    "
+elif [ "${MODE}" = "standalone" ]; then
+    if [ -n "${VM_NAME}" ]; then
+        echo "Destroying standalone VM: ${VM_NAME}..."
+        ssh -o StrictHostKeyChecking=no "${TARGET}" "
+            virsh destroy ${VM_NAME} 2>/dev/null || true
+            virsh undefine ${VM_NAME} --remove-all-storage --nvram 2>/dev/null || true
+        "
+    fi
+    echo "Tearing down BMC emulation..."
+    scp -o StrictHostKeyChecking=no -q "$(dirname "$0")/infra/teardown-bm-emulation.sh" "${TARGET}:/tmp/teardown-bm-emulation.sh"
+    ssh -o StrictHostKeyChecking=no "${TARGET}" "bash /tmp/teardown-bm-emulation.sh"
+fi
+
+# Remove state and temp files
+ssh -o StrictHostKeyChecking=no "${TARGET}" "
+    rm -f /tmp/enclave-wizard-env /tmp/enclave.rpm /tmp/enclave-wizard.rpm
 "
 
 echo "Done."
