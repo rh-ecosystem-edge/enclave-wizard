@@ -43,6 +43,11 @@ func (r *Reader) ReadAll() (*models.EnclaveConfig, error) {
 		return nil, fmt.Errorf("reading cloud_infra.yaml: %w", err)
 	}
 
+	topo, err := r.readTopology()
+	if err != nil {
+		return nil, fmt.Errorf("reading topology.yaml: %w", err)
+	}
+
 	// cloud_infra.yaml is the canonical location; fall back to global.yaml
 	if len(infra.DiscoveryHosts) == 0 && len(globalRaw.DiscoveryHosts) > 0 {
 		infra.DiscoveryHosts = globalRaw.DiscoveryHosts
@@ -52,6 +57,7 @@ func (r *Reader) ReadAll() (*models.EnclaveConfig, error) {
 		Global:       globalRaw.GlobalConfig,
 		Certificates: *certs,
 		CloudInfra:   *infra,
+		Topology:     *topo,
 	}, nil
 }
 
@@ -65,6 +71,10 @@ func (r *Reader) readCertificates() (*models.CertificatesConfig, error) {
 
 func (r *Reader) readCloudInfra() (*models.CloudInfraConfig, error) {
 	return readYAMLFile[models.CloudInfraConfig](filepath.Join(r.enclaveDir, "config", "cloud_infra.yaml"))
+}
+
+func (r *Reader) readTopology() (*models.TopologyConfig, error) {
+	return readYAMLFile[models.TopologyConfig](filepath.Join(r.enclaveDir, "config", "topology.yaml"))
 }
 
 func readYAMLFile[T any](path string) (*T, error) {

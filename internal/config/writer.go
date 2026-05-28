@@ -32,6 +32,9 @@ func (w *Writer) WriteAll(cfg *models.EnclaveConfig) error {
 	if err := writeYAMLFile(filepath.Join(configDir, "cloud_infra.yaml"), &cfg.CloudInfra); err != nil {
 		return fmt.Errorf("writing cloud_infra.yaml: %w", err)
 	}
+	if err := writeYAMLFile(filepath.Join(configDir, "topology.yaml"), &cfg.Topology); err != nil {
+		return fmt.Errorf("writing topology.yaml: %w", err)
+	}
 	return nil
 }
 
