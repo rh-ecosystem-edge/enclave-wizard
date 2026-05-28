@@ -47,7 +47,6 @@ export const InfrastructureStep: React.FC = () => {
     const updated = zones.filter((_, i) => i !== index);
     setZones(updated);
     if (removedName) {
-      // @ts-expect-error REMOVE_AZ action added in Task 6
       dispatch({ type: "REMOVE_AZ", name: removedName });
     }
   };

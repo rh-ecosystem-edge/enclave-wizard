@@ -31,7 +31,8 @@ export type WizardAction =
   | { type: "SET_PLUGINS"; plugins: unknown[] }
   | { type: "SET_VALIDATION_ERRORS"; errors: ValidationError[] }
   | { type: "SET_SHOW_VALIDATION"; show: boolean }
-  | { type: "LOAD_CONFIG"; config: ConfigData };
+  | { type: "LOAD_CONFIG"; config: ConfigData }
+  | { type: "REMOVE_AZ"; name: string };
 
 export const initialWizardState: WizardState = {
   currentStep: 0,
@@ -95,6 +96,24 @@ export function wizardReducer(
       return { ...state, showValidation: action.show };
     case "LOAD_CONFIG":
       return { ...state, configData: action.config };
+    case "REMOVE_AZ": {
+      const clearZone = (hosts: unknown[]): unknown[] =>
+        hosts.map((h: any) =>
+          h.zone === action.name ? { ...h, zone: "" } : h,
+        );
+      const globalData = { ...(state.configData.global as Record<string, unknown> ?? {}) };
+      if (Array.isArray(globalData.agent_hosts)) {
+        globalData.agent_hosts = clearZone(globalData.agent_hosts);
+      }
+      const infraData = { ...(state.configData.cloudInfra as Record<string, unknown> ?? {}) };
+      if (Array.isArray(infraData.discovery_hosts)) {
+        infraData.discovery_hosts = clearZone(infraData.discovery_hosts);
+      }
+      return {
+        ...state,
+        configData: { ...state.configData, global: globalData, cloudInfra: infraData },
+      };
+    }
     default:
       return state;
   }

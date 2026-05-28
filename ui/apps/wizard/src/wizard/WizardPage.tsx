@@ -30,6 +30,7 @@ import { STEP_REQUIRED_FIELDS } from "./stepFields.ts";
 import { CaasStep } from "./steps/CaasStep.tsx";
 import { DeployStep } from "./steps/DeployStep.tsx";
 import { HubClusterStep } from "./steps/HubClusterStep.tsx";
+import { InfrastructureStep } from "./steps/InfrastructureStep.tsx";
 import { LandingZoneStep } from "./steps/LandingZoneStep.tsx";
 import { ReviewStep } from "./steps/ReviewStep.tsx";
 import { SelectFlavorStep } from "./steps/SelectFlavorStep.tsx";
@@ -120,6 +121,7 @@ interface ConfigSubStep {
 const TOP_STEPS: StepDef[] = [
   { id: "welcome", label: "Welcome" },
   { id: "flavor", label: "Select" },
+  { id: "infrastructure", label: "Infrastructure" },
   { id: "configure", label: "Configure" },
   { id: "review", label: "Review" },
   { id: "deploy", label: "Deploy" },
@@ -222,6 +224,8 @@ function StepContent({
       return <WelcomeStep />;
     case "flavor":
       return <SelectFlavorStep />;
+    case "infrastructure":
+      return <InfrastructureStep />;
     case "configure":
       return (
         <ConfigureStep
