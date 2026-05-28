@@ -81,6 +81,13 @@ export const HubClusterStep: React.FC = () => {
   const configData = state.configData as Record<string, unknown>;
   const globalData = (configData.global ?? {}) as Record<string, unknown>;
 
+  const topologyData = (configData.topology ?? {}) as Record<string, unknown>;
+  const azNames: string[] = Array.isArray(topologyData.availability_zones)
+    ? (topologyData.availability_zones as { name: string }[])
+        .map((az) => az.name)
+        .filter(Boolean)
+    : [];
+
   const agentHosts: HostEntry[] = Array.isArray(globalData.agent_hosts)
     ? (globalData.agent_hosts as HostEntry[])
     : [];
@@ -204,6 +211,7 @@ export const HubClusterStep: React.FC = () => {
                     setAgentHosts(updated);
                   }}
                   label="Node"
+                  availabilityZones={azNames}
                 />
               </FlexItem>
               <FlexItem>

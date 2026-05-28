@@ -2,6 +2,8 @@ import {
   Card,
   CardBody,
   FormGroup,
+  FormSelect,
+  FormSelectOption,
   TextInput,
   Title,
 } from "@patternfly/react-core";
@@ -16,6 +18,7 @@ interface HostEntry {
   redfishUser: string;
   redfishPassword: string;
   rootDisk: string;
+  zone?: string;
 }
 
 interface HostEntryCardProps {
@@ -23,6 +26,7 @@ interface HostEntryCardProps {
   host: HostEntry;
   onChange: (host: HostEntry) => void;
   label?: string;
+  availabilityZones?: string[];
 }
 
 export type { HostEntry };
@@ -32,6 +36,7 @@ export const HostEntryCard: React.FC<HostEntryCardProps> = ({
   host,
   onChange,
   label = "Host",
+  availabilityZones,
 }) => {
   const prefix = `${label.toLowerCase().replace(/\s+/g, "-")}-${index}`;
 
@@ -120,6 +125,25 @@ export const HostEntryCard: React.FC<HostEntryCardProps> = ({
             />
           </FormGroup>
           </div>
+          {availabilityZones && availabilityZones.length >= 2 && (
+            <FormGroup
+              label="Availability Zone"
+              isRequired
+              fieldId={`${prefix}-zone`}
+            >
+              <FormSelect
+                id={`${prefix}-zone`}
+                value={host.zone ?? ""}
+                onChange={(_e, v) => update("zone", v)}
+                isRequired
+              >
+                <FormSelectOption value="" label="Select a zone" isPlaceholder />
+                {availabilityZones.map((az) => (
+                  <FormSelectOption key={az} value={az} label={az} />
+                ))}
+              </FormSelect>
+            </FormGroup>
+          )}
         </div>
       </CardBody>
     </Card>
