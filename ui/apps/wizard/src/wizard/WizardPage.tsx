@@ -32,6 +32,7 @@ import { DeployStep } from "./steps/DeployStep.tsx";
 import { HubClusterStep } from "./steps/HubClusterStep.tsx";
 import { InfrastructureStep } from "./steps/InfrastructureStep.tsx";
 import { LandingZoneStep } from "./steps/LandingZoneStep.tsx";
+import { NetworkDiscoveryStep } from "./steps/NetworkDiscoveryStep.tsx";
 import { ReviewStep } from "./steps/ReviewStep.tsx";
 import { SelectFlavorStep } from "./steps/SelectFlavorStep.tsx";
 import { StorageStep } from "./steps/StorageStep.tsx";
@@ -121,6 +122,7 @@ interface ConfigSubStep {
 const TOP_STEPS: StepDef[] = [
   { id: "welcome", label: "Welcome" },
   { id: "flavor", label: "Select" },
+  { id: "discovery", label: "Discovery" },
   { id: "infrastructure", label: "Infrastructure" },
   { id: "configure", label: "Configure" },
   { id: "review", label: "Review" },
@@ -224,6 +226,8 @@ function StepContent({
       return <WelcomeStep />;
     case "flavor":
       return <SelectFlavorStep />;
+    case "discovery":
+      return <NetworkDiscoveryStep />;
     case "infrastructure":
       return <InfrastructureStep />;
     case "configure":

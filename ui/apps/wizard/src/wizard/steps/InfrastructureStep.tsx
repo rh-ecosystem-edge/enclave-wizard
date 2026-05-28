@@ -8,6 +8,11 @@ import {
 } from "@patternfly/react-core";
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 import type React from "react";
+import type {
+  NetrisSite,
+  NetrisServer,
+  NetrisSubnet,
+} from "../../api/useNetrisApi.ts";
 import { useWizard } from "../WizardContext.tsx";
 import {
   type AvailabilityZone,
@@ -26,6 +31,19 @@ export const InfrastructureStep: React.FC = () => {
   )
     ? (topologyData.availability_zones as AvailabilityZone[])
     : [];
+
+  const discovery = (configData as Record<string, unknown>).netrisDiscovery as {
+    sites: NetrisSite[];
+    inventory: { servers: NetrisServer[] };
+    ipam: { subnets: NetrisSubnet[] };
+  } | null;
+
+  const hasDiscovery = discovery != null;
+  const sites = discovery?.sites ?? [];
+  const servers = discovery?.inventory?.servers ?? [];
+  const subnets = discovery?.ipam?.subnets ?? [];
+
+  const usedSiteIds = zones.flatMap((z) => z.siteIds ?? []);
 
   const setZones = (updated: AvailabilityZone[]) =>
     dispatch({
@@ -57,7 +75,9 @@ export const InfrastructureStep: React.FC = () => {
         Availability Zones
       </Title>
       <Content component="p" className={stepStyles.subtitle}>
-        Define your Availability Zones
+        {hasDiscovery
+          ? "Create availability zones and populate them from discovered Netris sites, or define them manually."
+          : "Define your Availability Zones"}
       </Content>
 
       <Flex
@@ -83,7 +103,11 @@ export const InfrastructureStep: React.FC = () => {
 
       {zones.length === 0 && (
         <p className={stepStyles.emptyHint}>
-          No availability zones defined. Click &quot;Add Availability Zone&quot; to create zones for your infrastructure.
+          No availability zones defined. Click &quot;Add Availability Zone&quot;
+          to create zones for your infrastructure.
+          {hasDiscovery && (
+            <> You can populate zones from the Netris sites discovered in the previous step.</>
+          )}
         </p>
       )}
 
@@ -96,6 +120,10 @@ export const InfrastructureStep: React.FC = () => {
                   index={i}
                   zone={zone}
                   onChange={(z) => updateZone(i, z)}
+                  sites={hasDiscovery ? sites : undefined}
+                  servers={hasDiscovery ? servers : undefined}
+                  subnets={hasDiscovery ? subnets : undefined}
+                  usedSiteIds={usedSiteIds}
                 />
               </FlexItem>
               <FlexItem>
