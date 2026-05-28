@@ -11,6 +11,7 @@ type DiscoveredNode struct {
 	RootDisk       string            `json:"rootDisk,omitempty"`
 	SiteName       string            `json:"siteName,omitempty"`
 	SiteID         int               `json:"siteId,omitempty"`
+	SiteIDs        []int             `json:"siteIds,omitempty"`
 	Description    string            `json:"description,omitempty"`
 	CPUs           int               `json:"cpus,omitempty"`
 	RAMGB          int               `json:"ramGb,omitempty"`

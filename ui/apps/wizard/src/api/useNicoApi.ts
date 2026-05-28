@@ -86,5 +86,10 @@ export function useNicoApi() {
     [token],
   );
 
-  return { connect, getInventory };
+  const disconnect = useCallback(
+    () => fetchJSON<void>("/api/v1/nico/disconnect", token, { method: "POST" }),
+    [token],
+  );
+
+  return { connect, disconnect, getInventory };
 }

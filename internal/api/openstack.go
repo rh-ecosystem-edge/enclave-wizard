@@ -39,6 +39,14 @@ func (h *OpenStackHandler) Register(api huma.API) {
 	}, h.connect)
 
 	huma.Register(api, huma.Operation{
+		OperationID: "openstack-disconnect",
+		Method:      http.MethodPost,
+		Path:        "/api/v1/openstack/disconnect",
+		Summary:     "Disconnect from OpenStack",
+		Tags:        []string{"OpenStack"},
+	}, h.disconnect)
+
+	huma.Register(api, huma.Operation{
 		OperationID: "openstack-inventory",
 		Method:      http.MethodGet,
 		Path:        "/api/v1/openstack/inventory",
@@ -54,6 +62,11 @@ func (h *OpenStackHandler) connect(_ context.Context, input *OSConnectInput) (*O
 		return nil, huma.Error502BadGateway("failed to connect to OpenStack", err)
 	}
 	return &OSConnectOutput{Body: *resp}, nil
+}
+
+func (h *OpenStackHandler) disconnect(_ context.Context, _ *struct{}) (*struct{}, error) {
+	h.client.Disconnect()
+	return nil, nil
 }
 
 func (h *OpenStackHandler) inventory(_ context.Context, _ *struct{}) (*OSInventoryOutput, error) {

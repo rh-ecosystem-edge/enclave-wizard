@@ -1,9 +1,12 @@
 import {
   Card,
   CardBody,
+  Flex,
+  FlexItem,
   FormGroup,
   FormSelect,
   FormSelectOption,
+  Label,
   TextInput,
   Title,
 } from "@patternfly/react-core";
@@ -19,6 +22,7 @@ interface HostEntry {
   redfishPassword: string;
   rootDisk: string;
   zone?: string;
+  sources?: string[];
 }
 
 interface HostEntryCardProps {
@@ -27,6 +31,7 @@ interface HostEntryCardProps {
   onChange: (host: HostEntry) => void;
   label?: string;
   availabilityZones?: string[];
+  zoneReadOnly?: boolean;
 }
 
 export type { HostEntry };
@@ -37,6 +42,7 @@ export const HostEntryCard: React.FC<HostEntryCardProps> = ({
   onChange,
   label = "Host",
   availabilityZones,
+  zoneReadOnly,
 }) => {
   const prefix = `${label.toLowerCase().replace(/\s+/g, "-")}-${index}`;
 
@@ -46,9 +52,18 @@ export const HostEntryCard: React.FC<HostEntryCardProps> = ({
   return (
     <Card isRounded isCompact>
       <CardBody>
-        <Title headingLevel="h4" size="md">
-          {label} {index + 1}
-        </Title>
+        <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
+          <FlexItem>
+            <Title headingLevel="h4" size="md">
+              {label} {index + 1}
+            </Title>
+          </FlexItem>
+          {host.sources?.map((src) => (
+            <FlexItem key={src}>
+              <Label isCompact>{src}</Label>
+            </FlexItem>
+          ))}
+        </Flex>
         <div className={styles.grid}>
           <FormGroup label="Name" isRequired fieldId={`${prefix}-name`}>
             <TextInput
@@ -136,6 +151,7 @@ export const HostEntryCard: React.FC<HostEntryCardProps> = ({
                 value={host.zone ?? ""}
                 onChange={(_e, v) => update("zone", v)}
                 isRequired
+                isDisabled={zoneReadOnly}
               >
                 <FormSelectOption value="" label="Select a zone" isPlaceholder />
                 {availabilityZones.map((az) => (

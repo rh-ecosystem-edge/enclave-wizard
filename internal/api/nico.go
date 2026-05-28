@@ -39,6 +39,14 @@ func (h *NicoHandler) Register(api huma.API) {
 	}, h.connect)
 
 	huma.Register(api, huma.Operation{
+		OperationID: "nico-disconnect",
+		Method:      http.MethodPost,
+		Path:        "/api/v1/nico/disconnect",
+		Summary:     "Disconnect from NICo controller",
+		Tags:        []string{"NICo"},
+	}, h.disconnect)
+
+	huma.Register(api, huma.Operation{
 		OperationID: "nico-inventory",
 		Method:      http.MethodGet,
 		Path:        "/api/v1/nico/inventory",
@@ -54,6 +62,11 @@ func (h *NicoHandler) connect(_ context.Context, input *NicoConnectInput) (*Nico
 		return nil, huma.Error502BadGateway("failed to connect to NICo controller", err)
 	}
 	return &NicoConnectOutput{Body: *resp}, nil
+}
+
+func (h *NicoHandler) disconnect(_ context.Context, _ *struct{}) (*struct{}, error) {
+	h.client.Disconnect()
+	return nil, nil
 }
 
 func (h *NicoHandler) inventory(_ context.Context, _ *struct{}) (*NicoInventoryOutput, error) {

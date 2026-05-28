@@ -87,6 +87,14 @@ func (h *NetrisHandler) Register(api huma.API) {
 	}, h.connect)
 
 	huma.Register(api, huma.Operation{
+		OperationID: "netris-disconnect",
+		Method:      http.MethodPost,
+		Path:        "/api/v1/netris/disconnect",
+		Summary:     "Disconnect from Netris controller",
+		Tags:        []string{"Netris"},
+	}, h.disconnect)
+
+	huma.Register(api, huma.Operation{
 		OperationID: "netris-sites",
 		Method:      http.MethodGet,
 		Path:        "/api/v1/netris/sites",
@@ -136,6 +144,11 @@ func (h *NetrisHandler) connect(_ context.Context, input *NetrisConnectInput) (*
 		return nil, huma.Error502BadGateway("failed to connect to Netris controller", err)
 	}
 	return &NetrisConnectOutput{Body: *resp}, nil
+}
+
+func (h *NetrisHandler) disconnect(_ context.Context, _ *struct{}) (*struct{}, error) {
+	h.client.Disconnect()
+	return nil, nil
 }
 
 func (h *NetrisHandler) sites(_ context.Context, _ *struct{}) (*NetrisSitesOutput, error) {

@@ -98,5 +98,10 @@ export function useNetboxApi() {
     [token],
   );
 
-  return { connect, getInventory };
+  const disconnect = useCallback(
+    () => fetchJSON<void>("/api/v1/netbox/disconnect", token, { method: "POST" }),
+    [token],
+  );
+
+  return { connect, disconnect, getInventory };
 }

@@ -142,5 +142,10 @@ export function useNetrisApi(): NetrisApiClient {
     [token],
   );
 
-  return { connect, getSites, getInventory, getVPCs, getIPAM };
+  const disconnect = useCallback(
+    () => fetchJSON<void>("/api/v1/netris/disconnect", token, { method: "POST" }),
+    [token],
+  );
+
+  return { connect, disconnect, getSites, getInventory, getVPCs, getIPAM };
 }

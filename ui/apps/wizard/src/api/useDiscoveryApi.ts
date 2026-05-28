@@ -12,6 +12,7 @@ export interface DiscoveredNode {
   rootDisk: string;
   siteName: string;
   siteId: number;
+  siteIds: number[];
   description: string;
   cpus: number;
   ramGb: number;

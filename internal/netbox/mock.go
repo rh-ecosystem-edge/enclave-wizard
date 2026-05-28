@@ -2,7 +2,9 @@ package netbox
 
 import "github.com/rh-ecosystem-edge/enclave-wizard/internal/models"
 
-type MockClient struct{}
+type MockClient struct {
+	connected bool
+}
 
 func NewMockClient() *MockClient { return &MockClient{} }
 
@@ -12,22 +14,21 @@ var mockSites = []models.NetboxSite{
 }
 
 var mockRacks = []models.NetboxRack{
-	{ID: 1, Name: "RDU-A1", Site: "Raleigh DC", UHeight: 42, Devices: 7, UtilPct: 78.5},
-	{ID: 2, Name: "RDU-B1", Site: "Raleigh DC", UHeight: 42, Devices: 5, UtilPct: 52.3},
-	{ID: 3, Name: "BOS-C1", Site: "Boston DC", UHeight: 42, Devices: 5, UtilPct: 48.8},
+	{ID: 1, Name: "RDU-A1", Site: "Raleigh DC", UHeight: 42, Devices: 5, UtilPct: 71.4},
+	{ID: 2, Name: "RDU-B1", Site: "Raleigh DC", UHeight: 42, Devices: 4, UtilPct: 47.6},
+	{ID: 3, Name: "BOS-C1", Site: "Boston DC", UHeight: 42, Devices: 4, UtilPct: 42.8},
 }
 
+// NetBox knows: srv-rdu-a-01, a-02, srv-rdu-b-01, b-02, b-03, srv-bos-a-01, a-02, a-03
 var mockDevices = []models.NetboxDevice{
 	{ID: 1, Name: "srv-rdu-a-01", DeviceType: "DGX H100", Manufacturer: "NVIDIA", Role: "gpu-server", Site: "Raleigh DC", Rack: "RDU-A1", Position: 1, SerialNumber: "DGX-RDU-A01", Status: "active", PrimaryIP: "10.10.1.100/24", Tags: []string{"gpu", "h100"}},
 	{ID: 2, Name: "srv-rdu-a-02", DeviceType: "DGX H100", Manufacturer: "NVIDIA", Role: "gpu-server", Site: "Raleigh DC", Rack: "RDU-A1", Position: 11, SerialNumber: "DGX-RDU-A02", Status: "active", PrimaryIP: "10.10.1.101/24", Tags: []string{"gpu", "h100"}},
-	{ID: 3, Name: "srv-rdu-a-03", DeviceType: "DGX H100", Manufacturer: "NVIDIA", Role: "gpu-server", Site: "Raleigh DC", Rack: "RDU-A1", Position: 21, SerialNumber: "DGX-RDU-A03", Status: "active", PrimaryIP: "10.10.1.102/24", Tags: []string{"gpu", "h100"}},
-	{ID: 4, Name: "srv-rdu-a-04", DeviceType: "ProLiant DL380 Gen10 Plus", Manufacturer: "HPE", Role: "infra-server", Site: "Raleigh DC", Rack: "RDU-A1", Position: 31, SerialNumber: "HPE-RDU-A04", Status: "active", PrimaryIP: "10.10.1.103/24", Tags: []string{"infra"}},
 	{ID: 5, Name: "srv-rdu-b-01", DeviceType: "DGX H100", Manufacturer: "NVIDIA", Role: "gpu-server", Site: "Raleigh DC", Rack: "RDU-B1", Position: 1, SerialNumber: "DGX-RDU-B01", Status: "active", PrimaryIP: "10.10.2.100/24", Tags: []string{"gpu", "h100"}},
 	{ID: 6, Name: "srv-rdu-b-02", DeviceType: "DGX H100", Manufacturer: "NVIDIA", Role: "gpu-server", Site: "Raleigh DC", Rack: "RDU-B1", Position: 11, SerialNumber: "DGX-RDU-B02", Status: "active", PrimaryIP: "10.10.2.101/24", Tags: []string{"gpu", "h100"}},
 	{ID: 7, Name: "srv-rdu-b-03", DeviceType: "ProLiant DL380 Gen10 Plus", Manufacturer: "HPE", Role: "infra-server", Site: "Raleigh DC", Rack: "RDU-B1", Position: 21, SerialNumber: "HPE-RDU-B03", Status: "active", PrimaryIP: "10.10.2.102/24", Tags: []string{"infra"}},
 	{ID: 8, Name: "srv-bos-a-01", DeviceType: "DGX H100", Manufacturer: "NVIDIA", Role: "gpu-server", Site: "Boston DC", Rack: "BOS-C1", Position: 1, SerialNumber: "DGX-BOS-A01", Status: "active", PrimaryIP: "10.20.1.100/24", Tags: []string{"gpu", "h100"}},
 	{ID: 9, Name: "srv-bos-a-02", DeviceType: "DGX H100", Manufacturer: "NVIDIA", Role: "gpu-server", Site: "Boston DC", Rack: "BOS-C1", Position: 11, SerialNumber: "DGX-BOS-A02", Status: "active", PrimaryIP: "10.20.1.101/24", Tags: []string{"gpu", "h100"}},
-	{ID: 10, Name: "srv-bos-a-03", DeviceType: "ProLiant DL380 Gen10 Plus", Manufacturer: "HPE", Role: "infra-server", Site: "Boston DC", Rack: "BOS-C1", Position: 21, SerialNumber: "HPE-BOS-A03", Status: "active", PrimaryIP: "10.20.1.102/24", Tags: []string{"infra"}},
+	{ID: 10, Name: "srv-bos-a-03", DeviceType: "ProLiant DL380 Gen10 Plus", Manufacturer: "HPE", Role: "infra-server", Site: "Boston DC", Rack: "BOS-C1", Position: 21, SerialNumber: "HPE-BOS-A03", Status: "planned", Tags: []string{"infra", "planned"}},
 	// Switches
 	{ID: 11, Name: "sw-rdu-a-spine-01", DeviceType: "Spectrum-4 SN5600", Manufacturer: "NVIDIA", Role: "spine", Site: "Raleigh DC", Rack: "RDU-A1", Position: 40, Status: "active"},
 	{ID: 12, Name: "sw-rdu-a-leaf-01", DeviceType: "Spectrum-4 SN5400", Manufacturer: "NVIDIA", Role: "leaf", Site: "Raleigh DC", Rack: "RDU-A1", Position: 38, Status: "active"},
@@ -54,6 +55,7 @@ var mockVRFs = []models.NetboxVRF{
 }
 
 func (c *MockClient) Connect(_ models.NetboxConnectRequest) (*models.NetboxConnectResponse, error) {
+	c.connected = true
 	return &models.NetboxConnectResponse{
 		Connected:   true,
 		Endpoint:    "https://netbox.example.com",
@@ -63,7 +65,12 @@ func (c *MockClient) Connect(_ models.NetboxConnectRequest) (*models.NetboxConne
 	}, nil
 }
 
+func (c *MockClient) Disconnect() { c.connected = false }
+
 func (c *MockClient) Inventory() (*models.NetboxInventory, error) {
+	if !c.connected {
+		return &models.NetboxInventory{}, nil
+	}
 	return &models.NetboxInventory{
 		Sites:    mockSites,
 		Devices:  mockDevices,

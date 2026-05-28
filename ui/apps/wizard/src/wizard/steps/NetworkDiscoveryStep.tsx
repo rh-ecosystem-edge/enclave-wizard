@@ -96,10 +96,13 @@ const NetrisProvider: React.FC = () => {
     }
   };
 
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
+    await netrisApi.disconnect();
     setStatus("disconnected");
     setSites([]); setInventory(null); setIPAM(null); setVPCs([]);
-    dispatch({ type: "SET_FIELD", path: "discovery", value: null });
+    const merged = await discoveryApi.getMergedInventory();
+    const hasData = merged.nodes?.length > 0 || merged.sites?.length > 0;
+    dispatch({ type: "SET_FIELD", path: "discovery", value: hasData ? merged : null });
   };
 
   const toggleSite = (id: number) =>
@@ -250,9 +253,13 @@ const NvidiaProvider: React.FC = () => {
     }
   };
 
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
+    await nicoApi.disconnect();
     setStatus("disconnected");
     setInventory(null);
+    const merged = await discoveryApi.getMergedInventory();
+    const hasData = merged.nodes?.length > 0 || merged.sites?.length > 0;
+    dispatch({ type: "SET_FIELD", path: "discovery", value: hasData ? merged : null });
   };
 
   const gpuServers = inventory?.servers.filter((s) => s.gpus?.length > 0) ?? [];
@@ -445,9 +452,13 @@ const OpenStackProvider: React.FC = () => {
     }
   };
 
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
+    await osApi.disconnect();
     setStatus("disconnected");
     setInventory(null);
+    const merged = await discoveryApi.getMergedInventory();
+    const hasData = merged.nodes?.length > 0 || merged.sites?.length > 0;
+    dispatch({ type: "SET_FIELD", path: "discovery", value: hasData ? merged : null });
   };
 
   const toggleAZ = (name: string) =>
@@ -626,9 +637,13 @@ const NetboxProvider: React.FC = () => {
     }
   };
 
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
+    await nbApi.disconnect();
     setStatus("disconnected");
     setInventory(null);
+    const merged = await discoveryApi.getMergedInventory();
+    const hasData = merged.nodes?.length > 0 || merged.sites?.length > 0;
+    dispatch({ type: "SET_FIELD", path: "discovery", value: hasData ? merged : null });
   };
 
   const toggleSite = (name: string) =>

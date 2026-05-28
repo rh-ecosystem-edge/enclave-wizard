@@ -4,6 +4,7 @@ import "github.com/rh-ecosystem-edge/enclave-wizard/internal/models"
 
 type Client interface {
 	Connect(req models.NetrisConnectRequest) (*models.NetrisConnectResponse, error)
+	Disconnect()
 	Sites() ([]models.NetrisSite, error)
 	Inventory(siteID *int) (*models.NetrisInventory, error)
 	VPCs() ([]models.NetrisVPC, error)

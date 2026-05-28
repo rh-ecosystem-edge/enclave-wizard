@@ -35,6 +35,7 @@ func MergeFromNetris(
 				RootDisk:    "/dev/sda",
 				SiteName:    srv.SiteName,
 				SiteID:      srv.SiteID,
+				SiteIDs:     []int{srv.SiteID},
 				Description: srv.Description,
 				PortCount:   srv.PortCount,
 				Labels:      srv.Labels,
@@ -143,6 +144,13 @@ func MergeOpenStackInto(inv *models.DiscoveredInventory, osInv *models.OSInvento
 		serverIndex[n.Name] = i
 	}
 
+	azSiteMap := make(map[string]int)
+	for _, site := range inv.Sites {
+		if containsSource(site.Sources, "openstack") {
+			azSiteMap[site.Name] = site.ID
+		}
+	}
+
 	for _, node := range osInv.BaremetalNodes {
 		bmcIP := node.BmcAddress
 		if idx := len("redfish://"); len(bmcIP) > idx {
@@ -150,6 +158,8 @@ func MergeOpenStackInto(inv *models.DiscoveredInventory, osInv *models.OSInvento
 				bmcIP = bmcIP[idx : idx+slashIdx]
 			}
 		}
+
+		osSiteID := azSiteMap[node.AvailabilityZone]
 
 		if idx, ok := serverIndex[node.Name]; ok {
 			n := &inv.Nodes[idx]
@@ -176,6 +186,9 @@ func MergeOpenStackInto(inv *models.DiscoveredInventory, osInv *models.OSInvento
 			}
 			if n.Description == "" {
 				n.Description = node.Model
+			}
+			if osSiteID > 0 && !containsInt(n.SiteIDs, osSiteID) {
+				n.SiteIDs = append(n.SiteIDs, osSiteID)
 			}
 			if !containsSource(n.Sources, "openstack") {
 				n.Sources = append(n.Sources, "openstack")
@@ -233,6 +246,13 @@ func MergeNetboxInto(inv *models.DiscoveredInventory, nbInv *models.NetboxInvent
 		})
 	}
 
+	nbSiteMap := make(map[string]int)
+	for _, site := range inv.Sites {
+		if containsSource(site.Sources, "netbox") {
+			nbSiteMap[site.Name] = site.ID
+		}
+	}
+
 	serverIndex := make(map[string]int)
 	for i, n := range inv.Nodes {
 		serverIndex[n.Name] = i
@@ -244,6 +264,8 @@ func MergeNetboxInto(inv *models.DiscoveredInventory, nbInv *models.NetboxInvent
 			rackPos = fmt.Sprintf("%s U%.0f", dev.Rack, dev.Position)
 		}
 
+		nbSiteID := nbSiteMap[dev.Site]
+
 		if idx, ok := serverIndex[dev.Name]; ok {
 			n := &inv.Nodes[idx]
 			if n.RackPosition == "" {
@@ -252,18 +274,26 @@ func MergeNetboxInto(inv *models.DiscoveredInventory, nbInv *models.NetboxInvent
 			if n.Description == "" {
 				n.Description = fmt.Sprintf("%s %s", dev.Manufacturer, dev.DeviceType)
 			}
+			if nbSiteID > 0 && !containsInt(n.SiteIDs, nbSiteID) {
+				n.SiteIDs = append(n.SiteIDs, nbSiteID)
+			}
 			if !containsSource(n.Sources, "netbox") {
 				n.Sources = append(n.Sources, "netbox")
 			}
 			continue
 		}
 
+		siteIDs := []int{}
+		if nbSiteID > 0 {
+			siteIDs = []int{nbSiteID}
+		}
 		inv.Nodes = append(inv.Nodes, models.DiscoveredNode{
 			ID:           fmt.Sprintf("nb-%d", dev.ID),
 			Name:         dev.Name,
 			Description:  fmt.Sprintf("%s %s", dev.Manufacturer, dev.DeviceType),
 			IPAddress:    dev.PrimaryIP,
 			RackPosition: rackPos,
+			SiteIDs:      siteIDs,
 			Sources:      []string{"netbox"},
 		})
 	}
@@ -290,6 +320,15 @@ func indexOf(s string, c byte) int {
 		}
 	}
 	return -1
+}
+
+func containsInt(slice []int, v int) bool {
+	for _, i := range slice {
+		if i == v {
+			return true
+		}
+	}
+	return false
 }
 
 func containsSource(sources []string, s string) bool {

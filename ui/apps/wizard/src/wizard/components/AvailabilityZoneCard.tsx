@@ -6,6 +6,7 @@ import {
   FormSelectOption,
   HelperText,
   HelperTextItem,
+  Label,
   TextInput,
   Title,
 } from "@patternfly/react-core";
@@ -65,7 +66,10 @@ export const AvailabilityZoneCard: React.FC<AvailabilityZoneCardProps> = ({
       ? current.filter((id) => id !== siteId)
       : [...current, siteId];
 
-    const siteNodes = nodes.filter((n) => next.includes(n.siteId));
+    const siteNodes = nodes.filter((n) => {
+      const allSiteIds = n.siteIds?.length ? n.siteIds : (n.siteId ? [n.siteId] : []);
+      return allSiteIds.some((sid: number) => next.includes(sid));
+    });
     const nodeIds = siteNodes.map((n) => n.id);
 
     const siteNetworks = networks.filter(
@@ -209,9 +213,13 @@ export const AvailabilityZoneCard: React.FC<AvailabilityZoneCardProps> = ({
                   <span key={node.id} className={styles.serverChip}>
                     {node.name}
                     <span className={styles.serverDetail}>
-                      BMC: {node.bmcIp}
+                      {node.bmcIp && <>BMC: {node.bmcIp}</>}
                       {node.gpuType && <> &middot; {node.gpuCount}x {node.gpuType}</>}
+                      {node.rackPosition && <> &middot; {node.rackPosition}</>}
                     </span>
+                    {node.sources?.map((src) => (
+                      <Label key={src} isCompact style={{ marginLeft: "0.25rem" }}>{src}</Label>
+                    ))}
                   </span>
                 ))}
               </div>

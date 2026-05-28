@@ -39,6 +39,14 @@ func (h *NetboxHandler) Register(api huma.API) {
 	}, h.connect)
 
 	huma.Register(api, huma.Operation{
+		OperationID: "netbox-disconnect",
+		Method:      http.MethodPost,
+		Path:        "/api/v1/netbox/disconnect",
+		Summary:     "Disconnect from NetBox",
+		Tags:        []string{"NetBox"},
+	}, h.disconnect)
+
+	huma.Register(api, huma.Operation{
 		OperationID: "netbox-inventory",
 		Method:      http.MethodGet,
 		Path:        "/api/v1/netbox/inventory",
@@ -54,6 +62,11 @@ func (h *NetboxHandler) connect(_ context.Context, input *NetboxConnectInput) (*
 		return nil, huma.Error502BadGateway("failed to connect to NetBox", err)
 	}
 	return &NetboxConnectOutput{Body: *resp}, nil
+}
+
+func (h *NetboxHandler) disconnect(_ context.Context, _ *struct{}) (*struct{}, error) {
+	h.client.Disconnect()
+	return nil, nil
 }
 
 func (h *NetboxHandler) inventory(_ context.Context, _ *struct{}) (*NetboxInventoryOutput, error) {

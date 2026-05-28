@@ -14,6 +14,7 @@ import { MinusCircleIcon } from "@patternfly/react-icons";
 import type React from "react";
 import { useState } from "react";
 import type { DiscoveredInventory, DiscoveredNode } from "../../api/useDiscoveryApi.ts";
+import type { AvailabilityZone } from "../components/AvailabilityZoneCard.tsx";
 import { SchemaFormRenderer } from "../../schema/SchemaFormRenderer.tsx";
 import { useWizard } from "../WizardContext.tsx";
 import { CertificateField } from "../components/CertificateField.tsx";
@@ -60,7 +61,7 @@ function getValueByPath(obj: Record<string, unknown>, path: string): unknown {
   return current;
 }
 
-function nodeToHostEntry(node: DiscoveredNode): HostEntry {
+function nodeToHostEntry(node: DiscoveredNode, zone?: string): HostEntry {
   return {
     name: node.name,
     macAddress: node.macAddress || "",
@@ -69,7 +70,28 @@ function nodeToHostEntry(node: DiscoveredNode): HostEntry {
     redfishUser: node.bmcUser || "",
     redfishPassword: node.bmcPassword || "",
     rootDisk: node.rootDisk || "/dev/sda",
+    zone: zone || "",
+    sources: node.sources,
   };
+}
+
+function findNodeAZ(node: DiscoveredNode, zones: AvailabilityZone[]): string {
+  for (const az of zones) {
+    if (az.assignedNodeIds?.includes(node.id)) return az.name;
+    const allSiteIds = node.siteIds?.length ? node.siteIds : (node.siteId ? [node.siteId] : []);
+    if (allSiteIds.some((sid: number) => az.siteIds?.includes(sid))) return az.name;
+  }
+  return "";
+}
+
+function nodeLabel(node: DiscoveredNode): string {
+  const parts = [node.name];
+  if (node.description) parts.push(node.description);
+  if (node.bmcIp) parts.push(`BMC: ${node.bmcIp}`);
+  if (node.gpuType) parts.push(`${node.gpuCount}x ${node.gpuType}`);
+  if (node.rackPosition) parts.push(node.rackPosition);
+  if (node.sources?.length) parts.push(`[${node.sources.join("+")}]`);
+  return parts.join(" · ");
 }
 
 export const HUB_REQUIRED_FIELDS = [
@@ -97,11 +119,10 @@ export const HubClusterStep: React.FC = () => {
   const globalData = (configData.global ?? {}) as Record<string, unknown>;
 
   const topologyData = (configData.topology ?? {}) as Record<string, unknown>;
-  const azNames: string[] = Array.isArray(topologyData.availability_zones)
-    ? (topologyData.availability_zones as { name: string }[])
-        .map((az) => az.name)
-        .filter(Boolean)
+  const azList: AvailabilityZone[] = Array.isArray(topologyData.availability_zones)
+    ? (topologyData.availability_zones as AvailabilityZone[])
     : [];
+  const azNames = azList.map((az) => az.name).filter(Boolean);
 
   const discovery = configData.discovery as DiscoveredInventory | null;
   const discoveredNodes = discovery?.nodes ?? [];
@@ -116,7 +137,17 @@ export const HubClusterStep: React.FC = () => {
 
   const usedNodeNames = new Set(agentHosts.map((h) => h.name).filter(Boolean));
 
-  const availableNodes = discoveredNodes.filter((n) => !usedNodeNames.has(n.name));
+  const azNodeIds = new Set(azList.flatMap((az) => az.assignedNodeIds ?? []));
+  const azSiteIds = new Set(azList.flatMap((az) => az.siteIds ?? []));
+  const hasAZs = azList.length > 0;
+
+  const availableNodes = discoveredNodes.filter((n) => {
+    if (usedNodeNames.has(n.name)) return false;
+    if (!hasAZs) return true;
+    if (azNodeIds.has(n.id)) return true;
+    const allSiteIds = n.siteIds?.length ? n.siteIds : (n.siteId ? [n.siteId] : []);
+    return allSiteIds.some((sid: number) => azSiteIds.has(sid));
+  });
 
   const handleNodeSelect = (value: string) => {
     if (!value) return;
@@ -128,7 +159,8 @@ export const HubClusterStep: React.FC = () => {
 
     const node = discoveredNodes.find((n) => n.id === value);
     if (node) {
-      setAgentHosts([...agentHosts, nodeToHostEntry(node)]);
+      const zone = findNodeAZ(node, azList);
+      setAgentHosts([...agentHosts, nodeToHostEntry(node, zone)]);
     }
   };
 
@@ -226,7 +258,7 @@ export const HubClusterStep: React.FC = () => {
                 <FormSelectOption
                   key={node.id}
                   value={node.id}
-                  label={`${node.name} (BMC: ${node.bmcIp}${node.gpuType ? `, ${node.gpuCount}x ${node.gpuType}` : ""})`}
+                  label={nodeLabel(node)}
                 />
               ))}
               <FormSelectOption value="__manual__" label="Manually add..." />
@@ -269,6 +301,7 @@ export const HubClusterStep: React.FC = () => {
                   }}
                   label="Node"
                   availabilityZones={azNames}
+                  zoneReadOnly={!!host.zone && hasDiscovery}
                 />
               </FlexItem>
               <FlexItem>
