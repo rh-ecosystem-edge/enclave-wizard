@@ -98,4 +98,5 @@ type EnclaveConfig struct {
 	Global       GlobalConfig       `json:"global" doc:"Primary cluster configuration (global.yaml)"`
 	Certificates CertificatesConfig `json:"certificates" doc:"TLS certificates (certificates.yaml)"`
 	CloudInfra   CloudInfraConfig   `json:"cloudInfra" doc:"Cloud infrastructure / discovery hosts (cloud_infra.yaml)"`
+	Topology     TopologyConfig     `json:"topology" doc:"Topology / availability zone configuration (topology.yaml)"`
 }

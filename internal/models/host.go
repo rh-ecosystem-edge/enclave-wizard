@@ -15,4 +15,5 @@ type HostEntry struct {
 	// Full NMStateConfig format (config and interfaces respectively)
 	NetworkConfig any `json:"networkConfig,omitempty" yaml:"networkConfig,omitempty" doc:"NMState network configuration for multi-NIC/VLAN"`
 	MapInterfaces any `json:"mapInterfaces,omitempty" yaml:"mapInterfaces,omitempty" doc:"Interface mapping for complex topologies"`
+	Zone          string `json:"zone,omitempty" yaml:"zone,omitempty" doc:"Availability zone assignment"`
 }
