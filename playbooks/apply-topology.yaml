@@ -1,0 +1,72 @@
+---
+- name: Apply availability zone topology
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    config_dir: "{{ working_dir | default('/home/enclave') }}/config"
+  tasks:
+    - name: Read topology config
+      ansible.builtin.slurp:
+        src: "{{ config_dir }}/topology.yaml"
+      register: topology_raw
+      failed_when: false
+
+    - name: Read global config
+      ansible.builtin.slurp:
+        src: "{{ config_dir }}/global.yaml"
+      register: global_raw
+
+    - name: Parse configs
+      ansible.builtin.set_fact:
+        topology: "{{ (topology_raw.content | default('') | b64decode | from_yaml) | default({}) }}"
+        global_config: "{{ global_raw.content | b64decode | from_yaml }}"
+
+    - name: Build host-to-zone mapping
+      ansible.builtin.set_fact:
+        host_zone_map: >-
+          {{
+            (global_config.agent_hosts | default([]) | selectattr('zone', 'defined') | list)
+            + (topology.discovery_hosts | default([]) | selectattr('zone', 'defined') | list)
+          }}
+      when: topology.availability_zones | default([]) | length > 0
+
+    - name: Label nodes with topology zone
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: Node
+        name: "{{ item.name }}"
+        definition:
+          metadata:
+            labels:
+              topology.kubernetes.io/zone: "{{ item.zone }}"
+      loop: "{{ host_zone_map | default([]) }}"
+      when:
+        - item.zone is defined
+        - item.zone | length > 0
+
+    - name: Create MachineSet per availability zone
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: machine.openshift.io/v1beta1
+          kind: MachineSet
+          metadata:
+            name: "{{ item.name }}-machineset"
+            namespace: openshift-machine-api
+          spec:
+            replicas: 0
+            selector:
+              matchLabels:
+                machine.openshift.io/cluster-api-machineset: "{{ item.name }}-machineset"
+            template:
+              metadata:
+                labels:
+                  machine.openshift.io/cluster-api-machineset: "{{ item.name }}-machineset"
+              spec:
+                metadata:
+                  labels:
+                    topology.kubernetes.io/zone: "{{ item.name }}"
+                providerSpec: {}
+      loop: "{{ topology.availability_zones | default([]) }}"
+      when: topology.availability_zones | default([]) | length > 0
