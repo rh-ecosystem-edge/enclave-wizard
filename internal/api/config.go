@@ -138,6 +138,10 @@ func (h *ConfigHandler) Register(api huma.API) {
 		func(cfg *models.EnclaveConfig) models.CloudInfraConfig { return cfg.CloudInfra },
 		func(cfg *models.EnclaveConfig, v models.CloudInfraConfig) { cfg.CloudInfra = v },
 	)
+	registerSection(api, h, "topology", "Topology", "Availability zone topology",
+		func(cfg *models.EnclaveConfig) models.TopologyConfig { return cfg.Topology },
+		func(cfg *models.EnclaveConfig, v models.TopologyConfig) { cfg.Topology = v },
+	)
 }
 
 func registerSection[T any](
