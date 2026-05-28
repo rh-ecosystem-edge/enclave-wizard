@@ -11,11 +11,7 @@ import {
 } from "@patternfly/react-core";
 import { ServerIcon } from "@patternfly/react-icons";
 import type React from "react";
-import type {
-  NetrisSite,
-  NetrisServer,
-  NetrisSubnet,
-} from "../../api/useNetrisApi.ts";
+import type { DiscoveredInventory } from "../../api/useDiscoveryApi.ts";
 import { availabilityZoneCardStyles as styles } from "./availabilityZoneCardStyles.ts";
 
 export interface AvailabilityZone {
@@ -25,16 +21,14 @@ export interface AvailabilityZone {
   dns: string;
   vpcName: string;
   siteIds: number[];
-  assignedServerIds: number[];
+  assignedNodeIds: string[];
 }
 
 interface AvailabilityZoneCardProps {
   index: number;
   zone: AvailabilityZone;
   onChange: (zone: AvailabilityZone) => void;
-  sites?: NetrisSite[];
-  servers?: NetrisServer[];
-  subnets?: NetrisSubnet[];
+  discovery?: DiscoveredInventory;
   usedSiteIds?: number[];
 }
 
@@ -45,20 +39,22 @@ export const emptyAvailabilityZone: AvailabilityZone = {
   dns: "",
   vpcName: "",
   siteIds: [],
-  assignedServerIds: [],
+  assignedNodeIds: [],
 };
 
 export const AvailabilityZoneCard: React.FC<AvailabilityZoneCardProps> = ({
   index,
   zone,
   onChange,
-  sites,
-  servers,
-  subnets,
+  discovery,
   usedSiteIds,
 }) => {
   const prefix = `az-${index}`;
-  const hasDiscovery = sites && sites.length > 0;
+  const hasDiscovery = discovery != null;
+
+  const sites = discovery?.sites ?? [];
+  const nodes = discovery?.nodes ?? [];
+  const networks = discovery?.networks ?? [];
 
   const update = (field: keyof AvailabilityZone, value: unknown) =>
     onChange({ ...zone, [field]: value });
@@ -69,33 +65,31 @@ export const AvailabilityZoneCard: React.FC<AvailabilityZoneCardProps> = ({
       ? current.filter((id) => id !== siteId)
       : [...current, siteId];
 
-    const siteServers = (servers ?? []).filter((s) => next.includes(s.siteId));
-    const serverIds = siteServers.map((s) => s.id);
+    const siteNodes = nodes.filter((n) => next.includes(n.siteId));
+    const nodeIds = siteNodes.map((n) => n.id);
 
-    const siteSubnets = (subnets ?? []).filter(
-      (s) => next.includes(s.siteId) && s.purpose === "common",
+    const siteNetworks = networks.filter(
+      (n) => next.includes(n.siteId) && n.purpose === "common",
     );
-    const firstSubnet = siteSubnets[0];
+    const firstNetwork = siteNetworks[0];
 
-    const selectedSite = (sites ?? []).find((s) => s.id === siteId);
+    const selectedSite = sites.find((s) => s.id === siteId);
 
     const updated: AvailabilityZone = {
       ...zone,
       siteIds: next,
-      assignedServerIds: serverIds,
+      assignedNodeIds: nodeIds,
       name: zone.name || (next.length === 1 && selectedSite ? selectedSite.name : zone.name),
-      gateway: firstSubnet?.gateway ?? zone.gateway,
-      machineNetwork: firstSubnet?.prefix ?? zone.machineNetwork,
+      gateway: firstNetwork?.gateway ?? zone.gateway,
+      machineNetwork: firstNetwork?.prefix ?? zone.machineNetwork,
       vpcName: zone.vpcName || `osac-${zone.name || selectedSite?.name || `zone-${index + 1}`}`,
     };
     onChange(updated);
   };
 
-  const assignedServers = (servers ?? []).filter((s) =>
-    zone.assignedServerIds.includes(s.id),
-  );
+  const assignedNodes = nodes.filter((n) => zone.assignedNodeIds.includes(n.id));
 
-  const availableSites = (sites ?? []).filter(
+  const availableSites = sites.filter(
     (s) => zone.siteIds.includes(s.id) || !(usedSiteIds ?? []).includes(s.id),
   );
 
@@ -121,7 +115,7 @@ export const AvailabilityZoneCard: React.FC<AvailabilityZoneCardProps> = ({
                     <FormSelectOption
                       key={site.id}
                       value={String(site.id)}
-                      label={`${site.name} (${site.serverCount} servers, ${site.switchCount} switches)`}
+                      label={`${site.name} (${site.nodeCount} nodes, ${site.switchCount} switches)`}
                       isDisabled={zone.siteIds.includes(site.id)}
                     />
                   ))}
@@ -130,14 +124,14 @@ export const AvailabilityZoneCard: React.FC<AvailabilityZoneCardProps> = ({
                   <HelperText>
                     <HelperTextItem>
                       Sites: {zone.siteIds.map((id) => {
-                        const site = (sites ?? []).find((s) => s.id === id);
+                        const site = sites.find((s) => s.id === id);
                         return site?.name ?? id;
                       }).join(", ")}
                       {" "}
                       <button
                         type="button"
                         style={{ background: "none", border: "none", color: "var(--pf-t--global--color--status--danger--default)", cursor: "pointer", fontSize: "0.8125rem" }}
-                        onClick={() => onChange({ ...zone, siteIds: [], assignedServerIds: [] })}
+                        onClick={() => onChange({ ...zone, siteIds: [], assignedNodeIds: [] })}
                       >
                         Clear all
                       </button>
@@ -166,11 +160,7 @@ export const AvailabilityZoneCard: React.FC<AvailabilityZoneCardProps> = ({
               isRequired
             />
           </FormGroup>
-          <FormGroup
-            label="Machine Network"
-            isRequired
-            fieldId={`${prefix}-machine-network`}
-          >
+          <FormGroup label="Machine Network" isRequired fieldId={`${prefix}-machine-network`}>
             <TextInput
               id={`${prefix}-machine-network`}
               value={zone.machineNetwork}
@@ -202,24 +192,25 @@ export const AvailabilityZoneCard: React.FC<AvailabilityZoneCardProps> = ({
                 />
                 <HelperText>
                   <HelperTextItem>
-                    A dedicated VPC will be created for this AZ in Netris
+                    A dedicated VPC will be created for this AZ
                   </HelperTextItem>
                 </HelperText>
               </FormGroup>
             </div>
           )}
 
-          {assignedServers.length > 0 && (
+          {assignedNodes.length > 0 && (
             <div className={styles.assignedServers}>
               <Title headingLevel="h5" size="sm">
-                <ServerIcon /> Assigned Servers ({assignedServers.length})
+                <ServerIcon /> Assigned Nodes ({assignedNodes.length})
               </Title>
               <div style={{ marginTop: "0.25rem" }}>
-                {assignedServers.map((server) => (
-                  <span key={server.id} className={styles.serverChip}>
-                    {server.name}
+                {assignedNodes.map((node) => (
+                  <span key={node.id} className={styles.serverChip}>
+                    {node.name}
                     <span className={styles.serverDetail}>
-                      BMC: {server.mgmtIp}
+                      BMC: {node.bmcIp}
+                      {node.gpuType && <> &middot; {node.gpuCount}x {node.gpuType}</>}
                     </span>
                   </span>
                 ))}

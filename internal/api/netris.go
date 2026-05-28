@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/rh-ecosystem-edge/enclave-wizard/internal/discovery"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/models"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/netris"
 )
@@ -53,6 +54,10 @@ type NetrisIPAMOutput struct {
 	Body models.NetrisIPAM
 }
 
+type DiscoveryOutput struct {
+	Body models.DiscoveredInventory
+}
+
 func (h *NetrisHandler) Register(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID: "netris-connect",
@@ -96,6 +101,15 @@ func (h *NetrisHandler) Register(api huma.API) {
 		Description: "Returns subnets with purpose and gateway info. Optionally filtered by site.",
 		Tags:        []string{"Netris"},
 	}, h.ipam)
+
+	huma.Register(api, huma.Operation{
+		OperationID: "discovery-inventory",
+		Method:      http.MethodGet,
+		Path:        "/api/v1/discovery/inventory",
+		Summary:     "Get merged discovery inventory",
+		Description: "Returns unified inventory merged from all connected providers (sites, nodes, networks).",
+		Tags:        []string{"Discovery"},
+	}, h.mergedInventory)
 }
 
 func (h *NetrisHandler) connect(_ context.Context, input *NetrisConnectInput) (*NetrisConnectOutput, error) {
@@ -148,4 +162,21 @@ func (h *NetrisHandler) ipam(_ context.Context, input *NetrisIPAMInput) (*Netris
 		return nil, huma.Error502BadGateway("failed to list IPAM", err)
 	}
 	return &NetrisIPAMOutput{Body: *ipam}, nil
+}
+
+func (h *NetrisHandler) mergedInventory(_ context.Context, _ *struct{}) (*DiscoveryOutput, error) {
+	sites, err := h.client.Sites()
+	if err != nil {
+		return nil, huma.Error502BadGateway("failed to list sites", err)
+	}
+	inv, err := h.client.Inventory(nil)
+	if err != nil {
+		return nil, huma.Error502BadGateway("failed to list inventory", err)
+	}
+	ipam, err := h.client.IPAM(nil)
+	if err != nil {
+		return nil, huma.Error502BadGateway("failed to list IPAM", err)
+	}
+	merged := discovery.MergeFromNetris(sites, inv, ipam)
+	return &DiscoveryOutput{Body: *merged}, nil
 }

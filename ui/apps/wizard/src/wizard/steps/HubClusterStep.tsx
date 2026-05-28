@@ -5,12 +5,15 @@ import {
   FlexItem,
   Form,
   FormGroup,
+  FormSelect,
+  FormSelectOption,
   TextArea,
   Title,
 } from "@patternfly/react-core";
-import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
+import { MinusCircleIcon } from "@patternfly/react-icons";
 import type React from "react";
 import { useState } from "react";
+import type { DiscoveredInventory, DiscoveredNode } from "../../api/useDiscoveryApi.ts";
 import { SchemaFormRenderer } from "../../schema/SchemaFormRenderer.tsx";
 import { useWizard } from "../WizardContext.tsx";
 import { CertificateField } from "../components/CertificateField.tsx";
@@ -57,6 +60,18 @@ function getValueByPath(obj: Record<string, unknown>, path: string): unknown {
   return current;
 }
 
+function nodeToHostEntry(node: DiscoveredNode): HostEntry {
+  return {
+    name: node.name,
+    macAddress: node.macAddress || "",
+    ipAddress: node.ipAddress || node.bmcIp || "",
+    redfish: node.bmcIp || "",
+    redfishUser: node.bmcUser || "",
+    redfishPassword: node.bmcPassword || "",
+    rootDisk: node.rootDisk || "/dev/sda",
+  };
+}
+
 export const HUB_REQUIRED_FIELDS = [
   "global.baseDomain",
   "global.clusterName",
@@ -88,12 +103,34 @@ export const HubClusterStep: React.FC = () => {
         .filter(Boolean)
     : [];
 
+  const discovery = configData.discovery as DiscoveredInventory | null;
+  const discoveredNodes = discovery?.nodes ?? [];
+  const hasDiscovery = discoveredNodes.length > 0;
+
   const agentHosts: HostEntry[] = Array.isArray(globalData.agent_hosts)
     ? (globalData.agent_hosts as HostEntry[])
     : [];
 
   const setAgentHosts = (hosts: HostEntry[]) =>
     dispatch({ type: "SET_FIELD", path: "global.agent_hosts", value: hosts });
+
+  const usedNodeNames = new Set(agentHosts.map((h) => h.name).filter(Boolean));
+
+  const availableNodes = discoveredNodes.filter((n) => !usedNodeNames.has(n.name));
+
+  const handleNodeSelect = (value: string) => {
+    if (!value) return;
+
+    if (value === "__manual__") {
+      setAgentHosts([...agentHosts, { ...EMPTY_HOST }]);
+      return;
+    }
+
+    const node = discoveredNodes.find((n) => n.id === value);
+    if (node) {
+      setAgentHosts([...agentHosts, nodeToHostEntry(node)]);
+    }
+  };
 
   const hostCount = agentHosts.length;
   const canAddHost = hostCount < 3;
@@ -177,19 +214,39 @@ export const HubClusterStep: React.FC = () => {
           </Title>
         </FlexItem>
         <FlexItem>
-          <Button
-            variant="link"
-            icon={<PlusCircleIcon />}
-            onClick={() => setAgentHosts([...agentHosts, { ...EMPTY_HOST }])}
-            isDisabled={!canAddHost}
-          >
-            Add node
-          </Button>
+          {canAddHost && hasDiscovery ? (
+            <FormSelect
+              id="add-cp-node"
+              value=""
+              onChange={(_e, v) => handleNodeSelect(v)}
+              style={{ width: "auto", minWidth: "250px" }}
+            >
+              <FormSelectOption value="" label="Add a node..." isPlaceholder />
+              {availableNodes.map((node) => (
+                <FormSelectOption
+                  key={node.id}
+                  value={node.id}
+                  label={`${node.name} (BMC: ${node.bmcIp}${node.gpuType ? `, ${node.gpuCount}x ${node.gpuType}` : ""})`}
+                />
+              ))}
+              <FormSelectOption value="__manual__" label="Manually add..." />
+            </FormSelect>
+          ) : (
+            <Button
+              variant="link"
+              onClick={() => setAgentHosts([...agentHosts, { ...EMPTY_HOST }])}
+              isDisabled={!canAddHost}
+            >
+              Add node
+            </Button>
+          )}
         </FlexItem>
       </Flex>
       {hostCount === 0 && (
         <p className={stepStyles.emptyHint}>
-          Add 3 control plane nodes to proceed. Click &quot;Add node&quot; to get started.
+          {hasDiscovery
+            ? "Select 3 control plane nodes from discovered inventory, or add them manually."
+            : "Add 3 control plane nodes to proceed. Click \"Add node\" to get started."}
         </p>
       )}
       {hostCount > 0 && hostCount < 3 && (
