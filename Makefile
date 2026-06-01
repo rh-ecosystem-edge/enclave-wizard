@@ -2,7 +2,7 @@ BINARY := enclave-wizard
 GO := go
 CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
 
-.PHONY: build build-linux build-ui run test lint clean tidy deploy teardown generate
+.PHONY: build build-linux build-ui run test lint clean tidy deploy teardown generate preview
 
 build-ui:
 	$(CONTAINER_RUNTIME) run --rm -v $(PWD)/ui:/app:z -w /app node:22-alpine \
@@ -22,6 +22,10 @@ run: build
 run-demo: build-ui
 	$(GO) build -ldflags="-w -s" -tags dev -o $(BINARY) .
 	./$(BINARY) --demo-deploy --enclave-dir ../enclave --tls-cert hack/tls/server.crt --tls-key hack/tls/server.key
+
+preview: build-ui
+	$(GO) build -ldflags="-w -s" -tags dev -o $(BINARY) .
+	hack/run-preview.sh $(PORT)
 
 test:
 	$(GO) test -cover ./...
