@@ -27,7 +27,6 @@ import {
 } from "../schema/schemaUtils.ts";
 import { useOpenApiSchema } from "../schema/useOpenApiSchema.ts";
 import { STEP_REQUIRED_FIELDS } from "./stepFields.ts";
-import { CaasStep } from "./steps/CaasStep.tsx";
 import { DeployStep } from "./steps/DeployStep.tsx";
 import { HubClusterStep } from "./steps/HubClusterStep.tsx";
 import { LandingZoneStep } from "./steps/LandingZoneStep.tsx";
@@ -131,12 +130,8 @@ const BASE_CONFIG_SUBSTEPS: ConfigSubStep[] = [
   { id: "hub-cluster", label: "Hub Cluster" },
 ];
 
-function buildConfigSubSteps(selectedFlavors: Set<string>): ConfigSubStep[] {
-  const subs = [...BASE_CONFIG_SUBSTEPS];
-  if (selectedFlavors.has("cluster")) {
-    subs.push({ id: "caas", label: "Cluster as a Service" });
-  }
-  return subs;
+function buildConfigSubSteps(_enabledPlugins: string[]): ConfigSubStep[] {
+  return [...BASE_CONFIG_SUBSTEPS];
 }
 
 function SubStepContent({ subStepId }: { subStepId: string }): React.ReactElement {
@@ -147,8 +142,6 @@ function SubStepContent({ subStepId }: { subStepId: string }): React.ReactElemen
       return <StorageStep />;
     case "hub-cluster":
       return <HubClusterStep />;
-    case "caas":
-      return <CaasStep />;
     default:
       return <div>Unknown section</div>;
   }
@@ -247,9 +240,14 @@ function WizardContent(): React.ReactElement {
   const [stepErrors, setStepErrors] = useState<StepValidationError[]>([]);
   const [activeSubStep, setActiveSubStep] = useState(0);
 
+  const globalData = (state.configData as Record<string, unknown>).global as Record<string, unknown> | undefined;
+  const enabledPlugins = Array.isArray(globalData?.enabled_plugins)
+    ? (globalData.enabled_plugins as string[])
+    : [];
+
   const configSubSteps = useMemo(
-    () => buildConfigSubSteps(state.selectedFlavors),
-    [state.selectedFlavors],
+    () => buildConfigSubSteps(enabledPlugins),
+    [enabledPlugins],
   );
 
   useEffect(() => {
@@ -262,11 +260,12 @@ function WizardContent(): React.ReactElement {
     if (initDone) return;
     const init = async () => {
       try {
-        const [defaults, pluginsResult, existingConfig] =
+        const [defaults, pluginsResult, existingConfig, experiencesResult] =
           await Promise.allSettled([
             api.getDefaults(),
             api.getPlugins(),
             api.getConfig(),
+            api.getExperiences(),
           ]);
 
         if (defaults.status === "fulfilled") {
@@ -280,6 +279,10 @@ function WizardContent(): React.ReactElement {
 
         if (pluginsResult.status === "fulfilled") {
           dispatch({ type: "SET_PLUGINS", plugins: pluginsResult.value.plugins ?? [] });
+        }
+
+        if (experiencesResult.status === "fulfilled") {
+          dispatch({ type: "SET_EXPERIENCES", experiences: experiencesResult.value });
         }
 
         if (existingConfig.status === "fulfilled") {

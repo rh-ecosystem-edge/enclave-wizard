@@ -10,24 +10,32 @@ describe("wizardReducer", () => {
     expect(state.currentStep).toBe(3);
   });
 
-  it("toggles a flavor on", () => {
-    const state = wizardReducer(initialWizardState, {
-      type: "TOGGLE_FLAVOR",
-      flavor: "cluster",
+  it("toggles an experience on", () => {
+    const withExp = wizardReducer(initialWizardState, {
+      type: "SET_EXPERIENCES",
+      experiences: [{ name: "test-exp", plugins: [{ name: "nvidia-gpu" }] }],
     });
-    expect(state.selectedFlavors.has("cluster")).toBe(true);
+    const state = wizardReducer(withExp, {
+      type: "TOGGLE_EXPERIENCE",
+      name: "test-exp",
+    });
+    expect(state.selectedExperiences.has("test-exp")).toBe(true);
   });
 
-  it("toggles a flavor off", () => {
+  it("toggles an experience off", () => {
     let state = wizardReducer(initialWizardState, {
-      type: "TOGGLE_FLAVOR",
-      flavor: "cluster",
+      type: "SET_EXPERIENCES",
+      experiences: [{ name: "test-exp", plugins: [{ name: "nvidia-gpu" }] }],
     });
     state = wizardReducer(state, {
-      type: "TOGGLE_FLAVOR",
-      flavor: "cluster",
+      type: "TOGGLE_EXPERIENCE",
+      name: "test-exp",
     });
-    expect(state.selectedFlavors.has("cluster")).toBe(false);
+    state = wizardReducer(state, {
+      type: "TOGGLE_EXPERIENCE",
+      name: "test-exp",
+    });
+    expect(state.selectedExperiences.has("test-exp")).toBe(false);
   });
 
   it("sets a top-level config field via dot path", () => {

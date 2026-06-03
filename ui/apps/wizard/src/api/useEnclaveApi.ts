@@ -13,6 +13,12 @@ import type {
 import { useCallback } from "react";
 import { Symbols } from "../main/Symbols.ts";
 
+export interface ExperienceDefinition {
+  name: string;
+  description?: string;
+  plugins: { name: string }[];
+}
+
 export interface EnclaveApiClient {
   getConfig: () => Promise<EnclaveConfig>;
   writeConfig: (config: EnclaveConfig) => Promise<void>;
@@ -21,6 +27,7 @@ export interface EnclaveApiClient {
   ) => Promise<ValidateConfigOutputBody>;
   getDefaults: () => Promise<Defaults>;
   getPlugins: () => Promise<PluginsOutputBody>;
+  getExperiences: () => Promise<ExperienceDefinition[]>;
 }
 
 export function useEnclaveApi(): EnclaveApiClient {
@@ -55,5 +62,12 @@ export function useEnclaveApi(): EnclaveApiClient {
     [pluginsApi],
   );
 
-  return { getConfig, writeConfig, validateConfig, getDefaults, getPlugins };
+  const getExperiences = useCallback(async (): Promise<ExperienceDefinition[]> => {
+    const resp = await fetch("/api/v1/experiences");
+    if (!resp.ok) return [];
+    const data = await resp.json();
+    return data.experiences ?? [];
+  }, []);
+
+  return { getConfig, writeConfig, validateConfig, getDefaults, getPlugins, getExperiences };
 }

@@ -1,6 +1,6 @@
 import type React from "react";
 import { createContext, useContext, useReducer } from "react";
-import type { FlavorId } from "./flavors.ts";
+import type { ExperienceDefinition } from "../api/useEnclaveApi.ts";
 
 export interface ValidationError {
   field: string;
@@ -15,7 +15,8 @@ interface ConfigData {
 
 export interface WizardState {
   currentStep: number;
-  selectedFlavors: Set<FlavorId>;
+  selectedExperiences: Set<string>;
+  experiences: ExperienceDefinition[];
   configData: ConfigData;
   validationErrors: ValidationError[];
   showValidation: boolean;
@@ -25,7 +26,8 @@ export interface WizardState {
 
 export type WizardAction =
   | { type: "SET_STEP"; step: number }
-  | { type: "TOGGLE_FLAVOR"; flavor: FlavorId }
+  | { type: "TOGGLE_EXPERIENCE"; name: string }
+  | { type: "SET_EXPERIENCES"; experiences: ExperienceDefinition[] }
   | { type: "SET_FIELD"; path: string; value: unknown }
   | { type: "SET_SCHEMA"; schema: unknown }
   | { type: "SET_PLUGINS"; plugins: unknown[] }
@@ -35,7 +37,8 @@ export type WizardAction =
 
 export const initialWizardState: WizardState = {
   currentStep: 0,
-  selectedFlavors: new Set(),
+  selectedExperiences: new Set(),
+  experiences: [],
   configData: {},
   validationErrors: [],
   showValidation: false,
@@ -57,14 +60,22 @@ function setNestedField(
   return { ...obj, [head]: setNestedField({ ...child }, rest, value) };
 }
 
-function toggleFlavor(flavors: Set<FlavorId>, id: FlavorId): Set<FlavorId> {
-  const next = new Set(flavors);
-  if (next.has(id)) {
-    next.delete(id);
-  } else {
-    next.add(id);
+function computeEnabledPlugins(
+  state: WizardState,
+  selectedExperiences: Set<string>,
+): string[] {
+  const globalData = (state.configData.global ?? {}) as Record<string, unknown>;
+  const storagePlugin = (globalData.storage_plugin as string) ?? "lvms";
+
+  const pluginSet = new Set<string>([storagePlugin]);
+  for (const exp of state.experiences) {
+    if (selectedExperiences.has(exp.name)) {
+      for (const p of exp.plugins) {
+        pluginSet.add(p.name);
+      }
+    }
   }
-  return next;
+  return Array.from(pluginSet);
 }
 
 export function wizardReducer(
@@ -74,8 +85,23 @@ export function wizardReducer(
   switch (action.type) {
     case "SET_STEP":
       return { ...state, currentStep: action.step };
-    case "TOGGLE_FLAVOR":
-      return { ...state, selectedFlavors: toggleFlavor(state.selectedFlavors, action.flavor) };
+    case "TOGGLE_EXPERIENCE": {
+      const next = new Set(state.selectedExperiences);
+      if (next.has(action.name)) {
+        next.delete(action.name);
+      } else {
+        next.add(action.name);
+      }
+      const enabledPlugins = computeEnabledPlugins(state, next);
+      const configData = setNestedField(
+        { ...state.configData } as Record<string, unknown>,
+        ["global", "enabled_plugins"],
+        enabledPlugins,
+      ) as ConfigData;
+      return { ...state, selectedExperiences: next, configData };
+    }
+    case "SET_EXPERIENCES":
+      return { ...state, experiences: action.experiences };
     case "SET_FIELD": {
       const keys = action.path.split(".");
       const configData = setNestedField(

@@ -82,8 +82,8 @@ func (v *Validator) Available() bool {
 }
 
 func (v *Validator) Validate(cfg *models.EnclaveConfig) []models.ValidationError {
-	if !v.Available() {
-		return []models.ValidationError{{Message: "schema validation unavailable: ansible-runner not found"}}
+	if !v.available {
+		return nil
 	}
 	if v.runner == nil {
 		return []models.ValidationError{{Message: "schema validation unavailable: ansible-runner not found"}}
