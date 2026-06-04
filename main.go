@@ -20,6 +20,7 @@ import (
 
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/api"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/auth"
+	"github.com/rh-ecosystem-edge/enclave-wizard/internal/tlscert"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/config"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/logger"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/plugins"
@@ -175,6 +176,11 @@ func main() {
 		}
 
 		hooks.OnStart(func() {
+			if err := tlscert.EnsureSelfSigned(opts.TLSCert, opts.TLSKey); err != nil {
+				slog.Error("failed to generate self-signed certificate", "error", err)
+				os.Exit(1)
+			}
+
 			fmt.Printf("Enclave Wizard listening on https://localhost:%d (enclave-dir: %s)\n", opts.HTTPSPort, opts.EnclaveDir)
 
 			// HTTP → HTTPS redirect

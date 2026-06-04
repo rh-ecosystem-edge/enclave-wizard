@@ -9,7 +9,6 @@ Source0:        enclave-wizard
 Source1:        enclave-wizard.service
 
 Requires:       enclave
-Requires:       openssl
 
 %description
 Web-based install wizard for Red Hat Sovereign Enclave (RHSE).
@@ -23,21 +22,6 @@ mkdir -p %{buildroot}/opt/enclave/fixtures/recordings
 cp -r %{_sourcedir}/fixtures/recordings/*.json %{buildroot}/opt/enclave/fixtures/recordings/ 2>/dev/null || true
 
 %post
-# Generate self-signed TLS certificate
-TLS_DIR="/etc/enclave-wizard/tls"
-if [ ! -f "${TLS_DIR}/server.crt" ]; then
-    echo "Generating self-signed TLS certificate..."
-    mkdir -p "${TLS_DIR}"
-    CERT_HOST=$(hostname -f)
-    openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
-        -keyout "${TLS_DIR}/server.key" \
-        -out "${TLS_DIR}/server.crt" \
-        -subj "/CN=${CERT_HOST}" \
-        -addext "subjectAltName=DNS:${CERT_HOST},DNS:localhost,IP:127.0.0.1" \
-        2>/dev/null
-    chmod 600 "${TLS_DIR}/server.key"
-fi
-
 # Open firewall ports
 firewall-cmd --add-port=3001/tcp --permanent 2>/dev/null || true
 firewall-cmd --add-port=3443/tcp --permanent 2>/dev/null || true
