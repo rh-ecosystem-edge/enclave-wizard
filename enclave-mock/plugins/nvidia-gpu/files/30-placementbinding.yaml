@@ -1,0 +1,16 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: nvidia-gpu-configuration
+  namespace: openshift-acm-policies
+placementRef:
+  apiGroup: apps.open-cluster-management.io
+  kind: PlacementRule
+  name: nvidia-gpu-configuration
+subjects:
+- apiGroup: policy.open-cluster-management.io
+  kind: Policy
+  name: nvidia-gpu-catalogsource
+- apiGroup: policy.open-cluster-management.io
+  kind: Policy
+  name: nvidia-gpu-configuration

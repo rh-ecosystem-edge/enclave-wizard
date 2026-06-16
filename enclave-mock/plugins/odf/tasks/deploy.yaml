@@ -1,0 +1,19 @@
+- name: Skip ODF external storage configuration when odfExternalConfig is not set
+  ansible.builtin.debug:
+    msg: odfExternalConfig is not defined — skipping external StorageCluster creation
+  when: odfExternalConfig is not defined
+- name: Configure ODF external StorageCluster
+  when: odfExternalConfig is defined
+  block:
+  - name: Ensure Secret is present
+    register: r_odf_secret
+    ansible.builtin.debug:
+      msg: 'NOOP: Ensure Secret is present'
+  - name: Ensure StorageCluster is present
+    register: r_storagecluster
+    ansible.builtin.debug:
+      msg: 'NOOP: Ensure StorageCluster is present'
+  - name: Wait for StorageCluster to be available
+    register: r_storage_cluster_info
+    ansible.builtin.debug:
+      msg: 'NOOP: Wait for StorageCluster to be available'

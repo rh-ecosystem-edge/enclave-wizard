@@ -1,0 +1,4 @@
+- name: Ensure QuayRegistry is present (ODF Backend)
+  register: r_quay
+  ansible.builtin.debug:
+    msg: 'NOOP: Ensure QuayRegistry is present (ODF Backend)'

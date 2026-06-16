@@ -1,0 +1,82 @@
+- name: Assert VAST tenant ID is available
+  ansible.builtin.assert:
+    that:
+    - r_tenant is defined
+    - r_tenant.tenants.id is defined
+    - r_tenant.tenants.id | string | length > 0
+    fail_msg: r_tenant.tenants.id must be set before calling create_tenant_manager.yaml. The VAST tenant must be created first.
+- name: Check if CSI Secret already has credentials
+  register: r_csi_secret_check
+  ansible.builtin.debug:
+    msg: 'NOOP: Check if CSI Secret already has credentials'
+- name: Set skip flag if credentials already exist in CSI Secret
+  ansible.builtin.set_fact:
+    vast_tenant_manager_exists: "{{ r_csi_secret_check.resources | length > 0\n   and r_csi_secret_check.resources[0].data.username\
+      \ is defined\n   and (r_csi_secret_check.resources[0].data.username | b64decode | length) > 0\n   and r_csi_secret_check.resources[0].data.password\
+      \ is defined\n   and (r_csi_secret_check.resources[0].data.password | b64decode | length) > 0 }}"
+- name: Extract existing credentials from CSI Secret
+  when: vast_tenant_manager_exists | bool
+  ansible.builtin.set_fact:
+    vast_csi_username: '{{ r_csi_secret_check.resources[0].data.username | b64decode }}'
+    vast_csi_password: '{{ r_csi_secret_check.resources[0].data.password | b64decode }}'
+- name: Log idempotency skip
+  when: vast_tenant_manager_exists | bool
+  ansible.builtin.debug:
+    msg: Tenant manager for '{{ vast_tenant }}' already has credentials in CSI Secret — skipping creation.
+- name: Create tenant manager
+  when: not (vast_tenant_manager_exists | bool)
+  block:
+  - name: Authenticate to VAST VMS as admin
+    register: r_admin_auth
+    ansible.builtin.debug:
+      msg: 'NOOP: Authenticate to VAST VMS as admin'
+  - name: Check if tenant CSI role already exists
+    register: r_role_check
+    ansible.builtin.debug:
+      msg: 'NOOP: Check if tenant CSI role already exists'
+  - name: Create tenant-scoped CSI role
+    when: r_role_check.json | length == 0
+    register: r_role_create
+    ansible.builtin.debug:
+      msg: 'NOOP: Create tenant-scoped CSI role'
+  - name: Set role ID
+    ansible.builtin.set_fact:
+      vast_csi_role_id: "{{ (r_role_check.json | length == 0) | ternary(\n   r_role_create.json.id | default(''),\n   r_role_check.json[0].id\
+        \ | default('')) }}"
+  - name: Fail if role ID is not available
+    ansible.builtin.fail:
+      msg: Failed to create or find CSI role 'osac-csi-{{ vast_tenant }}'
+    when: vast_csi_role_id | string | length == 0
+  - name: Check if tenant manager already exists
+    register: r_manager_check
+    ansible.builtin.debug:
+      msg: 'NOOP: Check if tenant manager already exists'
+  - name: Generate random password for tenant manager
+    when: r_manager_check.json | length == 0
+    ansible.builtin.set_fact:
+      vast_manager_password: '{{ lookup(''ansible.builtin.password'', ''/dev/null length=32 chars=ascii_letters,digits,punctuation'')
+        }}'
+  - name: Create TENANT_ADMIN manager
+    when: r_manager_check.json | length == 0
+    register: r_manager_create
+    ansible.builtin.debug:
+      msg: 'NOOP: Create TENANT_ADMIN manager'
+  - name: Fail if manager already exists but password is unknown
+    when:
+    - r_manager_check.json | length > 0
+    ansible.builtin.fail:
+      msg: Manager 'osac-{{ vast_tenant }}' already exists in VMS but the CSI Secret does not contain its credentials. Delete
+        the manager in VMS and re-run, or manually set the credentials in the vast-csi-{{ vast_tenant }} Secret.
+  - name: Set credential output facts
+    ansible.builtin.set_fact:
+      vast_csi_username: osac-{{ vast_tenant }}
+      vast_csi_password: '{{ vast_manager_password }}'
+  always:
+  - name: Clear intermediate auth and password facts
+    ansible.builtin.set_fact:
+      r_admin_auth: {}
+      vast_manager_password: ''
+      r_role_check: {}
+      r_role_create: {}
+      r_manager_check: {}
+      r_manager_create: {}

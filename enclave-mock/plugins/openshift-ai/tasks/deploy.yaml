@@ -1,0 +1,42 @@
+- name: Create Namespace for ACM Policies
+  environment:
+    KUBECONFIG: '{{ workingDir }}/ocp-cluster/auth/kubeconfig'
+  register: r_namespace_model_config
+  ansible.builtin.debug:
+    msg: 'NOOP: Create Namespace for ACM Policies'
+- name: Create ACM Policy for Model CatalogSources
+  environment:
+    KUBECONFIG: '{{ workingDir }}/ocp-cluster/auth/kubeconfig'
+  register: r_acm_policy_model_catalogsources
+  ansible.builtin.debug:
+    msg: 'NOOP: Create ACM Policy for Model CatalogSources'
+- name: Create ACM Policy for Model prerequisites
+  environment:
+    KUBECONFIG: '{{ workingDir }}/ocp-cluster/auth/kubeconfig'
+  register: r_acm_policy_model_prerequisites
+  ansible.builtin.debug:
+    msg: 'NOOP: Create ACM Policy for Model prerequisites'
+- name: Create ACM Policy for Model operators CRD readiness
+  environment:
+    KUBECONFIG: '{{ workingDir }}/ocp-cluster/auth/kubeconfig'
+  register: r_acm_policy_model_crd_ready
+  ansible.builtin.debug:
+    msg: 'NOOP: Create ACM Policy for Model operators CRD readiness'
+- name: Create ACM Policy for Model configuration
+  environment:
+    KUBECONFIG: '{{ workingDir }}/ocp-cluster/auth/kubeconfig'
+  register: r_acm_policy_model_config
+  ansible.builtin.debug:
+    msg: 'NOOP: Create ACM Policy for Model configuration'
+- name: Create ACM PlacementRule for Model configuration
+  environment:
+    KUBECONFIG: '{{ workingDir }}/ocp-cluster/auth/kubeconfig'
+  register: r_acm_placementrule_model_config
+  ansible.builtin.debug:
+    msg: 'NOOP: Create ACM PlacementRule for Model configuration'
+- name: Create ACM PlacementBinding for Model configuration
+  environment:
+    KUBECONFIG: '{{ workingDir }}/ocp-cluster/auth/kubeconfig'
+  register: r_acm_placementbinding_model_config
+  ansible.builtin.debug:
+    msg: 'NOOP: Create ACM PlacementBinding for Model configuration'

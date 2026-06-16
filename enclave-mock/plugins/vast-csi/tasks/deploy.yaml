@@ -1,0 +1,70 @@
+- name: Set infra tenant variables
+  ansible.builtin.set_fact:
+    vast_tenant: '{{ vastDefaults.infraTenant }}'
+    vast_tiers: '{{ vastDefaults.tiers }}'
+    vast_protocols: '{{ vastDefaults.tiers | map(attribute=''protocol'') | unique | list }}'
+    vast_host: '{{ vastEndpoint | regex_replace(''^https?://'', '''') }}'
+    vast_vms_conn:
+      host: '{{ vastEndpoint | regex_replace(''^https?://'', '''') }}'
+      username: '{{ vastAdminUsername }}'
+      password: '{{ vastAdminPassword }}'
+      validate_certs: '{{ vastDefaults.validateCerts }}'
+      api_version: '{{ vastDefaults.apiVersion }}'
+- name: Provision VAST infra tenant resources
+  block:
+  - name: Create infra tenant on VAST
+    register: r_tenant
+    ansible.builtin.debug:
+      msg: 'NOOP: Create infra tenant on VAST'
+  - name: Create VIP pool for infra tenant
+    register: r_vippool
+    ansible.builtin.debug:
+      msg: 'NOOP: Create VIP pool for infra tenant'
+  - name: Create view policy for tenant
+    register: r_viewpolicy
+    ansible.builtin.debug:
+      msg: 'NOOP: Create view policy for tenant'
+  - name: Set view policy ID
+    ansible.builtin.set_fact:
+      vast_view_policy_id: '{{ r_viewpolicy.viewpolicies.id }}'
+  - name: Create view for each tier
+    loop: '{{ vast_tiers }}'
+    loop_control:
+      label: view-{{ vast_tenant }}-{{ item.name }}
+    ansible.builtin.debug:
+      msg: 'NOOP: Create view for each tier'
+  - name: Create tenant-scoped manager
+    ansible.builtin.include_tasks:
+      file: '{{ plugin_dir }}/tasks/create_tenant_manager.yaml'
+  - name: Create CSI credentials Secret for infra tenant
+    register: r_csi_secret
+    ansible.builtin.debug:
+      msg: 'NOOP: Create CSI credentials Secret for infra tenant'
+  - name: Create StorageClass for each tier
+    loop: '{{ vast_tiers }}'
+    loop_control:
+      label: '{{ vast_tenant }}-{{ item.name }}'
+    register: r_storageclass
+    ansible.builtin.debug:
+      msg: 'NOOP: Create StorageClass for each tier'
+  - name: Check if VolumeSnapshot CRD is available
+    register: r_snapshot_crd
+    ansible.builtin.debug:
+      msg: 'NOOP: Check if VolumeSnapshot CRD is available'
+  - name: Create VolumeSnapshotClass for each tier
+    loop: '{{ vast_tiers }}'
+    loop_control:
+      label: vast-snapshot-{{ vast_tenant }}-{{ item.name }}
+    when:
+    - r_snapshot_crd.resources | default([]) | length > 0
+    register: r_snapshotclass
+    ansible.builtin.debug:
+      msg: 'NOOP: Create VolumeSnapshotClass for each tier'
+  always:
+  - name: Clear VMS connection and credential facts
+    ansible.builtin.set_fact:
+      vast_vms_conn: null
+      vast_view_policy_id: null
+      vast_csi_username: null
+      vast_csi_password: null
+      vast_csi_role_id: null

@@ -1,0 +1,45 @@
+- name: Set Quay storage variables
+  ansible.builtin.set_fact:
+    vast_quay_storageclass: '{{ vastDefaults.infraTenant }}-quay'
+    vast_quay_pvc_size: '{{ vastDefaults.quayPvcSize }}'
+- name: Ensure QuayRegistry is present (VAST Backend)
+  register: r_quay_vast
+  ansible.builtin.debug:
+    msg: 'NOOP: Ensure QuayRegistry is present (VAST Backend)'
+- name: Quay VAST NFS storage (PVC and deployment patch)
+  when:
+  - quayBackend == 'LocalStorage'
+  block:
+  - name: Wait for Quay app deployment to exist (VAST)
+    register: quay_app_deployment
+    ansible.builtin.debug:
+      msg: 'NOOP: Wait for Quay app deployment to exist (VAST)'
+  - name: Check if Quay app deployment already has registry-storage volume (VAST)
+    ansible.builtin.set_fact:
+      quay_registry_storage_already_patched: "{{ (quay_app_deployment.resources[0].spec.template.spec.volumes | default([])\n\
+        \    | selectattr('name', 'equalto', 'registry-storage') | list | length > 0)\n   and (quay_app_deployment.resources[0].spec.template.spec.containers\
+        \ | default([])\n    | map(attribute='volumeMounts', default=[]) | flatten\n    | selectattr('name', 'equalto', 'registry-storage')\
+        \ | list | length > 0) }}"
+  - name: Create VAST NFS PVC for Quay Storage
+    ansible.builtin.debug:
+      msg: 'NOOP: Create VAST NFS PVC for Quay Storage'
+  - name: Patch Quay app deployment to mount registry storage PVC (VAST)
+    environment:
+      KUBECONFIG: '{{ workingDir }}/ocp-cluster/auth/kubeconfig'
+    vars:
+      quay_vast_patch:
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: registry-storage
+          persistentVolumeClaim:
+            claimName: quay-storage-pvc
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: registry-storage
+          mountPath: /datastorage/registry
+    when: not (quay_registry_storage_already_patched | default(false))
+    register: quay_patch_result
+    ansible.builtin.debug:
+      msg: 'NOOP: Patch Quay app deployment to mount registry storage PVC (VAST)'

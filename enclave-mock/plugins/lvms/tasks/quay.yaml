@@ -1,0 +1,48 @@
+- name: Ensure QuayRegistry is present (LVMS Backend)
+  register: r_quay_lvms
+  ansible.builtin.debug:
+    msg: 'NOOP: Ensure QuayRegistry is present (LVMS Backend)'
+- name: Quay LVMS storage (PVC and deployment patch)
+  when:
+  - quayBackend == 'LocalStorage'
+  - disconnected | default(true)
+  block:
+  - name: Wait for Quay app deployment to exist (LVMS)
+    register: quay_app_deployment
+    ansible.builtin.debug:
+      msg: 'NOOP: Wait for Quay app deployment to exist (LVMS)'
+  - name: Set quay container index for LVMS patch (first container is the app)
+    ansible.builtin.set_fact:
+      quay_container_index: 0
+    when: quay_app_deployment.resources | default([]) | length > 0
+  - name: Check if Quay app deployment already has registry-storage volume (LVMS)
+    ansible.builtin.set_fact:
+      quay_registry_storage_already_patched: '{{ quay_app_deployment.resources[0].spec.template.spec.volumes | selectattr(''name'',
+        ''equalto'', ''registry-storage'') | list | length > 0 }}'
+    when: quay_app_deployment.resources | default([]) | length > 0
+  - name: Create LVMS PVC for Quay Storage
+    ansible.builtin.debug:
+      msg: 'NOOP: Create LVMS PVC for Quay Storage'
+  - name: Patch Quay app deployment to mount registry storage PVC (LVMS)
+    environment:
+      KUBECONFIG: '{{ workingDir }}/ocp-cluster/auth/kubeconfig'
+    vars:
+      quay_lvms_patch:
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: registry-storage
+          persistentVolumeClaim:
+            claimName: quay-storage-pvc
+      - op: add
+        path: /spec/template/spec/containers/{{ quay_container_index }}/volumeMounts/-
+        value:
+          name: registry-storage
+          mountPath: /datastorage/registry
+    when:
+    - quay_app_deployment.resources | default([]) | length > 0
+    - quay_container_index is defined
+    - not (quay_registry_storage_already_patched | default(false))
+    register: quay_patch_result
+    ansible.builtin.debug:
+      msg: 'NOOP: Patch Quay app deployment to mount registry storage PVC (LVMS)'

@@ -1,0 +1,17 @@
+- name: Collect protocols from configured tiers
+  ansible.builtin.set_fact:
+    vast_protocols: '{{ vastDefaults.tiers | map(attribute=''protocol'') | unique | list }}'
+- name: Wait for VastCSIDriver CRD to be registered
+  register: r_vast_crd
+  ansible.builtin.debug:
+    msg: 'NOOP: Wait for VastCSIDriver CRD to be registered'
+- name: Create VastCSIDriver CR for each protocol
+  loop: '{{ vast_protocols }}'
+  register: r_vast_driver
+  ansible.builtin.debug:
+    msg: 'NOOP: Create VastCSIDriver CR for each protocol'
+- name: Wait for CSI drivers to register
+  loop: '{{ vast_protocols }}'
+  register: r_csi_registered
+  ansible.builtin.debug:
+    msg: 'NOOP: Wait for CSI drivers to register'

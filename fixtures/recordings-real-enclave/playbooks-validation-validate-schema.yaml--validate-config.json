@@ -1,0 +1,4413 @@
+{
+  "run": {
+    "id": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+    "type": "validate",
+    "status": "successful",
+    "playbook": "playbooks/validation/validate-schema.yaml",
+    "pid": 18472,
+    "exitCode": 0,
+    "startedAt": "2026-06-16T10:13:28.009724984-04:00",
+    "endedAt": "2026-06-16T10:13:32.403358786-04:00"
+  },
+  "command": {
+    "command": [
+      "ansible-playbook",
+      "--tags",
+      "validate-config",
+      "playbooks/validation/validate-schema.yaml"
+    ],
+    "cwd": "/opt/enclave",
+    "env": {
+      "LANG": "en_US.UTF-8",
+      "INVOCATION_ID": "471d8da01d9a41baabcfa3edbad6e526",
+      "JOURNAL_STREAM": "9:51735",
+      "SYSTEMD_EXEC_PID": "17961",
+      "HOME": "/opt/enclave",
+      "XDG_CACHE_HOME": "/opt/enclave/.cache",
+      "ANSIBLE_CONFIG": "/opt/enclave/ansible.cfg",
+      "PATH": "/opt/enclave/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "ANSIBLE_CALLBACK_PLUGINS": "/opt/enclave/.local/share/uv/tools/enclave/lib/python3.12/site-packages/ansible_runner/display_callback/callback",
+      "ANSIBLE_STDOUT_CALLBACK": "awx_display",
+      "ANSIBLE_RETRY_FILES_ENABLED": "False",
+      "ANSIBLE_HOST_KEY_CHECKING": "False",
+      "AWX_ISOLATED_DATA_DIR": "/opt/enclave/artifacts/567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "ANSIBLE_CACHE_PLUGIN": "jsonfile",
+      "ANSIBLE_CACHE_PLUGIN_CONNECTION": "/opt/enclave/artifacts/567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4/fact_cache",
+      "RUNNER_OMIT_EVENTS": "False",
+      "RUNNER_ONLY_FAILED_EVENTS": "False"
+    }
+  },
+  "rc": 0,
+  "status": "successful",
+  "stdout": "\r\nPLAY [Schema Validation] *******************************************************\n\r\nTASK [Include config schema validation tasks] **********************************\nTuesday 16 June 2026  10:13:29 -0400 (0:00:00.179)       0:00:00.179 ********** \nincluded: /opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml for localhost\n\r\nTASK [Load shared schema definitions] ******************************************\nTuesday 16 June 2026  10:13:29 -0400 (0:00:00.026)       0:00:00.205 ********** \nok: [localhost]\n\r\nTASK [Include load-vars to resolve user config file paths] *********************\nTuesday 16 June 2026  10:13:29 -0400 (0:00:00.066)       0:00:00.272 ********** \nincluded: /opt/enclave/playbooks/validation/tasks/../../common/load-vars.yaml for localhost\n\r\nTASK [Set user config file paths] **********************************************\nTuesday 16 June 2026  10:13:29 -0400 (0:00:00.028)       0:00:00.300 ********** \nok: [localhost]\n\r\nTASK [Include deployment defaults] *********************************************\nTuesday 16 June 2026  10:13:29 -0400 (0:00:00.045)       0:00:00.346 ********** \nok: [localhost]\n\r\nTASK [Include user config vars] ************************************************\nTuesday 16 June 2026  10:13:29 -0400 (0:00:00.022)       0:00:00.369 ********** \nok: [localhost] =\u003e (item=../../config/global.yaml)\nok: [localhost] =\u003e (item=../../config/certificates.yaml)\nok: [localhost] =\u003e (item=../../config/cloud_infra.yaml)\n\r\nTASK [Ensure config directory exists] ******************************************\nTuesday 16 June 2026  10:13:29 -0400 (0:00:00.037)       0:00:00.406 ********** \nchanged: [localhost]\n\r\nTASK [Write sshPubKey content to file] *****************************************\nTuesday 16 June 2026  10:13:30 -0400 (0:00:00.489)       0:00:00.896 ********** \nchanged: [localhost]\n\r\nTASK [Set sshPubPath from written file] ****************************************\nTuesday 16 June 2026  10:13:30 -0400 (0:00:00.715)       0:00:01.611 ********** \nok: [localhost]\n\r\nTASK [Include common configuration] ********************************************\nTuesday 16 June 2026  10:13:31 -0400 (0:00:00.071)       0:00:01.683 ********** \nok: [localhost] =\u003e (item=control_binaries.yaml)\nok: [localhost] =\u003e (item=operators.yaml)\nok: [localhost] =\u003e (item=platforms.yaml)\nok: [localhost] =\u003e (item=catalogs.yaml)\nok: [localhost] =\u003e (item=mirror_registry.yaml)\nok: [localhost] =\u003e (item=quay_operator.yaml)\nok: [localhost] =\u003e (item=k8s.yaml)\nok: [localhost] =\u003e (item=oc_mirror.yaml)\n\r\nTASK [Ensure storage plugin is in enabled_plugins] *****************************\nTuesday 16 June 2026  10:13:31 -0400 (0:00:00.113)       0:00:01.796 ********** \nok: [localhost]\n\r\nTASK [Find plugin directories] *************************************************\nTuesday 16 June 2026  10:13:31 -0400 (0:00:00.034)       0:00:01.831 ********** \ndirectory\nok: [localhost]\n\r\nTASK [Stat plugin config files] ************************************************\nTuesday 16 June 2026  10:13:31 -0400 (0:00:00.361)       0:00:02.193 ********** \nskipping: [localhost]\n\r\nTASK [Load plugin config files] ************************************************\nTuesday 16 June 2026  10:13:31 -0400 (0:00:00.034)       0:00:02.228 ********** \nskipping: [localhost]\n\r\nTASK [Set Management cluster OpenShift version from default] *******************\nTuesday 16 June 2026  10:13:31 -0400 (0:00:00.031)       0:00:02.260 ********** \nok: [localhost]\n\r\nTASK [Override OpenShift versions on fresh install] ****************************\nTuesday 16 June 2026  10:13:31 -0400 (0:00:00.043)       0:00:02.304 ********** \nok: [localhost]\n\r\nTASK [Validate global.yaml against global schema] ******************************\nTuesday 16 June 2026  10:13:31 -0400 (0:00:00.046)       0:00:02.350 ********** \nok: [localhost]\n\r\nTASK [Validate certificates.yaml against certificates schema] ******************\nTuesday 16 June 2026  10:13:31 -0400 (0:00:00.214)       0:00:02.565 ********** \nok: [localhost]\n\r\nTASK [Validate cloud_infra.yaml against cloud_infra schema] ********************\nTuesday 16 June 2026  10:13:32 -0400 (0:00:00.105)       0:00:02.671 ********** \nok: [localhost]\n\r\nTASK [Validate plugin config against schemas/config.yaml (if present and config file exists)] ***\nTuesday 16 June 2026  10:13:32 -0400 (0:00:00.104)       0:00:02.775 ********** \nskipping: [localhost]\n\r\nPLAY RECAP *********************************************************************\r\nlocalhost                  : ok=17   changed=2    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0   \n\r\nTASKS RECAP ********************************************************************\nTuesday 16 June 2026  10:13:32 -0400 (0:00:00.016)       0:00:02.792 ********** \n=============================================================================== \nWrite sshPubKey content to file ----------------------------------------- 0.72s\nEnsure config directory exists ------------------------------------------ 0.49s\nFind plugin directories ------------------------------------------------- 0.36s\nValidate global.yaml against global schema ------------------------------ 0.21s\nInclude common configuration -------------------------------------------- 0.11s\nValidate certificates.yaml against certificates schema ------------------ 0.11s\nValidate cloud_infra.yaml against cloud_infra schema -------------------- 0.10s\nSet sshPubPath from written file ---------------------------------------- 0.07s\nLoad shared schema definitions ------------------------------------------ 0.07s\nOverride OpenShift versions on fresh install ---------------------------- 0.05s\nSet user config file paths ---------------------------------------------- 0.05s\nSet Management cluster OpenShift version from default ------------------- 0.04s\nInclude user config vars ------------------------------------------------ 0.04s\nEnsure storage plugin is in enabled_plugins ----------------------------- 0.04s\nStat plugin config files ------------------------------------------------ 0.03s\nLoad plugin config files ------------------------------------------------ 0.03s\nInclude load-vars to resolve user config file paths --------------------- 0.03s\nInclude config schema validation tasks ---------------------------------- 0.03s\nInclude deployment defaults --------------------------------------------- 0.02s\nValidate plugin config against schemas/config.yaml (if present and config file exists) --- 0.02s\n",
+  "stderr": "",
+  "events": [
+    {
+      "uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "counter": 1,
+      "stdout": "",
+      "start_line": 0,
+      "end_line": 0,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.364190+00:00",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "4f656328-23f7-4151-b46a-cf24c1871990"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "counter": 2,
+      "stdout": "\r\nPLAY [Schema Validation] *******************************************************",
+      "start_line": 0,
+      "end_line": 2,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_play_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.365886+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "name": "Schema Validation",
+        "pattern": "localhost",
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000001"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000005",
+      "counter": 3,
+      "stdout": "\r\nTASK [Include config schema validation tasks] **********************************",
+      "start_line": 2,
+      "end_line": 4,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.542320+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include config schema validation tasks",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000005",
+        "task_action": "ansible.builtin.include_tasks",
+        "resolved_action": null,
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/validate-schema.yaml:26",
+        "name": "Include config schema validation tasks",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000005"
+      }
+    },
+    {
+      "uuid": "1c04bd39-37c9-4241-816d-1dcceab6288e",
+      "counter": 4,
+      "stdout": "Tuesday 16 June 2026  10:13:29 -0400 (0:00:00.179)       0:00:00.179 ********** ",
+      "start_line": 4,
+      "end_line": 5,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.542965+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000005",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include config schema validation tasks",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000005",
+        "task_action": "ansible.builtin.include_tasks",
+        "resolved_action": null,
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/validate-schema.yaml:26",
+        "uuid": "1c04bd39-37c9-4241-816d-1dcceab6288e"
+      }
+    },
+    {
+      "uuid": "b60cc69e-6964-4e5b-b5a4-4dcf71422756",
+      "counter": 5,
+      "stdout": "",
+      "start_line": 5,
+      "end_line": 5,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.543958+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000005",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include config schema validation tasks",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000005",
+        "task_action": "ansible.builtin.include_tasks",
+        "resolved_action": null,
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/validate-schema.yaml:26",
+        "host": "localhost",
+        "uuid": "b60cc69e-6964-4e5b-b5a4-4dcf71422756"
+      }
+    },
+    {
+      "uuid": "6cbb7b6c-1282-4ae3-b73f-97824df4e067",
+      "counter": 6,
+      "stdout": "",
+      "start_line": 5,
+      "end_line": 5,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.556770+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000005",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include config schema validation tasks",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000005",
+        "task_action": "ansible.builtin.include_tasks",
+        "resolved_action": null,
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/validate-schema.yaml:26",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "include": "tasks/config_schema_validation.yaml",
+          "include_args": {
+            "apply": {
+              "tags": "validate-config"
+            }
+          },
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:29.543877+00:00",
+        "end": "2026-06-16T14:13:29.556434+00:00",
+        "duration": 0.012557,
+        "event_loop": null,
+        "uuid": "6cbb7b6c-1282-4ae3-b73f-97824df4e067"
+      }
+    },
+    {
+      "uuid": "560b7420-3f5f-4af4-9016-1e5821bf984b",
+      "counter": 7,
+      "stdout": "included: /opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml for localhost",
+      "start_line": 5,
+      "end_line": 6,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_include",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.565101+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000005",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include config schema validation tasks",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000005",
+        "task_action": "ansible.builtin.include_tasks",
+        "resolved_action": null,
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/validate-schema.yaml:26",
+        "included_file": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml",
+        "uuid": "560b7420-3f5f-4af4-9016-1e5821bf984b"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000017",
+      "counter": 8,
+      "stdout": "\r\nTASK [Load shared schema definitions] ******************************************",
+      "start_line": 6,
+      "end_line": 8,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.568507+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Load shared schema definitions",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000017",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:1",
+        "name": "Load shared schema definitions",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000017"
+      }
+    },
+    {
+      "uuid": "bc7fcff7-9922-42aa-b041-62f0098ee927",
+      "counter": 9,
+      "stdout": "Tuesday 16 June 2026  10:13:29 -0400 (0:00:00.026)       0:00:00.205 ********** ",
+      "start_line": 8,
+      "end_line": 9,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.569022+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000017",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Load shared schema definitions",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000017",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:1",
+        "uuid": "bc7fcff7-9922-42aa-b041-62f0098ee927"
+      }
+    },
+    {
+      "uuid": "1799ed00-11cd-45ab-949b-6a587956f74d",
+      "counter": 10,
+      "stdout": "",
+      "start_line": 9,
+      "end_line": 9,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.570033+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000017",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Load shared schema definitions",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000017",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:1",
+        "host": "localhost",
+        "uuid": "1799ed00-11cd-45ab-949b-6a587956f74d"
+      }
+    },
+    {
+      "uuid": "2ba5913b-4020-439a-86bf-60048d17472a",
+      "counter": 11,
+      "stdout": "ok: [localhost]",
+      "start_line": 9,
+      "end_line": 10,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.632409+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000017",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Load shared schema definitions",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000017",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:1",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "ansible_facts": {
+            "schema_definitions": {
+              "definitions": {
+                "ipv4Address": {
+                  "type": "string",
+                  "pattern": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
+                  "description": "IPv4 address"
+                },
+                "ipv4AddressWithOptionalPort": {
+                  "type": "string",
+                  "pattern": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(:(([1-9][0-9]{0,3})|([1-5][0-9]{4})|(6[0-4][0-9]{3})|(65[0-4][0-9]{2})|(655[0-2][0-9])|(6553[0-5])))?$",
+                  "description": "IPv4 address with optional port (e.g. 192.168.1.1 or 192.168.1.1:8008)"
+                },
+                "cidr": {
+                  "type": "string",
+                  "pattern": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/(3[0-2]|[12]?[0-9])$",
+                  "description": "CIDR notation network address"
+                },
+                "macAddress": {
+                  "type": "string",
+                  "pattern": "^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$",
+                  "description": "MAC address in colon-separated hex notation"
+                },
+                "httpUrl": {
+                  "type": "string",
+                  "pattern": "^https?://[^/]",
+                  "description": "HTTP or HTTPS URL with a non-empty hostname"
+                },
+                "k8sQuantity": {
+                  "type": "string",
+                  "pattern": "^([0-9]+\\.?[0-9]*|\\.[0-9]+)([eE][+-]?[0-9]+|Ki|Mi|Gi|Ti|Pi|Ei|m|k|M|G|T|P|E)?$",
+                  "description": "A Kubernetes resource quantity (e.g. 5Gi, 100m, 512Mi)"
+                },
+                "nonEmptyString": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "A non-empty string value"
+                },
+                "hostname": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9]([a-zA-Z0-9\\-]*[a-zA-Z0-9])?(\\.[a-zA-Z0-9]([a-zA-Z0-9\\-]*[a-zA-Z0-9])?)*$",
+                  "description": "A valid DNS hostname"
+                },
+                "disconnected": {
+                  "type": "boolean",
+                  "description": "Whether the deployment is disconnected (air-gapped). Default: true. Set to false for connected deployments."
+                },
+                "fresh": {
+                  "type": "boolean",
+                  "description": "Whether this is a fresh install. default: true. Set to false to mirror multiple OpenShift versions."
+                },
+                "masterMaxPods": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Configure High Density Pod Limits for ABI. Default: 500."
+                },
+                "diskEncryption": {
+                  "type": "boolean",
+                  "description": "Whether to enable disk encryption using TPM v2. Default: false. Set to true to encrypt the installation partition on all nodes."
+                },
+                "ocMirrorLogLevel": {
+                  "type": "string",
+                  "enum": [
+                    "trace",
+                    "debug",
+                    "info",
+                    "error"
+                  ],
+                  "description": "Log level for oc-mirror. Default: info."
+                },
+                "quayBackendRGWIsSecure": {
+                  "type": "boolean",
+                  "description": "Whether to use HTTPS for backend storage"
+                },
+                "quayBackendRGWMaximumChunkSizeMb": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Maximum multipart upload chunk size in MB"
+                },
+                "quayBackendRGWMinimumChunkSizeMb": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Minimum multipart upload chunk size in MB"
+                },
+                "quayBackendRGWPort": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 65535,
+                  "description": "Port for backend storage endpoint"
+                },
+                "quayBackendRGWServerSideAssembly": {
+                  "type": "boolean",
+                  "description": "Enable server-side assembly for multipart uploads"
+                },
+                "quayBackendStoragePath": {
+                  "type": "string",
+                  "pattern": "^/",
+                  "description": "Path for backend storage"
+                },
+                "hostEntry": {
+                  "type": "object",
+                  "description": "Host entry for cluster or discovery nodes",
+                  "properties": {
+                    "bmcSystemId": {
+                      "type": "string",
+                      "description": "Redfish system ID path component, defaults to '1'"
+                    },
+                    "ipAddress": {
+                      "$ref": "#/definitions/ipv4Address"
+                    },
+                    "macAddress": {
+                      "$ref": "#/definitions/macAddress"
+                    },
+                    "mapInterfaces": {
+                      "description": "Interface mapping configuration",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "name",
+                          "macAddress"
+                        ],
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "macAddress": {
+                            "$ref": "#/definitions/macAddress"
+                          }
+                        }
+                      }
+                    },
+                    "name": {
+                      "$ref": "#/definitions/nonEmptyString"
+                    },
+                    "networkConfig": {
+                      "type": "object",
+                      "description": "Network configuration"
+                    },
+                    "redfish": {
+                      "$ref": "#/definitions/ipv4AddressWithOptionalPort"
+                    },
+                    "redfishPassword": {
+                      "$ref": "#/definitions/nonEmptyString"
+                    },
+                    "redfishUser": {
+                      "$ref": "#/definitions/nonEmptyString"
+                    },
+                    "rootDisk": {
+                      "$ref": "#/definitions/nonEmptyString"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "redfish",
+                    "redfishPassword",
+                    "redfishUser",
+                    "rootDisk",
+                    "macAddress"
+                  ],
+                  "oneOf": [
+                    {
+                      "required": [
+                        "ipAddress"
+                      ],
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "networkConfig"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "mapInterfaces"
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "required": [
+                        "networkConfig",
+                        "mapInterfaces"
+                      ],
+                      "not": {
+                        "required": [
+                          "ipAddress"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "_ansible_no_log": false,
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:29.569952+00:00",
+        "end": "2026-06-16T14:13:29.632146+00:00",
+        "duration": 0.062194,
+        "event_loop": null,
+        "uuid": "2ba5913b-4020-439a-86bf-60048d17472a"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000018",
+      "counter": 12,
+      "stdout": "\r\nTASK [Include load-vars to resolve user config file paths] *********************",
+      "start_line": 10,
+      "end_line": 12,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.634925+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include load-vars to resolve user config file paths",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000018",
+        "task_action": "ansible.builtin.include_tasks",
+        "resolved_action": null,
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:5",
+        "name": "Include load-vars to resolve user config file paths",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000018"
+      }
+    },
+    {
+      "uuid": "bb7a9346-593f-458c-8fcd-bea1b5a42ed7",
+      "counter": 13,
+      "stdout": "Tuesday 16 June 2026  10:13:29 -0400 (0:00:00.066)       0:00:00.272 ********** ",
+      "start_line": 12,
+      "end_line": 13,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.635456+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000018",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include load-vars to resolve user config file paths",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000018",
+        "task_action": "ansible.builtin.include_tasks",
+        "resolved_action": null,
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:5",
+        "uuid": "bb7a9346-593f-458c-8fcd-bea1b5a42ed7"
+      }
+    },
+    {
+      "uuid": "d67a9a17-7449-4bc4-bff4-a7ab0bdf5bb5",
+      "counter": 14,
+      "stdout": "",
+      "start_line": 13,
+      "end_line": 13,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.636372+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000018",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include load-vars to resolve user config file paths",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000018",
+        "task_action": "ansible.builtin.include_tasks",
+        "resolved_action": null,
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:5",
+        "host": "localhost",
+        "uuid": "d67a9a17-7449-4bc4-bff4-a7ab0bdf5bb5"
+      }
+    },
+    {
+      "uuid": "364e2332-a7ab-4bea-9b04-e0ed02497a96",
+      "counter": 15,
+      "stdout": "",
+      "start_line": 13,
+      "end_line": 13,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.646441+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000018",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include load-vars to resolve user config file paths",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000018",
+        "task_action": "ansible.builtin.include_tasks",
+        "resolved_action": null,
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:5",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "include": "../../common/load-vars.yaml",
+          "include_args": {},
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:29.636295+00:00",
+        "end": "2026-06-16T14:13:29.646005+00:00",
+        "duration": 0.00971,
+        "event_loop": null,
+        "uuid": "364e2332-a7ab-4bea-9b04-e0ed02497a96"
+      }
+    },
+    {
+      "uuid": "255238ba-bcd1-4407-b558-7f750346f14c",
+      "counter": 16,
+      "stdout": "included: /opt/enclave/playbooks/validation/tasks/../../common/load-vars.yaml for localhost",
+      "start_line": 13,
+      "end_line": 14,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_include",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.657897+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000018",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include load-vars to resolve user config file paths",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000018",
+        "task_action": "ansible.builtin.include_tasks",
+        "resolved_action": null,
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:5",
+        "included_file": "/opt/enclave/playbooks/validation/tasks/../../common/load-vars.yaml",
+        "uuid": "255238ba-bcd1-4407-b558-7f750346f14c"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000028",
+      "counter": 17,
+      "stdout": "\r\nTASK [Set user config file paths] **********************************************",
+      "start_line": 14,
+      "end_line": 16,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.663367+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Set user config file paths",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000028",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:3",
+        "name": "Set user config file paths",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000028"
+      }
+    },
+    {
+      "uuid": "268c2711-cdef-4447-bc88-3fa0ba0ec66f",
+      "counter": 18,
+      "stdout": "Tuesday 16 June 2026  10:13:29 -0400 (0:00:00.028)       0:00:00.300 ********** ",
+      "start_line": 16,
+      "end_line": 17,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.663974+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000028",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Set user config file paths",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000028",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:3",
+        "uuid": "268c2711-cdef-4447-bc88-3fa0ba0ec66f"
+      }
+    },
+    {
+      "uuid": "4243b974-51f3-4f70-b9d6-d38a98d0338a",
+      "counter": 19,
+      "stdout": "",
+      "start_line": 17,
+      "end_line": 17,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.664943+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000028",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Set user config file paths",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000028",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:3",
+        "host": "localhost",
+        "uuid": "4243b974-51f3-4f70-b9d6-d38a98d0338a"
+      }
+    },
+    {
+      "uuid": "6f519e64-65d7-4ec6-8c29-ffe84c62e8bb",
+      "counter": 20,
+      "stdout": "ok: [localhost]",
+      "start_line": 17,
+      "end_line": 18,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.701542+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000028",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Set user config file paths",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000028",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:3",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "ansible_facts": {
+            "user_config_files": [
+              "../../config/global.yaml",
+              "../../config/certificates.yaml",
+              "../../config/cloud_infra.yaml"
+            ]
+          },
+          "_ansible_no_log": false,
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:29.664860+00:00",
+        "end": "2026-06-16T14:13:29.701299+00:00",
+        "duration": 0.036439,
+        "event_loop": null,
+        "uuid": "6f519e64-65d7-4ec6-8c29-ffe84c62e8bb"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000029",
+      "counter": 21,
+      "stdout": "\r\nTASK [Include deployment defaults] *********************************************",
+      "start_line": 18,
+      "end_line": 20,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.709315+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include deployment defaults",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000029",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:10",
+        "name": "Include deployment defaults",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000029"
+      }
+    },
+    {
+      "uuid": "028f0e80-9d51-49c8-b09a-cc0fbca53503",
+      "counter": 22,
+      "stdout": "Tuesday 16 June 2026  10:13:29 -0400 (0:00:00.045)       0:00:00.346 ********** ",
+      "start_line": 20,
+      "end_line": 21,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.710363+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000029",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include deployment defaults",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000029",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:10",
+        "uuid": "028f0e80-9d51-49c8-b09a-cc0fbca53503"
+      }
+    },
+    {
+      "uuid": "e2f543db-d75b-4e57-bf22-dd3efd777c31",
+      "counter": 23,
+      "stdout": "",
+      "start_line": 21,
+      "end_line": 21,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.711794+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000029",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include deployment defaults",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000029",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:10",
+        "host": "localhost",
+        "uuid": "e2f543db-d75b-4e57-bf22-dd3efd777c31"
+      }
+    },
+    {
+      "uuid": "a39e5f84-4958-4e4d-926a-dfe8888d492c",
+      "counter": 24,
+      "stdout": "ok: [localhost]",
+      "start_line": 21,
+      "end_line": 22,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.729222+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000029",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include deployment defaults",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000029",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:10",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "ansible_included_var_files": [
+            "/opt/enclave/playbooks/common/../../defaults/deployment.yaml"
+          ],
+          "ansible_facts": {
+            "disconnected": true,
+            "fresh": true,
+            "masterMaxPods": 500,
+            "diskEncryption": false,
+            "ocMirrorLogLevel": "info",
+            "storage_plugin": "lvms",
+            "enabled_plugins": [
+              "{{ storage_plugin }}"
+            ],
+            "pullSecretPath": "{{ workingDir }}/config/pull-secret.json"
+          },
+          "_ansible_no_log": false,
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:29.711720+00:00",
+        "end": "2026-06-16T14:13:29.728238+00:00",
+        "duration": 0.016518,
+        "event_loop": null,
+        "uuid": "a39e5f84-4958-4e4d-926a-dfe8888d492c"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+      "counter": 25,
+      "stdout": "\r\nTASK [Include user config vars] ************************************************",
+      "start_line": 22,
+      "end_line": 24,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.732122+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include user config vars",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:13",
+        "name": "Include user config vars",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a"
+      }
+    },
+    {
+      "uuid": "158daa3b-8d9e-4ff7-bc26-ff652cf81351",
+      "counter": 26,
+      "stdout": "Tuesday 16 June 2026  10:13:29 -0400 (0:00:00.022)       0:00:00.369 ********** ",
+      "start_line": 24,
+      "end_line": 25,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.733179+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include user config vars",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:13",
+        "uuid": "158daa3b-8d9e-4ff7-bc26-ff652cf81351"
+      }
+    },
+    {
+      "uuid": "1aeb7805-06d6-4719-904a-4952a0440eba",
+      "counter": 27,
+      "stdout": "",
+      "start_line": 25,
+      "end_line": 25,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.734685+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include user config vars",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:13",
+        "host": "localhost",
+        "uuid": "1aeb7805-06d6-4719-904a-4952a0440eba"
+      }
+    },
+    {
+      "uuid": "e54453d0-2252-4ca9-89ad-775ee6df5e7f",
+      "counter": 28,
+      "stdout": "ok: [localhost] =\u003e (item=../../config/global.yaml)",
+      "start_line": 25,
+      "end_line": 26,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_item_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.758590+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include user config vars",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:13",
+        "host": "localhost",
+        "res": {
+          "ansible_included_var_files": [
+            "/opt/enclave/playbooks/common/../../config/global.yaml"
+          ],
+          "ansible_facts": {
+            "agent_hosts": [
+              {
+                "ipAddress": "192.168.223.10",
+                "macAddress": "00:60:2f:e0:c1:00",
+                "name": "enclave-cp-0",
+                "redfish": "192.168.223.1:8100",
+                "redfishPassword": "password",
+                "redfishUser": "admin",
+                "rootDisk": "/dev/sda"
+              },
+              {
+                "ipAddress": "192.168.223.11",
+                "macAddress": "00:60:2f:e0:c1:01",
+                "name": "enclave-cp-1",
+                "redfish": "192.168.223.1:8100",
+                "redfishPassword": "password",
+                "redfishUser": "admin",
+                "rootDisk": "/dev/sda"
+              },
+              {
+                "ipAddress": "192.168.223.12",
+                "macAddress": "00:60:2f:e0:c1:02",
+                "name": "enclave-cp-2",
+                "redfish": "192.168.223.1:8100",
+                "redfishPassword": "password",
+                "redfishUser": "admin",
+                "rootDisk": "/dev/sda"
+              }
+            ],
+            "apiVIP": "192.168.223.200",
+            "baseDomain": "enclave-test.lab.local",
+            "clusterName": "mgmt",
+            "defaultDNS": "192.168.223.1",
+            "defaultGateway": "192.168.223.1",
+            "defaultPrefix": 24,
+            "disconnected": false,
+            "enabled_plugins": [
+              "lvms"
+            ],
+            "ingressVIP": "192.168.223.201",
+            "lzBmcIP": "192.168.223.25",
+            "machineNetwork": "192.168.223.0/24",
+            "pullSecret": {
+              "auths": {
+                "cloud.openshift.com": {
+                  "auth": "b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K29jbV9hY2Nlc3NfZGUwYmYxMGI2ODVkNGFiZTg3MmY4Y2VmM2QxMDBlNWE6SlhFRDBWOEQ5MjZIMDkzVEFDTzgwU1dXSUlXTlJHQ1pWQUdKMElJNkxIUU9ZRzE2Tk5OM1NHR0FYRVczWEg5TA==",
+                  "email": "rpiccoli@redhat.com"
+                },
+                "quay.io": {
+                  "auth": "b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K29jbV9hY2Nlc3NfZGUwYmYxMGI2ODVkNGFiZTg3MmY4Y2VmM2QxMDBlNWE6SlhFRDBWOEQ5MjZIMDkzVEFDTzgwU1dXSUlXTlJHQ1pWQUdKMElJNkxIUU9ZRzE2Tk5OM1NHR0FYRVczWEg5TA==",
+                  "email": "rpiccoli@redhat.com"
+                },
+                "registry.build02.ci.openshift.org": {
+                  "auth": "dXNlcjpzaGEyNTZ+UkRuVGttdHdwQmM0TFlfVnZKb2s2RXpyall4dEROTVhYelEwYnpRelhLdw=="
+                },
+                "registry.build05.ci.openshift.org": {
+                  "auth": "dXNlcjpzaGEyNTZ+azVvaEc2c054S0VwTXZ1dXhIN2ZFdFdJdndyMHoyT2E2QTFSOHhralZ6NA=="
+                },
+                "registry.ci.openshift.org": {
+                  "auth": "dXNlcjpzaGEyNTZ+dXVRR01vYllkazRJUGd5R3NTX01mMWhabGNkMF9mSFUtdFBLOVpDbHUxZw=="
+                },
+                "registry.redhat.io": {
+                  "auth": "cmgtZWUtcnBpY2NvbGk6Q2VzYXJpbm8kMQ=="
+                }
+              }
+            },
+            "quayBackend": "LocalStorage",
+            "quayPassword": "password",
+            "quayUser": "admin",
+            "rendezvousIP": "192.168.223.10",
+            "sshPubKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC5qkioierDIYohdUPYNT19FMMVd1E8IlQwHhhInEZPLMQdFvpwBqAD2AxN1tDaRrKvQwUdM8isKFPx8Y1+Vye4PGXn6FDXryKasnkcyE5FE8ckAMJdK3IdStr2E0Ol4ZSzmofpb6XFGiN0hKVcXXHGtqk+iim4aNzzCr9KN6j+Lx00oILMwyo7NL7+Za4Cy39PFqlY0YdfXkDm/gnOm8uKRTMw9z9b7oGpBniuo96jEL55LSOnCvFjKExhC0LpOyHEC9GbpFtkzfaI/Ylyb8+yibAt+GR8GodFe44FUoi2i2V+Hq455Kz6q2+vTC2xU9ZOgu6rbDRm7N+tWK0Pr1cH4Y4KXNDFmPfXYGquGwvuTNxYGvaFjsUwANVAIotIic3Y+GYQoShrSxXnKqh9pqZDJoTVFsSAbZDBlsQHzHepxldK2NKQoBRdGr/suiLlZWjGRl50BHoTyFa2Mz0ngzU0S06YhgSvRvWrI6JlbdH0Q1WCsbrrRhrmQmmUc9LfQ58= wizard@enclave-wizard-lz",
+            "storage_plugin": "lvms",
+            "workingDir": "/opt/enclave"
+          },
+          "_ansible_no_log": false,
+          "changed": false,
+          "item": "../../config/global.yaml",
+          "ansible_loop_var": "item",
+          "_ansible_item_label": "../../config/global.yaml"
+        },
+        "uuid": "e54453d0-2252-4ca9-89ad-775ee6df5e7f"
+      }
+    },
+    {
+      "uuid": "599a6378-20b8-4212-b28f-50d1449face7",
+      "counter": 29,
+      "stdout": "ok: [localhost] =\u003e (item=../../config/certificates.yaml)",
+      "start_line": 26,
+      "end_line": 27,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_item_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.761188+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include user config vars",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:13",
+        "host": "localhost",
+        "res": {
+          "ansible_included_var_files": [
+            "/opt/enclave/playbooks/common/../../config/certificates.yaml"
+          ],
+          "ansible_facts": {},
+          "_ansible_no_log": false,
+          "changed": false,
+          "item": "../../config/certificates.yaml",
+          "ansible_loop_var": "item",
+          "_ansible_item_label": "../../config/certificates.yaml"
+        },
+        "uuid": "599a6378-20b8-4212-b28f-50d1449face7"
+      }
+    },
+    {
+      "uuid": "ac49aecd-627a-46f5-b43d-b314aa8c5e43",
+      "counter": 30,
+      "stdout": "ok: [localhost] =\u003e (item=../../config/cloud_infra.yaml)",
+      "start_line": 27,
+      "end_line": 28,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_item_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.764717+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include user config vars",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:13",
+        "host": "localhost",
+        "res": {
+          "ansible_included_var_files": [
+            "/opt/enclave/playbooks/common/../../config/cloud_infra.yaml"
+          ],
+          "ansible_facts": {
+            "discovery_hosts": []
+          },
+          "_ansible_no_log": false,
+          "changed": false,
+          "item": "../../config/cloud_infra.yaml",
+          "ansible_loop_var": "item",
+          "_ansible_item_label": "../../config/cloud_infra.yaml"
+        },
+        "uuid": "ac49aecd-627a-46f5-b43d-b314aa8c5e43"
+      }
+    },
+    {
+      "uuid": "0ed5d70c-c360-4ef6-a8af-f811f74201c2",
+      "counter": 31,
+      "stdout": "",
+      "start_line": 28,
+      "end_line": 28,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.766619+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include user config vars",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002a",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:13",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "results": [
+            {
+              "ansible_included_var_files": [
+                "/opt/enclave/playbooks/common/../../config/global.yaml"
+              ],
+              "ansible_facts": {
+                "agent_hosts": [
+                  {
+                    "ipAddress": "192.168.223.10",
+                    "macAddress": "00:60:2f:e0:c1:00",
+                    "name": "enclave-cp-0",
+                    "redfish": "192.168.223.1:8100",
+                    "redfishPassword": "password",
+                    "redfishUser": "admin",
+                    "rootDisk": "/dev/sda"
+                  },
+                  {
+                    "ipAddress": "192.168.223.11",
+                    "macAddress": "00:60:2f:e0:c1:01",
+                    "name": "enclave-cp-1",
+                    "redfish": "192.168.223.1:8100",
+                    "redfishPassword": "password",
+                    "redfishUser": "admin",
+                    "rootDisk": "/dev/sda"
+                  },
+                  {
+                    "ipAddress": "192.168.223.12",
+                    "macAddress": "00:60:2f:e0:c1:02",
+                    "name": "enclave-cp-2",
+                    "redfish": "192.168.223.1:8100",
+                    "redfishPassword": "password",
+                    "redfishUser": "admin",
+                    "rootDisk": "/dev/sda"
+                  }
+                ],
+                "apiVIP": "192.168.223.200",
+                "baseDomain": "enclave-test.lab.local",
+                "clusterName": "mgmt",
+                "defaultDNS": "192.168.223.1",
+                "defaultGateway": "192.168.223.1",
+                "defaultPrefix": 24,
+                "disconnected": false,
+                "enabled_plugins": [
+                  "lvms"
+                ],
+                "ingressVIP": "192.168.223.201",
+                "lzBmcIP": "192.168.223.25",
+                "machineNetwork": "192.168.223.0/24",
+                "pullSecret": {
+                  "auths": {
+                    "cloud.openshift.com": {
+                      "auth": "b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K29jbV9hY2Nlc3NfZGUwYmYxMGI2ODVkNGFiZTg3MmY4Y2VmM2QxMDBlNWE6SlhFRDBWOEQ5MjZIMDkzVEFDTzgwU1dXSUlXTlJHQ1pWQUdKMElJNkxIUU9ZRzE2Tk5OM1NHR0FYRVczWEg5TA==",
+                      "email": "rpiccoli@redhat.com"
+                    },
+                    "quay.io": {
+                      "auth": "b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K29jbV9hY2Nlc3NfZGUwYmYxMGI2ODVkNGFiZTg3MmY4Y2VmM2QxMDBlNWE6SlhFRDBWOEQ5MjZIMDkzVEFDTzgwU1dXSUlXTlJHQ1pWQUdKMElJNkxIUU9ZRzE2Tk5OM1NHR0FYRVczWEg5TA==",
+                      "email": "rpiccoli@redhat.com"
+                    },
+                    "registry.build02.ci.openshift.org": {
+                      "auth": "dXNlcjpzaGEyNTZ+UkRuVGttdHdwQmM0TFlfVnZKb2s2RXpyall4dEROTVhYelEwYnpRelhLdw=="
+                    },
+                    "registry.build05.ci.openshift.org": {
+                      "auth": "dXNlcjpzaGEyNTZ+azVvaEc2c054S0VwTXZ1dXhIN2ZFdFdJdndyMHoyT2E2QTFSOHhralZ6NA=="
+                    },
+                    "registry.ci.openshift.org": {
+                      "auth": "dXNlcjpzaGEyNTZ+dXVRR01vYllkazRJUGd5R3NTX01mMWhabGNkMF9mSFUtdFBLOVpDbHUxZw=="
+                    },
+                    "registry.redhat.io": {
+                      "auth": "cmgtZWUtcnBpY2NvbGk6Q2VzYXJpbm8kMQ=="
+                    }
+                  }
+                },
+                "quayBackend": "LocalStorage",
+                "quayPassword": "password",
+                "quayUser": "admin",
+                "rendezvousIP": "192.168.223.10",
+                "sshPubKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC5qkioierDIYohdUPYNT19FMMVd1E8IlQwHhhInEZPLMQdFvpwBqAD2AxN1tDaRrKvQwUdM8isKFPx8Y1+Vye4PGXn6FDXryKasnkcyE5FE8ckAMJdK3IdStr2E0Ol4ZSzmofpb6XFGiN0hKVcXXHGtqk+iim4aNzzCr9KN6j+Lx00oILMwyo7NL7+Za4Cy39PFqlY0YdfXkDm/gnOm8uKRTMw9z9b7oGpBniuo96jEL55LSOnCvFjKExhC0LpOyHEC9GbpFtkzfaI/Ylyb8+yibAt+GR8GodFe44FUoi2i2V+Hq455Kz6q2+vTC2xU9ZOgu6rbDRm7N+tWK0Pr1cH4Y4KXNDFmPfXYGquGwvuTNxYGvaFjsUwANVAIotIic3Y+GYQoShrSxXnKqh9pqZDJoTVFsSAbZDBlsQHzHepxldK2NKQoBRdGr/suiLlZWjGRl50BHoTyFa2Mz0ngzU0S06YhgSvRvWrI6JlbdH0Q1WCsbrrRhrmQmmUc9LfQ58= wizard@enclave-wizard-lz",
+                "storage_plugin": "lvms",
+                "workingDir": "/opt/enclave"
+              },
+              "_ansible_no_log": false,
+              "failed": false,
+              "changed": false,
+              "item": "../../config/global.yaml",
+              "ansible_loop_var": "item",
+              "_ansible_item_label": "../../config/global.yaml"
+            },
+            {
+              "ansible_included_var_files": [
+                "/opt/enclave/playbooks/common/../../config/certificates.yaml"
+              ],
+              "ansible_facts": {},
+              "_ansible_no_log": false,
+              "failed": false,
+              "changed": false,
+              "item": "../../config/certificates.yaml",
+              "ansible_loop_var": "item",
+              "_ansible_item_label": "../../config/certificates.yaml"
+            },
+            {
+              "ansible_included_var_files": [
+                "/opt/enclave/playbooks/common/../../config/cloud_infra.yaml"
+              ],
+              "ansible_facts": {
+                "discovery_hosts": []
+              },
+              "_ansible_no_log": false,
+              "failed": false,
+              "changed": false,
+              "item": "../../config/cloud_infra.yaml",
+              "ansible_loop_var": "item",
+              "_ansible_item_label": "../../config/cloud_infra.yaml"
+            }
+          ],
+          "msg": "All items completed",
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:29.734589+00:00",
+        "end": "2026-06-16T14:13:29.766521+00:00",
+        "duration": 0.031932,
+        "event_loop": null,
+        "uuid": "0ed5d70c-c360-4ef6-a8af-f811f74201c2"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-00000000002c",
+      "counter": 32,
+      "stdout": "\r\nTASK [Ensure config directory exists] ******************************************",
+      "start_line": 28,
+      "end_line": 30,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.769451+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Ensure config directory exists",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002c",
+        "task_action": "ansible.builtin.file",
+        "resolved_action": "ansible.builtin.file",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:20",
+        "name": "Ensure config directory exists",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-00000000002c"
+      }
+    },
+    {
+      "uuid": "c7192c3d-89b8-4a15-bf40-587d999f282a",
+      "counter": 33,
+      "stdout": "Tuesday 16 June 2026  10:13:29 -0400 (0:00:00.037)       0:00:00.406 ********** ",
+      "start_line": 30,
+      "end_line": 31,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.770548+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002c",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Ensure config directory exists",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002c",
+        "task_action": "ansible.builtin.file",
+        "resolved_action": "ansible.builtin.file",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:20",
+        "uuid": "c7192c3d-89b8-4a15-bf40-587d999f282a"
+      }
+    },
+    {
+      "uuid": "d22ae226-3794-4f36-be61-0e0c78740de9",
+      "counter": 34,
+      "stdout": "",
+      "start_line": 31,
+      "end_line": 31,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:29.772099+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002c",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Ensure config directory exists",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002c",
+        "task_action": "ansible.builtin.file",
+        "resolved_action": "ansible.builtin.file",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:20",
+        "host": "localhost",
+        "uuid": "d22ae226-3794-4f36-be61-0e0c78740de9"
+      }
+    },
+    {
+      "uuid": "7a1ae6bb-f57c-4f5c-9f58-b695a3963e3c",
+      "counter": 35,
+      "stdout": "changed: [localhost]",
+      "start_line": 31,
+      "end_line": 32,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:30.249902+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002c",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Ensure config directory exists",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002c",
+        "task_action": "ansible.builtin.file",
+        "resolved_action": "ansible.builtin.file",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:20",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "path": "/opt/enclave/config",
+          "changed": true,
+          "diff": {
+            "before": {
+              "path": "/opt/enclave/config",
+              "mode": "0755"
+            },
+            "after": {
+              "path": "/opt/enclave/config",
+              "mode": "0750"
+            }
+          },
+          "uid": 0,
+          "gid": 0,
+          "owner": "root",
+          "group": "root",
+          "mode": "0750",
+          "state": "directory",
+          "secontext": "system_u:object_r:usr_t:s0",
+          "size": 4096,
+          "invocation": {
+            "module_args": {
+              "path": "/opt/enclave/config",
+              "state": "directory",
+              "mode": "0750",
+              "recurse": false,
+              "force": false,
+              "follow": true,
+              "modification_time_format": "%Y%m%d%H%M.%S",
+              "access_time_format": "%Y%m%d%H%M.%S",
+              "unsafe_writes": false,
+              "_original_basename": null,
+              "_diff_peek": null,
+              "src": null,
+              "modification_time": null,
+              "access_time": null,
+              "owner": null,
+              "group": null,
+              "seuser": null,
+              "serole": null,
+              "selevel": null,
+              "setype": null,
+              "attributes": null
+            }
+          },
+          "_ansible_no_log": false
+        },
+        "start": "2026-06-16T14:13:29.772020+00:00",
+        "end": "2026-06-16T14:13:30.249647+00:00",
+        "duration": 0.477627,
+        "event_loop": null,
+        "uuid": "7a1ae6bb-f57c-4f5c-9f58-b695a3963e3c"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-00000000002d",
+      "counter": 36,
+      "stdout": "\r\nTASK [Write sshPubKey content to file] *****************************************",
+      "start_line": 32,
+      "end_line": 34,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:30.258637+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Write sshPubKey content to file",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002d",
+        "task_action": "ansible.builtin.copy",
+        "resolved_action": "ansible.builtin.copy",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:26",
+        "name": "Write sshPubKey content to file",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-00000000002d"
+      }
+    },
+    {
+      "uuid": "c435f03c-c9f8-4947-9da3-f7a5e8b35b41",
+      "counter": 37,
+      "stdout": "Tuesday 16 June 2026  10:13:30 -0400 (0:00:00.489)       0:00:00.896 ********** ",
+      "start_line": 34,
+      "end_line": 35,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:30.259724+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002d",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Write sshPubKey content to file",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002d",
+        "task_action": "ansible.builtin.copy",
+        "resolved_action": "ansible.builtin.copy",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:26",
+        "uuid": "c435f03c-c9f8-4947-9da3-f7a5e8b35b41"
+      }
+    },
+    {
+      "uuid": "c7d0d241-4b8f-45d3-8b1a-86ca937a4b47",
+      "counter": 38,
+      "stdout": "",
+      "start_line": 35,
+      "end_line": 35,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:30.261444+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002d",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Write sshPubKey content to file",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002d",
+        "task_action": "ansible.builtin.copy",
+        "resolved_action": "ansible.builtin.copy",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:26",
+        "host": "localhost",
+        "uuid": "c7d0d241-4b8f-45d3-8b1a-86ca937a4b47"
+      }
+    },
+    {
+      "uuid": "2bf17ad7-215a-4062-8c3a-540f35cee54d",
+      "counter": 39,
+      "stdout": "changed: [localhost]",
+      "start_line": 35,
+      "end_line": 36,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:30.970183+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002d",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Write sshPubKey content to file",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002d",
+        "task_action": "ansible.builtin.copy",
+        "resolved_action": "ansible.builtin.copy",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:26",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "diff": [],
+          "dest": "/opt/enclave/config/ssh-pub-key.pub",
+          "src": "/root/.ansible/tmp/ansible-tmp-1781619210.333004-18497-203859773132775/source",
+          "md5sum": "99c9753266f78a8cd91b2aee13a3d23a",
+          "checksum": "762fdb0907fbf6f80b46f9e2d4e40693cd7b3c59",
+          "changed": true,
+          "uid": 0,
+          "gid": 0,
+          "owner": "root",
+          "group": "root",
+          "mode": "0644",
+          "state": "file",
+          "secontext": "system_u:object_r:usr_t:s0",
+          "size": 578,
+          "invocation": {
+            "module_args": {
+              "dest": "/opt/enclave/config/ssh-pub-key.pub",
+              "mode": "0644",
+              "src": "/root/.ansible/tmp/ansible-tmp-1781619210.333004-18497-203859773132775/source",
+              "_original_basename": "tmp582a2obh",
+              "follow": false,
+              "checksum": "762fdb0907fbf6f80b46f9e2d4e40693cd7b3c59",
+              "backup": false,
+              "force": true,
+              "unsafe_writes": false,
+              "content": null,
+              "validate": null,
+              "directory_mode": null,
+              "remote_src": null,
+              "local_follow": null,
+              "owner": null,
+              "group": null,
+              "seuser": null,
+              "serole": null,
+              "selevel": null,
+              "setype": null,
+              "attributes": null
+            }
+          },
+          "_ansible_no_log": false
+        },
+        "start": "2026-06-16T14:13:30.261361+00:00",
+        "end": "2026-06-16T14:13:30.969971+00:00",
+        "duration": 0.70861,
+        "event_loop": null,
+        "uuid": "2bf17ad7-215a-4062-8c3a-540f35cee54d"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-00000000002e",
+      "counter": 40,
+      "stdout": "\r\nTASK [Set sshPubPath from written file] ****************************************",
+      "start_line": 36,
+      "end_line": 38,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:30.974062+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Set sshPubPath from written file",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002e",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:32",
+        "name": "Set sshPubPath from written file",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-00000000002e"
+      }
+    },
+    {
+      "uuid": "f88e9063-ae70-4033-a80d-c6b54e8b4364",
+      "counter": 41,
+      "stdout": "Tuesday 16 June 2026  10:13:30 -0400 (0:00:00.715)       0:00:01.611 ********** ",
+      "start_line": 38,
+      "end_line": 39,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:30.975268+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002e",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Set sshPubPath from written file",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002e",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:32",
+        "uuid": "f88e9063-ae70-4033-a80d-c6b54e8b4364"
+      }
+    },
+    {
+      "uuid": "3fa8315c-fca1-4ceb-ac7b-e304b0e90481",
+      "counter": 42,
+      "stdout": "",
+      "start_line": 39,
+      "end_line": 39,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:30.977053+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002e",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Set sshPubPath from written file",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002e",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:32",
+        "host": "localhost",
+        "uuid": "3fa8315c-fca1-4ceb-ac7b-e304b0e90481"
+      }
+    },
+    {
+      "uuid": "4b61f89b-ae07-4946-ac78-b0c5b469be09",
+      "counter": 43,
+      "stdout": "ok: [localhost]",
+      "start_line": 39,
+      "end_line": 40,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.043071+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002e",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Set sshPubPath from written file",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000002e",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:32",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "ansible_facts": {
+            "sshPubPath": "/opt/enclave/config/ssh-pub-key.pub"
+          },
+          "_ansible_no_log": false,
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:30.976951+00:00",
+        "end": "2026-06-16T14:13:31.042855+00:00",
+        "duration": 0.065904,
+        "event_loop": null,
+        "uuid": "4b61f89b-ae07-4946-ac78-b0c5b469be09"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+      "counter": 44,
+      "stdout": "\r\nTASK [Include common configuration] ********************************************",
+      "start_line": 40,
+      "end_line": 42,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.046152+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include common configuration",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:36",
+        "name": "Include common configuration",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000030"
+      }
+    },
+    {
+      "uuid": "ad238cb8-89a7-4b94-910b-44cf2af0d4d8",
+      "counter": 45,
+      "stdout": "Tuesday 16 June 2026  10:13:31 -0400 (0:00:00.071)       0:00:01.683 ********** ",
+      "start_line": 42,
+      "end_line": 43,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.047132+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include common configuration",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:36",
+        "uuid": "ad238cb8-89a7-4b94-910b-44cf2af0d4d8"
+      }
+    },
+    {
+      "uuid": "e661acb1-dea1-4bd0-b3ed-26be8b5b6b57",
+      "counter": 46,
+      "stdout": "",
+      "start_line": 43,
+      "end_line": 43,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.048474+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include common configuration",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:36",
+        "host": "localhost",
+        "uuid": "e661acb1-dea1-4bd0-b3ed-26be8b5b6b57"
+      }
+    },
+    {
+      "uuid": "f4a6e850-3384-4272-95cf-d6168bacfa1e",
+      "counter": 47,
+      "stdout": "ok: [localhost] =\u003e (item=control_binaries.yaml)",
+      "start_line": 43,
+      "end_line": 44,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_item_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.067336+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include common configuration",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:36",
+        "host": "localhost",
+        "res": {
+          "ansible_included_var_files": [
+            "/opt/enclave/playbooks/common/../../defaults/control_binaries.yaml"
+          ],
+          "ansible_facts": {
+            "control_binaries": {
+              "openshift_client": {
+                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.20.21/openshift-client-linux.tar.gz",
+                "checksum": "sha256:bc49d2bcc26812668ceed77e703aca247a48b81440da022bd14870600a33e6e8"
+              },
+              "helm": {
+                "url": "https://developers.redhat.com/content-gateway/file/pub/openshift-v4/clients/helm/3.17.1/helm-linux-amd64",
+                "checksum": "sha256:ef6c04f6a748d0f1d624a94a56dc0db83f8d70a65e3dbb19e94107126efcc5fd"
+              },
+              "mirror_registry": {
+                "url": "https://developers.redhat.com/content-gateway/file/pub/openshift-v4/clients/mirror-registry/1.3.11/mirror-registry.tar.gz",
+                "checksum": "sha256:b2fbf8b13d794cdebb8baee48afbfa78d13c4d76a1c60fc99d52c3c9abd31cf1"
+              },
+              "oc_mirror": {
+                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.20.15/oc-mirror.tar.gz",
+                "checksum": "sha256:59791d2e6b84ee380bc6a180e4e5e2006590ca1e0f146b0176819386e11e26d1"
+              }
+            }
+          },
+          "_ansible_no_log": false,
+          "changed": false,
+          "config_file": "control_binaries.yaml",
+          "ansible_loop_var": "config_file",
+          "_ansible_item_label": "control_binaries.yaml"
+        },
+        "uuid": "f4a6e850-3384-4272-95cf-d6168bacfa1e"
+      }
+    },
+    {
+      "uuid": "9af5e63d-e2ec-4f70-bb3e-af438b7bc781",
+      "counter": 48,
+      "stdout": "ok: [localhost] =\u003e (item=operators.yaml)",
+      "start_line": 44,
+      "end_line": 45,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_item_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.105741+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include common configuration",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:36",
+        "host": "localhost",
+        "res": {
+          "ansible_included_var_files": [
+            "/opt/enclave/playbooks/common/../../defaults/operators.yaml"
+          ],
+          "ansible_facts": {
+            "operators": [
+              {
+                "name": "quay-operator",
+                "version": "3.15.5",
+                "channel": "stable-3.15",
+                "init_version": "3.15.0",
+                "namespace": "quay-enterprise"
+              },
+              {
+                "name": "multicluster-engine",
+                "version": "2.10.3",
+                "channel": "stable-2.10",
+                "init_version": "2.10.0",
+                "namespace": "multicluster-engine",
+                "seed": true
+              },
+              {
+                "name": "advanced-cluster-management",
+                "version": "2.15.3",
+                "channel": "release-2.15",
+                "init_version": "2.15.0",
+                "namespace": "open-cluster-management",
+                "seed": true
+              },
+              {
+                "name": "cincinnati-operator",
+                "version": "5.0.3",
+                "channel": "v1",
+                "init_version": "5.0.3",
+                "namespace": "openshift-update-service",
+                "csvNames": [
+                  "update-service-operator"
+                ]
+              },
+              {
+                "name": "openshift-gitops-operator",
+                "version": "1.19.2",
+                "channel": "gitops-1.19",
+                "init_version": "1.19.2",
+                "namespace": "openshift-gitops-operator",
+                "global": true
+              },
+              {
+                "name": "openshift-pipelines-operator-rh",
+                "version": "1.20.3",
+                "channel": "pipelines-1.20",
+                "init_version": "1.20.3",
+                "namespace": "openshift-pipelines",
+                "global": true
+              },
+              {
+                "name": "netobserv-operator",
+                "version": "1.11.0",
+                "channel": "stable",
+                "init_version": "1.11.0",
+                "namespace": "openshift-netobserv-operator",
+                "global": true,
+                "csvNames": [
+                  "network-observability-operator"
+                ]
+              },
+              {
+                "name": "cluster-logging",
+                "version": "6.4.2",
+                "channel": "stable-6.4",
+                "init_version": "6.4.2",
+                "namespace": "openshift-logging"
+              },
+              {
+                "name": "loki-operator",
+                "version": "6.4.2",
+                "channel": "stable-6.4",
+                "init_version": "6.4.2",
+                "namespace": "openshift-operators-redhat",
+                "global": true
+              },
+              {
+                "name": "redhat-oadp-operator",
+                "version": "1.5.5",
+                "channel": "stable",
+                "init_version": "1.5.5",
+                "namespace": "openshift-oadp",
+                "csvNames": [
+                  "oadp-operator"
+                ]
+              },
+              {
+                "name": "openshift-cert-manager-operator",
+                "version": "1.18.1",
+                "channel": "stable-v1",
+                "init_version": "1.18.1",
+                "namespace": "cert-manager-operator",
+                "csvNames": [
+                  "cert-manager-operator"
+                ]
+              },
+              {
+                "name": "cluster-observability-operator",
+                "version": "1.3.1",
+                "channel": "stable",
+                "init_version": "1.3.1",
+                "namespace": "openshift-cluster-observability-operator",
+                "global": true
+              },
+              {
+                "name": "openshift-external-secrets-operator",
+                "version": "1.0.0",
+                "channel": "stable-v1.0",
+                "init_version": "1.0.0",
+                "namespace": "external-secrets-operator",
+                "global": true,
+                "csvNames": [
+                  "external-secrets-operator"
+                ]
+              },
+              {
+                "name": "compliance-operator",
+                "version": "1.8.2",
+                "channel": "stable",
+                "init_version": "1.8.2",
+                "namespace": "openshift-compliance"
+              },
+              {
+                "name": "metallb-operator",
+                "version": "4.20.0-202602261925",
+                "channel": "stable",
+                "init_version": "4.20.0-202602261925",
+                "namespace": "metallb-system",
+                "global": true,
+                "csvNames": [
+                  "metallb-operator"
+                ],
+                "extraMirrorPackages": [
+                  "kubevirt-hyperconverged"
+                ]
+              }
+            ]
+          },
+          "_ansible_no_log": false,
+          "changed": false,
+          "config_file": "operators.yaml",
+          "ansible_loop_var": "config_file",
+          "_ansible_item_label": "operators.yaml"
+        },
+        "uuid": "9af5e63d-e2ec-4f70-bb3e-af438b7bc781"
+      }
+    },
+    {
+      "uuid": "631f33a0-b2dc-401d-9ce7-8aa273f4dafd",
+      "counter": 49,
+      "stdout": "ok: [localhost] =\u003e (item=platforms.yaml)",
+      "start_line": 45,
+      "end_line": 46,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_item_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.107964+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include common configuration",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:36",
+        "host": "localhost",
+        "res": {
+          "ansible_included_var_files": [
+            "/opt/enclave/playbooks/common/../../defaults/platforms.yaml"
+          ],
+          "ansible_facts": {
+            "openshift_versions": [
+              {
+                "version": "4.20.8"
+              },
+              {
+                "version": "4.20.21",
+                "default": true
+              }
+            ]
+          },
+          "_ansible_no_log": false,
+          "changed": false,
+          "config_file": "platforms.yaml",
+          "ansible_loop_var": "config_file",
+          "_ansible_item_label": "platforms.yaml"
+        },
+        "uuid": "631f33a0-b2dc-401d-9ce7-8aa273f4dafd"
+      }
+    },
+    {
+      "uuid": "3e42765c-a2a1-4128-90f4-c0db42ea803b",
+      "counter": 50,
+      "stdout": "ok: [localhost] =\u003e (item=catalogs.yaml)",
+      "start_line": 46,
+      "end_line": 47,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_item_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.110732+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include common configuration",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:36",
+        "host": "localhost",
+        "res": {
+          "ansible_included_var_files": [
+            "/opt/enclave/playbooks/common/../../defaults/catalogs.yaml"
+          ],
+          "ansible_facts": {
+            "certified_operator_catalog": "registry.redhat.io/redhat/certified-operator-index",
+            "certified_operator_catalog_version": "v4.20",
+            "rh_operator_catalog": "registry.redhat.io/redhat/redhat-operator-index",
+            "rh_operator_catalog_version": "v4.20",
+            "mirror_rh_operator_catalog": "mirror-redhat-operators",
+            "mirror_certified_rh_operator_catalog": "mirror-certified-operators"
+          },
+          "_ansible_no_log": false,
+          "changed": false,
+          "config_file": "catalogs.yaml",
+          "ansible_loop_var": "config_file",
+          "_ansible_item_label": "catalogs.yaml"
+        },
+        "uuid": "3e42765c-a2a1-4128-90f4-c0db42ea803b"
+      }
+    },
+    {
+      "uuid": "eef81025-7bde-4e6b-9481-c29a4faaa664",
+      "counter": 51,
+      "stdout": "ok: [localhost] =\u003e (item=mirror_registry.yaml)",
+      "start_line": 47,
+      "end_line": 48,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_item_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.114368+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include common configuration",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:36",
+        "host": "localhost",
+        "res": {
+          "ansible_included_var_files": [
+            "/opt/enclave/playbooks/common/../../defaults/mirror_registry.yaml"
+          ],
+          "ansible_facts": {
+            "quayHostname": "mirror.{{ baseDomain }}",
+            "quayCAPath": "{{ workingDir }}/data/quay-rootCA/rootCA.pem"
+          },
+          "_ansible_no_log": false,
+          "changed": false,
+          "config_file": "mirror_registry.yaml",
+          "ansible_loop_var": "config_file",
+          "_ansible_item_label": "mirror_registry.yaml"
+        },
+        "uuid": "eef81025-7bde-4e6b-9481-c29a4faaa664"
+      }
+    },
+    {
+      "uuid": "b1477642-1fe4-41f2-9a8a-0271fd676d4c",
+      "counter": 52,
+      "stdout": "ok: [localhost] =\u003e (item=quay_operator.yaml)",
+      "start_line": 48,
+      "end_line": 49,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_item_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.118355+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include common configuration",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:36",
+        "host": "localhost",
+        "res": {
+          "ansible_included_var_files": [
+            "/opt/enclave/playbooks/common/../../defaults/quay_operator.yaml"
+          ],
+          "ansible_facts": {
+            "quayFeatureProxyStorage": true,
+            "quayFeatureQuotaManagement": false,
+            "quayMaximumLayerSize": "100G",
+            "quayBackendDefaults": {
+              "storage_path": "/datastorage/registry"
+            },
+            "quayBackendRGWDefaults": {
+              "is_secure": true,
+              "port": 443,
+              "minimum_chunk_size_mb": 100,
+              "maximum_chunk_size_mb": 500,
+              "server_side_assembly": true
+            },
+            "quayOAuthApp": {
+              "enabled": true,
+              "name": "default-application",
+              "organization": "default-org",
+              "redirect_uri": "http://localhost:8080/callback",
+              "scopes": "repo:read repo:write repo:admin repo:create user:read user:admin org:admin"
+            }
+          },
+          "_ansible_no_log": false,
+          "changed": false,
+          "config_file": "quay_operator.yaml",
+          "ansible_loop_var": "config_file",
+          "_ansible_item_label": "quay_operator.yaml"
+        },
+        "uuid": "b1477642-1fe4-41f2-9a8a-0271fd676d4c"
+      }
+    },
+    {
+      "uuid": "6fd31610-ae99-4b7f-bf83-753d1b140be0",
+      "counter": 53,
+      "stdout": "ok: [localhost] =\u003e (item=k8s.yaml)",
+      "start_line": 49,
+      "end_line": 50,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_item_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.122389+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include common configuration",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:36",
+        "host": "localhost",
+        "res": {
+          "ansible_included_var_files": [
+            "/opt/enclave/playbooks/common/../../defaults/k8s.yaml"
+          ],
+          "ansible_facts": {
+            "k8s_retries": 12,
+            "k8s_delay": 10
+          },
+          "_ansible_no_log": false,
+          "changed": false,
+          "config_file": "k8s.yaml",
+          "ansible_loop_var": "config_file",
+          "_ansible_item_label": "k8s.yaml"
+        },
+        "uuid": "6fd31610-ae99-4b7f-bf83-753d1b140be0"
+      }
+    },
+    {
+      "uuid": "f979e385-d9f8-48cc-a51e-a1988e71f3d1",
+      "counter": 54,
+      "stdout": "ok: [localhost] =\u003e (item=oc_mirror.yaml)",
+      "start_line": 50,
+      "end_line": 51,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_item_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.126420+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include common configuration",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:36",
+        "host": "localhost",
+        "res": {
+          "ansible_included_var_files": [
+            "/opt/enclave/playbooks/common/../../defaults/oc_mirror.yaml"
+          ],
+          "ansible_facts": {
+            "ocMirrorParallelImages": 10,
+            "ocMirrorParallelLayers": 10,
+            "ocMirrorRetryTimes": 10,
+            "ocMirrorRetryDelay": "10s",
+            "ocMirrorImageTimeout": "40m0s",
+            "ocMirrorAnsibleRetries": 10,
+            "ocMirrorAnsibleDelay": 10,
+            "ocMirrorCacheAnsibleRetries": 5,
+            "ocMirrorParallelLayersLocalStorage": 1
+          },
+          "_ansible_no_log": false,
+          "changed": false,
+          "config_file": "oc_mirror.yaml",
+          "ansible_loop_var": "config_file",
+          "_ansible_item_label": "oc_mirror.yaml"
+        },
+        "uuid": "f979e385-d9f8-48cc-a51e-a1988e71f3d1"
+      }
+    },
+    {
+      "uuid": "914c5c0b-b43a-4118-8e2a-6b78371ea2fc",
+      "counter": 55,
+      "stdout": "",
+      "start_line": 51,
+      "end_line": 51,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.154904+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Include common configuration",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000030",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:36",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "results": [
+            {
+              "ansible_included_var_files": [
+                "/opt/enclave/playbooks/common/../../defaults/control_binaries.yaml"
+              ],
+              "ansible_facts": {
+                "control_binaries": {
+                  "openshift_client": {
+                    "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.20.21/openshift-client-linux.tar.gz",
+                    "checksum": "sha256:bc49d2bcc26812668ceed77e703aca247a48b81440da022bd14870600a33e6e8"
+                  },
+                  "helm": {
+                    "url": "https://developers.redhat.com/content-gateway/file/pub/openshift-v4/clients/helm/3.17.1/helm-linux-amd64",
+                    "checksum": "sha256:ef6c04f6a748d0f1d624a94a56dc0db83f8d70a65e3dbb19e94107126efcc5fd"
+                  },
+                  "mirror_registry": {
+                    "url": "https://developers.redhat.com/content-gateway/file/pub/openshift-v4/clients/mirror-registry/1.3.11/mirror-registry.tar.gz",
+                    "checksum": "sha256:b2fbf8b13d794cdebb8baee48afbfa78d13c4d76a1c60fc99d52c3c9abd31cf1"
+                  },
+                  "oc_mirror": {
+                    "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.20.15/oc-mirror.tar.gz",
+                    "checksum": "sha256:59791d2e6b84ee380bc6a180e4e5e2006590ca1e0f146b0176819386e11e26d1"
+                  }
+                }
+              },
+              "_ansible_no_log": false,
+              "failed": false,
+              "changed": false,
+              "config_file": "control_binaries.yaml",
+              "ansible_loop_var": "config_file",
+              "_ansible_item_label": "control_binaries.yaml"
+            },
+            {
+              "ansible_included_var_files": [
+                "/opt/enclave/playbooks/common/../../defaults/operators.yaml"
+              ],
+              "ansible_facts": {
+                "operators": [
+                  {
+                    "name": "quay-operator",
+                    "version": "3.15.5",
+                    "channel": "stable-3.15",
+                    "init_version": "3.15.0",
+                    "namespace": "quay-enterprise"
+                  },
+                  {
+                    "name": "multicluster-engine",
+                    "version": "2.10.3",
+                    "channel": "stable-2.10",
+                    "init_version": "2.10.0",
+                    "namespace": "multicluster-engine",
+                    "seed": true
+                  },
+                  {
+                    "name": "advanced-cluster-management",
+                    "version": "2.15.3",
+                    "channel": "release-2.15",
+                    "init_version": "2.15.0",
+                    "namespace": "open-cluster-management",
+                    "seed": true
+                  },
+                  {
+                    "name": "cincinnati-operator",
+                    "version": "5.0.3",
+                    "channel": "v1",
+                    "init_version": "5.0.3",
+                    "namespace": "openshift-update-service",
+                    "csvNames": [
+                      "update-service-operator"
+                    ]
+                  },
+                  {
+                    "name": "openshift-gitops-operator",
+                    "version": "1.19.2",
+                    "channel": "gitops-1.19",
+                    "init_version": "1.19.2",
+                    "namespace": "openshift-gitops-operator",
+                    "global": true
+                  },
+                  {
+                    "name": "openshift-pipelines-operator-rh",
+                    "version": "1.20.3",
+                    "channel": "pipelines-1.20",
+                    "init_version": "1.20.3",
+                    "namespace": "openshift-pipelines",
+                    "global": true
+                  },
+                  {
+                    "name": "netobserv-operator",
+                    "version": "1.11.0",
+                    "channel": "stable",
+                    "init_version": "1.11.0",
+                    "namespace": "openshift-netobserv-operator",
+                    "global": true,
+                    "csvNames": [
+                      "network-observability-operator"
+                    ]
+                  },
+                  {
+                    "name": "cluster-logging",
+                    "version": "6.4.2",
+                    "channel": "stable-6.4",
+                    "init_version": "6.4.2",
+                    "namespace": "openshift-logging"
+                  },
+                  {
+                    "name": "loki-operator",
+                    "version": "6.4.2",
+                    "channel": "stable-6.4",
+                    "init_version": "6.4.2",
+                    "namespace": "openshift-operators-redhat",
+                    "global": true
+                  },
+                  {
+                    "name": "redhat-oadp-operator",
+                    "version": "1.5.5",
+                    "channel": "stable",
+                    "init_version": "1.5.5",
+                    "namespace": "openshift-oadp",
+                    "csvNames": [
+                      "oadp-operator"
+                    ]
+                  },
+                  {
+                    "name": "openshift-cert-manager-operator",
+                    "version": "1.18.1",
+                    "channel": "stable-v1",
+                    "init_version": "1.18.1",
+                    "namespace": "cert-manager-operator",
+                    "csvNames": [
+                      "cert-manager-operator"
+                    ]
+                  },
+                  {
+                    "name": "cluster-observability-operator",
+                    "version": "1.3.1",
+                    "channel": "stable",
+                    "init_version": "1.3.1",
+                    "namespace": "openshift-cluster-observability-operator",
+                    "global": true
+                  },
+                  {
+                    "name": "openshift-external-secrets-operator",
+                    "version": "1.0.0",
+                    "channel": "stable-v1.0",
+                    "init_version": "1.0.0",
+                    "namespace": "external-secrets-operator",
+                    "global": true,
+                    "csvNames": [
+                      "external-secrets-operator"
+                    ]
+                  },
+                  {
+                    "name": "compliance-operator",
+                    "version": "1.8.2",
+                    "channel": "stable",
+                    "init_version": "1.8.2",
+                    "namespace": "openshift-compliance"
+                  },
+                  {
+                    "name": "metallb-operator",
+                    "version": "4.20.0-202602261925",
+                    "channel": "stable",
+                    "init_version": "4.20.0-202602261925",
+                    "namespace": "metallb-system",
+                    "global": true,
+                    "csvNames": [
+                      "metallb-operator"
+                    ],
+                    "extraMirrorPackages": [
+                      "kubevirt-hyperconverged"
+                    ]
+                  }
+                ]
+              },
+              "_ansible_no_log": false,
+              "failed": false,
+              "changed": false,
+              "config_file": "operators.yaml",
+              "ansible_loop_var": "config_file",
+              "_ansible_item_label": "operators.yaml"
+            },
+            {
+              "ansible_included_var_files": [
+                "/opt/enclave/playbooks/common/../../defaults/platforms.yaml"
+              ],
+              "ansible_facts": {
+                "openshift_versions": [
+                  {
+                    "version": "4.20.8"
+                  },
+                  {
+                    "version": "4.20.21",
+                    "default": true
+                  }
+                ]
+              },
+              "_ansible_no_log": false,
+              "failed": false,
+              "changed": false,
+              "config_file": "platforms.yaml",
+              "ansible_loop_var": "config_file",
+              "_ansible_item_label": "platforms.yaml"
+            },
+            {
+              "ansible_included_var_files": [
+                "/opt/enclave/playbooks/common/../../defaults/catalogs.yaml"
+              ],
+              "ansible_facts": {
+                "certified_operator_catalog": "registry.redhat.io/redhat/certified-operator-index",
+                "certified_operator_catalog_version": "v4.20",
+                "rh_operator_catalog": "registry.redhat.io/redhat/redhat-operator-index",
+                "rh_operator_catalog_version": "v4.20",
+                "mirror_rh_operator_catalog": "mirror-redhat-operators",
+                "mirror_certified_rh_operator_catalog": "mirror-certified-operators"
+              },
+              "_ansible_no_log": false,
+              "failed": false,
+              "changed": false,
+              "config_file": "catalogs.yaml",
+              "ansible_loop_var": "config_file",
+              "_ansible_item_label": "catalogs.yaml"
+            },
+            {
+              "ansible_included_var_files": [
+                "/opt/enclave/playbooks/common/../../defaults/mirror_registry.yaml"
+              ],
+              "ansible_facts": {
+                "quayHostname": "mirror.{{ baseDomain }}",
+                "quayCAPath": "{{ workingDir }}/data/quay-rootCA/rootCA.pem"
+              },
+              "_ansible_no_log": false,
+              "failed": false,
+              "changed": false,
+              "config_file": "mirror_registry.yaml",
+              "ansible_loop_var": "config_file",
+              "_ansible_item_label": "mirror_registry.yaml"
+            },
+            {
+              "ansible_included_var_files": [
+                "/opt/enclave/playbooks/common/../../defaults/quay_operator.yaml"
+              ],
+              "ansible_facts": {
+                "quayFeatureProxyStorage": true,
+                "quayFeatureQuotaManagement": false,
+                "quayMaximumLayerSize": "100G",
+                "quayBackendDefaults": {
+                  "storage_path": "/datastorage/registry"
+                },
+                "quayBackendRGWDefaults": {
+                  "is_secure": true,
+                  "port": 443,
+                  "minimum_chunk_size_mb": 100,
+                  "maximum_chunk_size_mb": 500,
+                  "server_side_assembly": true
+                },
+                "quayOAuthApp": {
+                  "enabled": true,
+                  "name": "default-application",
+                  "organization": "default-org",
+                  "redirect_uri": "http://localhost:8080/callback",
+                  "scopes": "repo:read repo:write repo:admin repo:create user:read user:admin org:admin"
+                }
+              },
+              "_ansible_no_log": false,
+              "failed": false,
+              "changed": false,
+              "config_file": "quay_operator.yaml",
+              "ansible_loop_var": "config_file",
+              "_ansible_item_label": "quay_operator.yaml"
+            },
+            {
+              "ansible_included_var_files": [
+                "/opt/enclave/playbooks/common/../../defaults/k8s.yaml"
+              ],
+              "ansible_facts": {
+                "k8s_retries": 12,
+                "k8s_delay": 10
+              },
+              "_ansible_no_log": false,
+              "failed": false,
+              "changed": false,
+              "config_file": "k8s.yaml",
+              "ansible_loop_var": "config_file",
+              "_ansible_item_label": "k8s.yaml"
+            },
+            {
+              "ansible_included_var_files": [
+                "/opt/enclave/playbooks/common/../../defaults/oc_mirror.yaml"
+              ],
+              "ansible_facts": {
+                "ocMirrorParallelImages": 10,
+                "ocMirrorParallelLayers": 10,
+                "ocMirrorRetryTimes": 10,
+                "ocMirrorRetryDelay": "10s",
+                "ocMirrorImageTimeout": "40m0s",
+                "ocMirrorAnsibleRetries": 10,
+                "ocMirrorAnsibleDelay": 10,
+                "ocMirrorCacheAnsibleRetries": 5,
+                "ocMirrorParallelLayersLocalStorage": 1
+              },
+              "_ansible_no_log": false,
+              "failed": false,
+              "changed": false,
+              "config_file": "oc_mirror.yaml",
+              "ansible_loop_var": "config_file",
+              "_ansible_item_label": "oc_mirror.yaml"
+            }
+          ],
+          "msg": "All items completed",
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:31.048398+00:00",
+        "end": "2026-06-16T14:13:31.154774+00:00",
+        "duration": 0.106376,
+        "event_loop": null,
+        "uuid": "914c5c0b-b43a-4118-8e2a-6b78371ea2fc"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000032",
+      "counter": 56,
+      "stdout": "\r\nTASK [Ensure storage plugin is in enabled_plugins] *****************************",
+      "start_line": 51,
+      "end_line": 53,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.159562+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Ensure storage plugin is in enabled_plugins",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000032",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:50",
+        "name": "Ensure storage plugin is in enabled_plugins",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000032"
+      }
+    },
+    {
+      "uuid": "8b4c4ffd-943a-43ea-93b1-589e91fc7d87",
+      "counter": 57,
+      "stdout": "Tuesday 16 June 2026  10:13:31 -0400 (0:00:00.113)       0:00:01.796 ********** ",
+      "start_line": 53,
+      "end_line": 54,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.160110+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000032",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Ensure storage plugin is in enabled_plugins",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000032",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:50",
+        "uuid": "8b4c4ffd-943a-43ea-93b1-589e91fc7d87"
+      }
+    },
+    {
+      "uuid": "9a38c93d-0a12-4032-9274-b78f5049cf0f",
+      "counter": 58,
+      "stdout": "",
+      "start_line": 54,
+      "end_line": 54,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.160871+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000032",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Ensure storage plugin is in enabled_plugins",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000032",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:50",
+        "host": "localhost",
+        "uuid": "9a38c93d-0a12-4032-9274-b78f5049cf0f"
+      }
+    },
+    {
+      "uuid": "8455aad9-853c-4937-a7cd-f32d7ec4fe71",
+      "counter": 59,
+      "stdout": "ok: [localhost]",
+      "start_line": 54,
+      "end_line": 55,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.191133+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000032",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Ensure storage plugin is in enabled_plugins",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000032",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:50",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "ansible_facts": {
+            "enabled_plugins": [
+              "lvms"
+            ]
+          },
+          "_ansible_no_log": false,
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:31.160784+00:00",
+        "end": "2026-06-16T14:13:31.190889+00:00",
+        "duration": 0.030105,
+        "event_loop": null,
+        "uuid": "8455aad9-853c-4937-a7cd-f32d7ec4fe71"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000033",
+      "counter": 60,
+      "stdout": "\r\nTASK [Find plugin directories] *************************************************",
+      "start_line": 55,
+      "end_line": 57,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.194374+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Find plugin directories",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000033",
+        "task_action": "ansible.builtin.find",
+        "resolved_action": "ansible.builtin.find",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:54",
+        "name": "Find plugin directories",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000033"
+      }
+    },
+    {
+      "uuid": "f5a69e94-d10d-4fb0-bd0c-200f44793268",
+      "counter": 61,
+      "stdout": "Tuesday 16 June 2026  10:13:31 -0400 (0:00:00.034)       0:00:01.831 ********** ",
+      "start_line": 57,
+      "end_line": 58,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.195456+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000033",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Find plugin directories",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000033",
+        "task_action": "ansible.builtin.find",
+        "resolved_action": "ansible.builtin.find",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:54",
+        "uuid": "f5a69e94-d10d-4fb0-bd0c-200f44793268"
+      }
+    },
+    {
+      "uuid": "8e102271-fa97-490f-ba55-2c2f637c7bea",
+      "counter": 62,
+      "stdout": "",
+      "start_line": 58,
+      "end_line": 58,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.196941+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000033",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Find plugin directories",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000033",
+        "task_action": "ansible.builtin.find",
+        "resolved_action": "ansible.builtin.find",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:54",
+        "host": "localhost",
+        "uuid": "8e102271-fa97-490f-ba55-2c2f637c7bea"
+      }
+    },
+    {
+      "event": "verbose",
+      "uuid": "88f553d8-8e32-4ab4-85d9-d9e6f1abb30a",
+      "counter": 63,
+      "stdout": "[WARNING]: Skipped '/opt/enclave/playbooks/validation/../plugins' path due to",
+      "start_line": 58,
+      "end_line": 59,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "created": "2026-06-16T14:13:31.554607+00:00"
+    },
+    {
+      "event": "verbose",
+      "uuid": "d813c509-dd84-4abd-b3e4-c32996739809",
+      "counter": 64,
+      "stdout": "this access issue: '/opt/enclave/playbooks/validation/../plugins' is not a",
+      "start_line": 59,
+      "end_line": 60,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "created": "2026-06-16T14:13:31.554607+00:00"
+    },
+    {
+      "event": "verbose",
+      "uuid": "d942dfaa-6424-4ab7-9d4c-701dd8471a3f",
+      "counter": 65,
+      "stdout": "directory",
+      "start_line": 60,
+      "end_line": 61,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "created": "2026-06-16T14:13:31.554607+00:00"
+    },
+    {
+      "uuid": "be68a26d-9555-45c1-a56c-68affd506796",
+      "counter": 66,
+      "stdout": "ok: [localhost]",
+      "start_line": 61,
+      "end_line": 62,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.553213+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000033",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Find plugin directories",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000033",
+        "task_action": "ansible.builtin.find",
+        "resolved_action": "ansible.builtin.find",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:54",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "files": [],
+          "changed": false,
+          "msg": "Not all paths examined, check warnings for details",
+          "matched": 0,
+          "examined": 0,
+          "skipped_paths": {
+            "/opt/enclave/playbooks/validation/../plugins": "'/opt/enclave/playbooks/validation/../plugins' is not a directory"
+          },
+          "invocation": {
+            "module_args": {
+              "paths": [
+                "/opt/enclave/playbooks/validation/../plugins"
+              ],
+              "file_type": "directory",
+              "depth": 1,
+              "patterns": [
+                "*"
+              ],
+              "read_whole_file": false,
+              "age_stamp": "mtime",
+              "recurse": false,
+              "hidden": false,
+              "follow": false,
+              "get_checksum": false,
+              "use_regex": false,
+              "exact_mode": true,
+              "excludes": null,
+              "contains": null,
+              "age": null,
+              "size": null,
+              "mode": null
+            }
+          },
+          "warnings": [
+            "Skipped '/opt/enclave/playbooks/validation/../plugins' path due to this access issue: '/opt/enclave/playbooks/validation/../plugins' is not a directory\n"
+          ],
+          "_ansible_no_log": false
+        },
+        "start": "2026-06-16T14:13:31.196863+00:00",
+        "end": "2026-06-16T14:13:31.552975+00:00",
+        "duration": 0.356112,
+        "event_loop": null,
+        "uuid": "be68a26d-9555-45c1-a56c-68affd506796"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000034",
+      "counter": 67,
+      "stdout": "\r\nTASK [Stat plugin config files] ************************************************",
+      "start_line": 62,
+      "end_line": 64,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.556387+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Stat plugin config files",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000034",
+        "task_action": "ansible.builtin.stat",
+        "resolved_action": "ansible.builtin.stat",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:61",
+        "name": "Stat plugin config files",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000034"
+      }
+    },
+    {
+      "uuid": "7403b9f8-faf7-426a-a944-e25648e7dfbd",
+      "counter": 68,
+      "stdout": "Tuesday 16 June 2026  10:13:31 -0400 (0:00:00.361)       0:00:02.193 ********** ",
+      "start_line": 64,
+      "end_line": 65,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.556966+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000034",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Stat plugin config files",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000034",
+        "task_action": "ansible.builtin.stat",
+        "resolved_action": "ansible.builtin.stat",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:61",
+        "uuid": "7403b9f8-faf7-426a-a944-e25648e7dfbd"
+      }
+    },
+    {
+      "uuid": "e4be3c0f-4f23-409e-a7d8-19a612e038cc",
+      "counter": 69,
+      "stdout": "",
+      "start_line": 65,
+      "end_line": 65,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.558069+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000034",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Stat plugin config files",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000034",
+        "task_action": "ansible.builtin.stat",
+        "resolved_action": "ansible.builtin.stat",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:61",
+        "host": "localhost",
+        "uuid": "e4be3c0f-4f23-409e-a7d8-19a612e038cc"
+      }
+    },
+    {
+      "uuid": "ae5702f4-2ee7-4c90-bf5a-6588d778ac50",
+      "counter": 70,
+      "stdout": "skipping: [localhost]",
+      "start_line": 65,
+      "end_line": 66,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_skipped",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.589035+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000034",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Stat plugin config files",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000034",
+        "task_action": "ansible.builtin.stat",
+        "resolved_action": "ansible.builtin.stat",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:61",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "start": "2026-06-16T14:13:31.557991+00:00",
+        "end": "2026-06-16T14:13:31.588814+00:00",
+        "duration": 0.030823,
+        "event_loop": null,
+        "uuid": "ae5702f4-2ee7-4c90-bf5a-6588d778ac50"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000035",
+      "counter": 71,
+      "stdout": "\r\nTASK [Load plugin config files] ************************************************",
+      "start_line": 66,
+      "end_line": 68,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.591406+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Load plugin config files",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000035",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:72",
+        "name": "Load plugin config files",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000035"
+      }
+    },
+    {
+      "uuid": "ffab71c8-e13c-40c7-b6c5-d04913b1234c",
+      "counter": 72,
+      "stdout": "Tuesday 16 June 2026  10:13:31 -0400 (0:00:00.034)       0:00:02.228 ********** ",
+      "start_line": 68,
+      "end_line": 69,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.591951+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000035",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Load plugin config files",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000035",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:72",
+        "uuid": "ffab71c8-e13c-40c7-b6c5-d04913b1234c"
+      }
+    },
+    {
+      "uuid": "51f5961a-8143-41ea-a838-64674d314689",
+      "counter": 73,
+      "stdout": "",
+      "start_line": 69,
+      "end_line": 69,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.592823+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000035",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Load plugin config files",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000035",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:72",
+        "host": "localhost",
+        "uuid": "51f5961a-8143-41ea-a838-64674d314689"
+      }
+    },
+    {
+      "uuid": "c5bd1398-9a4c-4320-a599-bec5c819b939",
+      "counter": 74,
+      "stdout": "skipping: [localhost]",
+      "start_line": 69,
+      "end_line": 70,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_skipped",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.621071+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000035",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Load plugin config files",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000035",
+        "task_action": "ansible.builtin.include_vars",
+        "resolved_action": "ansible.builtin.include_vars",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:72",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "start": "2026-06-16T14:13:31.592730+00:00",
+        "end": "2026-06-16T14:13:31.620891+00:00",
+        "duration": 0.028161,
+        "event_loop": null,
+        "uuid": "c5bd1398-9a4c-4320-a599-bec5c819b939"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000037",
+      "counter": 75,
+      "stdout": "\r\nTASK [Set Management cluster OpenShift version from default] *******************",
+      "start_line": 70,
+      "end_line": 72,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.623268+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Set Management cluster OpenShift version from default",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000037",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:79",
+        "name": "Set Management cluster OpenShift version from default",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000037"
+      }
+    },
+    {
+      "uuid": "5ef7b869-7941-4c90-b6fa-e2131a03b126",
+      "counter": 76,
+      "stdout": "Tuesday 16 June 2026  10:13:31 -0400 (0:00:00.031)       0:00:02.260 ********** ",
+      "start_line": 72,
+      "end_line": 73,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.623770+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000037",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Set Management cluster OpenShift version from default",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000037",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:79",
+        "uuid": "5ef7b869-7941-4c90-b6fa-e2131a03b126"
+      }
+    },
+    {
+      "uuid": "9583e31d-ff56-42c0-9046-4cfcec69a5d8",
+      "counter": 77,
+      "stdout": "",
+      "start_line": 73,
+      "end_line": 73,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.624592+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000037",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Set Management cluster OpenShift version from default",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000037",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:79",
+        "host": "localhost",
+        "uuid": "9583e31d-ff56-42c0-9046-4cfcec69a5d8"
+      }
+    },
+    {
+      "uuid": "73e4f1d0-b694-418e-91f6-cfe1f051a0c9",
+      "counter": 78,
+      "stdout": "ok: [localhost]",
+      "start_line": 73,
+      "end_line": 74,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.664078+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000037",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Set Management cluster OpenShift version from default",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000037",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:79",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "ansible_facts": {
+            "mgmt_openshift_version": "4.20.21"
+          },
+          "_ansible_no_log": false,
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:31.624520+00:00",
+        "end": "2026-06-16T14:13:31.663861+00:00",
+        "duration": 0.039341,
+        "event_loop": null,
+        "uuid": "73e4f1d0-b694-418e-91f6-cfe1f051a0c9"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000038",
+      "counter": 79,
+      "stdout": "\r\nTASK [Override OpenShift versions on fresh install] ****************************",
+      "start_line": 74,
+      "end_line": 76,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.666652+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Override OpenShift versions on fresh install",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000038",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:83",
+        "name": "Override OpenShift versions on fresh install",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000038"
+      }
+    },
+    {
+      "uuid": "414ebc77-2954-4f90-86ba-3329c74b70eb",
+      "counter": 80,
+      "stdout": "Tuesday 16 June 2026  10:13:31 -0400 (0:00:00.043)       0:00:02.304 ********** ",
+      "start_line": 76,
+      "end_line": 77,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.667205+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000038",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Override OpenShift versions on fresh install",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000038",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:83",
+        "uuid": "414ebc77-2954-4f90-86ba-3329c74b70eb"
+      }
+    },
+    {
+      "uuid": "21b2faee-8755-4a39-b460-680514d66b43",
+      "counter": 81,
+      "stdout": "",
+      "start_line": 77,
+      "end_line": 77,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.668182+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000038",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Override OpenShift versions on fresh install",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000038",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:83",
+        "host": "localhost",
+        "uuid": "21b2faee-8755-4a39-b460-680514d66b43"
+      }
+    },
+    {
+      "uuid": "f188f4a9-dea4-4f6c-87ec-a16e9b4f5dcc",
+      "counter": 82,
+      "stdout": "ok: [localhost]",
+      "start_line": 77,
+      "end_line": 78,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.702134+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000038",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Override OpenShift versions on fresh install",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000038",
+        "task_action": "ansible.builtin.set_fact",
+        "resolved_action": "ansible.builtin.set_fact",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/common/load-vars.yaml:83",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "ansible_facts": {
+            "openshift_versions": [
+              {
+                "version": "4.20.21",
+                "default": true
+              }
+            ]
+          },
+          "_ansible_no_log": false,
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:31.668091+00:00",
+        "end": "2026-06-16T14:13:31.701922+00:00",
+        "duration": 0.033831,
+        "event_loop": null,
+        "uuid": "f188f4a9-dea4-4f6c-87ec-a16e9b4f5dcc"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-000000000019",
+      "counter": 83,
+      "stdout": "\r\nTASK [Validate global.yaml against global schema] ******************************",
+      "start_line": 78,
+      "end_line": 80,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.712845+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate global.yaml against global schema",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000019",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:9",
+        "name": "Validate global.yaml against global schema",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-000000000019"
+      }
+    },
+    {
+      "uuid": "67c762fa-c119-4bac-a371-404647c325ac",
+      "counter": 84,
+      "stdout": "Tuesday 16 June 2026  10:13:31 -0400 (0:00:00.046)       0:00:02.350 ********** ",
+      "start_line": 80,
+      "end_line": 81,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.713584+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000019",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate global.yaml against global schema",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000019",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:9",
+        "uuid": "67c762fa-c119-4bac-a371-404647c325ac"
+      }
+    },
+    {
+      "uuid": "c9f6285f-e5a5-4e51-9980-cc87e360a6bf",
+      "counter": 85,
+      "stdout": "",
+      "start_line": 81,
+      "end_line": 81,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.714926+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000019",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate global.yaml against global schema",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000019",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:9",
+        "host": "localhost",
+        "uuid": "c9f6285f-e5a5-4e51-9980-cc87e360a6bf"
+      }
+    },
+    {
+      "uuid": "d0461d75-b454-4c5a-851c-a6013318b257",
+      "counter": 86,
+      "stdout": "ok: [localhost]",
+      "start_line": 81,
+      "end_line": 82,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.925117+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000019",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate global.yaml against global schema",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-000000000019",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:9",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "msg": "All checks passed.",
+          "_ansible_no_log": false,
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:31.714819+00:00",
+        "end": "2026-06-16T14:13:31.924867+00:00",
+        "duration": 0.210048,
+        "event_loop": null,
+        "uuid": "d0461d75-b454-4c5a-851c-a6013318b257"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-00000000001a",
+      "counter": 87,
+      "stdout": "\r\nTASK [Validate certificates.yaml against certificates schema] ******************",
+      "start_line": 82,
+      "end_line": 84,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.927711+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate certificates.yaml against certificates schema",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001a",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:16",
+        "name": "Validate certificates.yaml against certificates schema",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-00000000001a"
+      }
+    },
+    {
+      "uuid": "647059a9-98b8-4c17-b4ee-1983d628b7c6",
+      "counter": 88,
+      "stdout": "Tuesday 16 June 2026  10:13:31 -0400 (0:00:00.214)       0:00:02.565 ********** ",
+      "start_line": 84,
+      "end_line": 85,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.928281+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001a",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate certificates.yaml against certificates schema",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001a",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:16",
+        "uuid": "647059a9-98b8-4c17-b4ee-1983d628b7c6"
+      }
+    },
+    {
+      "uuid": "69023c85-d67f-4132-aadf-564ab413a738",
+      "counter": 89,
+      "stdout": "",
+      "start_line": 85,
+      "end_line": 85,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:31.929207+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001a",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate certificates.yaml against certificates schema",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001a",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:16",
+        "host": "localhost",
+        "uuid": "69023c85-d67f-4132-aadf-564ab413a738"
+      }
+    },
+    {
+      "uuid": "330acc3e-11b4-4870-8f36-67bbf14814ab",
+      "counter": 90,
+      "stdout": "ok: [localhost]",
+      "start_line": 85,
+      "end_line": 86,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.030605+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001a",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate certificates.yaml against certificates schema",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001a",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:16",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "msg": "All checks passed.",
+          "_ansible_no_log": false,
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:31.929122+00:00",
+        "end": "2026-06-16T14:13:32.030390+00:00",
+        "duration": 0.101268,
+        "event_loop": null,
+        "uuid": "330acc3e-11b4-4870-8f36-67bbf14814ab"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-00000000001b",
+      "counter": 91,
+      "stdout": "\r\nTASK [Validate cloud_infra.yaml against cloud_infra schema] ********************",
+      "start_line": 86,
+      "end_line": 88,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.033558+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate cloud_infra.yaml against cloud_infra schema",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001b",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:23",
+        "name": "Validate cloud_infra.yaml against cloud_infra schema",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-00000000001b"
+      }
+    },
+    {
+      "uuid": "27d0d0f6-81aa-4fc8-9979-b7e82e3403cb",
+      "counter": 92,
+      "stdout": "Tuesday 16 June 2026  10:13:32 -0400 (0:00:00.105)       0:00:02.671 ********** ",
+      "start_line": 88,
+      "end_line": 89,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.034558+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001b",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate cloud_infra.yaml against cloud_infra schema",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001b",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:23",
+        "uuid": "27d0d0f6-81aa-4fc8-9979-b7e82e3403cb"
+      }
+    },
+    {
+      "uuid": "a5dfcf9b-fb58-43ba-9f4e-df6b2295cc03",
+      "counter": 93,
+      "stdout": "",
+      "start_line": 89,
+      "end_line": 89,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.035970+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001b",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate cloud_infra.yaml against cloud_infra schema",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001b",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:23",
+        "host": "localhost",
+        "uuid": "a5dfcf9b-fb58-43ba-9f4e-df6b2295cc03"
+      }
+    },
+    {
+      "uuid": "3e0ced61-0bdb-471f-ae9d-2a979b56ac3f",
+      "counter": 94,
+      "stdout": "ok: [localhost]",
+      "start_line": 89,
+      "end_line": 90,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_ok",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.135405+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001b",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate cloud_infra.yaml against cloud_infra schema",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001b",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:23",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "res": {
+          "msg": "All checks passed.",
+          "_ansible_no_log": false,
+          "changed": false
+        },
+        "start": "2026-06-16T14:13:32.035891+00:00",
+        "end": "2026-06-16T14:13:32.135178+00:00",
+        "duration": 0.099287,
+        "event_loop": null,
+        "uuid": "3e0ced61-0bdb-471f-ae9d-2a979b56ac3f"
+      }
+    },
+    {
+      "uuid": "6561e1d2-032b-a6dc-9ba2-00000000001c",
+      "counter": 95,
+      "stdout": "\r\nTASK [Validate plugin config against schemas/config.yaml (if present and config file exists)] ***",
+      "start_line": 90,
+      "end_line": 92,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_task_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.138424+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate plugin config against schemas/config.yaml (if present and config file exists)",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001c",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:30",
+        "name": "Validate plugin config against schemas/config.yaml (if present and config file exists)",
+        "is_conditional": false,
+        "uuid": "6561e1d2-032b-a6dc-9ba2-00000000001c"
+      }
+    },
+    {
+      "uuid": "c4c58b06-5f25-4a49-813c-95ea0bd1485c",
+      "counter": 96,
+      "stdout": "Tuesday 16 June 2026  10:13:32 -0400 (0:00:00.104)       0:00:02.775 ********** ",
+      "start_line": 92,
+      "end_line": 93,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.138968+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001c",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate plugin config against schemas/config.yaml (if present and config file exists)",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001c",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:30",
+        "uuid": "c4c58b06-5f25-4a49-813c-95ea0bd1485c"
+      }
+    },
+    {
+      "uuid": "1a41f808-a2e4-4015-956b-e7adc201e9a5",
+      "counter": 97,
+      "stdout": "",
+      "start_line": 93,
+      "end_line": 93,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_start",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.139824+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001c",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate plugin config against schemas/config.yaml (if present and config file exists)",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001c",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:30",
+        "host": "localhost",
+        "uuid": "1a41f808-a2e4-4015-956b-e7adc201e9a5"
+      }
+    },
+    {
+      "uuid": "5c104d3e-1cb7-4512-a736-da93a1f8135b",
+      "counter": 98,
+      "stdout": "skipping: [localhost]",
+      "start_line": 93,
+      "end_line": 94,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "runner_on_skipped",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.152221+00:00",
+      "parent_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001c",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "play": "Schema Validation",
+        "play_uuid": "6561e1d2-032b-a6dc-9ba2-000000000001",
+        "play_pattern": "localhost",
+        "task": "Validate plugin config against schemas/config.yaml (if present and config file exists)",
+        "task_uuid": "6561e1d2-032b-a6dc-9ba2-00000000001c",
+        "task_action": "ansible.utils.validate",
+        "resolved_action": "ansible.utils.validate",
+        "task_args": "",
+        "task_path": "/opt/enclave/playbooks/validation/tasks/config_schema_validation.yaml:30",
+        "host": "localhost",
+        "remote_addr": "127.0.0.1",
+        "start": "2026-06-16T14:13:32.139728+00:00",
+        "end": "2026-06-16T14:13:32.152029+00:00",
+        "duration": 0.012301,
+        "event_loop": null,
+        "uuid": "5c104d3e-1cb7-4512-a736-da93a1f8135b"
+      }
+    },
+    {
+      "uuid": "1fe128ba-ab8f-4ca3-8c00-2ba67d707ca9",
+      "counter": 99,
+      "stdout": "\r\nPLAY RECAP *********************************************************************\r\nlocalhost                  : ok=17   changed=2    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0   ",
+      "start_line": 94,
+      "end_line": 98,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "playbook_on_stats",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.154332+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "changed": {
+          "localhost": 2
+        },
+        "dark": {},
+        "failures": {},
+        "ignored": {},
+        "ok": {
+          "localhost": 17
+        },
+        "processed": {
+          "localhost": 1
+        },
+        "rescued": {},
+        "skipped": {
+          "localhost": 3
+        },
+        "artifact_data": {},
+        "uuid": "1fe128ba-ab8f-4ca3-8c00-2ba67d707ca9"
+      }
+    },
+    {
+      "uuid": "82364123-7cb8-4eac-b9a4-c586bc5a5f24",
+      "counter": 100,
+      "stdout": "\r\nTASKS RECAP ********************************************************************",
+      "start_line": 98,
+      "end_line": 100,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.155491+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "banner": true,
+        "uuid": "82364123-7cb8-4eac-b9a4-c586bc5a5f24"
+      }
+    },
+    {
+      "uuid": "0aa3287f-9680-4e26-b954-0dc4b2406c47",
+      "counter": 101,
+      "stdout": "Tuesday 16 June 2026  10:13:32 -0400 (0:00:00.016)       0:00:02.792 ********** ",
+      "start_line": 100,
+      "end_line": 101,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.156293+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "0aa3287f-9680-4e26-b954-0dc4b2406c47"
+      }
+    },
+    {
+      "uuid": "99ee8d85-a8a6-45bc-bd53-a25a5d80887f",
+      "counter": 102,
+      "stdout": "=============================================================================== ",
+      "start_line": 101,
+      "end_line": 102,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.156635+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "99ee8d85-a8a6-45bc-bd53-a25a5d80887f"
+      }
+    },
+    {
+      "uuid": "be40db5a-763b-4da8-b408-b035276119ed",
+      "counter": 103,
+      "stdout": "Write sshPubKey content to file ----------------------------------------- 0.72s",
+      "start_line": 102,
+      "end_line": 103,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.157572+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "be40db5a-763b-4da8-b408-b035276119ed"
+      }
+    },
+    {
+      "uuid": "227372a1-26ec-4a36-8212-fe3f8a54cf81",
+      "counter": 104,
+      "stdout": "Ensure config directory exists ------------------------------------------ 0.49s",
+      "start_line": 103,
+      "end_line": 104,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.157956+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "227372a1-26ec-4a36-8212-fe3f8a54cf81"
+      }
+    },
+    {
+      "uuid": "34b4025c-8aa1-4a77-bb34-95dbbfeff5a2",
+      "counter": 105,
+      "stdout": "Find plugin directories ------------------------------------------------- 0.36s",
+      "start_line": 104,
+      "end_line": 105,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.158851+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "34b4025c-8aa1-4a77-bb34-95dbbfeff5a2"
+      }
+    },
+    {
+      "uuid": "4874a52a-53ea-49f1-9e45-cbc42a69b2c6",
+      "counter": 106,
+      "stdout": "Validate global.yaml against global schema ------------------------------ 0.21s",
+      "start_line": 105,
+      "end_line": 106,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.159203+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "4874a52a-53ea-49f1-9e45-cbc42a69b2c6"
+      }
+    },
+    {
+      "uuid": "b72bb6a6-78d8-4cb2-88c2-1696a7c8af7f",
+      "counter": 107,
+      "stdout": "Include common configuration -------------------------------------------- 0.11s",
+      "start_line": 106,
+      "end_line": 107,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.160235+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "b72bb6a6-78d8-4cb2-88c2-1696a7c8af7f"
+      }
+    },
+    {
+      "uuid": "95566e71-0858-4b19-afde-c185fff73f35",
+      "counter": 108,
+      "stdout": "Validate certificates.yaml against certificates schema ------------------ 0.11s",
+      "start_line": 107,
+      "end_line": 108,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.160602+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "95566e71-0858-4b19-afde-c185fff73f35"
+      }
+    },
+    {
+      "uuid": "12033e1b-e66d-4731-abf3-40c6927b65f8",
+      "counter": 109,
+      "stdout": "Validate cloud_infra.yaml against cloud_infra schema -------------------- 0.10s",
+      "start_line": 108,
+      "end_line": 109,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.161472+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "12033e1b-e66d-4731-abf3-40c6927b65f8"
+      }
+    },
+    {
+      "uuid": "7dba3668-e7a7-4404-b0f2-beb31737964b",
+      "counter": 110,
+      "stdout": "Set sshPubPath from written file ---------------------------------------- 0.07s",
+      "start_line": 109,
+      "end_line": 110,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.161878+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "7dba3668-e7a7-4404-b0f2-beb31737964b"
+      }
+    },
+    {
+      "uuid": "f6b5c2c2-c43e-47ea-862b-a1f471f1edbb",
+      "counter": 111,
+      "stdout": "Load shared schema definitions ------------------------------------------ 0.07s",
+      "start_line": 110,
+      "end_line": 111,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.162536+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "f6b5c2c2-c43e-47ea-862b-a1f471f1edbb"
+      }
+    },
+    {
+      "uuid": "c21dc566-e6db-4f08-9839-22933c5c4532",
+      "counter": 112,
+      "stdout": "Override OpenShift versions on fresh install ---------------------------- 0.05s",
+      "start_line": 111,
+      "end_line": 112,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.163402+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "c21dc566-e6db-4f08-9839-22933c5c4532"
+      }
+    },
+    {
+      "uuid": "bdc30bd9-5d58-4b44-bdb7-114f4e386fa6",
+      "counter": 113,
+      "stdout": "Set user config file paths ---------------------------------------------- 0.05s",
+      "start_line": 112,
+      "end_line": 113,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.163788+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "bdc30bd9-5d58-4b44-bdb7-114f4e386fa6"
+      }
+    },
+    {
+      "uuid": "dcf26de0-1bd9-4696-bf27-8c4c33847082",
+      "counter": 114,
+      "stdout": "Set Management cluster OpenShift version from default ------------------- 0.04s",
+      "start_line": 113,
+      "end_line": 114,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.164410+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "dcf26de0-1bd9-4696-bf27-8c4c33847082"
+      }
+    },
+    {
+      "uuid": "18383d1d-3d00-40a1-9291-686d429519dc",
+      "counter": 115,
+      "stdout": "Include user config vars ------------------------------------------------ 0.04s",
+      "start_line": 114,
+      "end_line": 115,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.165035+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "18383d1d-3d00-40a1-9291-686d429519dc"
+      }
+    },
+    {
+      "uuid": "4968cb02-41b6-4375-ba23-49da76086869",
+      "counter": 116,
+      "stdout": "Ensure storage plugin is in enabled_plugins ----------------------------- 0.04s",
+      "start_line": 115,
+      "end_line": 116,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.165933+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "4968cb02-41b6-4375-ba23-49da76086869"
+      }
+    },
+    {
+      "uuid": "dade1cd9-74bd-4c40-9629-2f8a73a349f7",
+      "counter": 117,
+      "stdout": "Stat plugin config files ------------------------------------------------ 0.03s",
+      "start_line": 116,
+      "end_line": 117,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.166279+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "dade1cd9-74bd-4c40-9629-2f8a73a349f7"
+      }
+    },
+    {
+      "uuid": "f3b1aa6e-4a24-43e6-9307-73e0f2d6cb33",
+      "counter": 118,
+      "stdout": "Load plugin config files ------------------------------------------------ 0.03s",
+      "start_line": 117,
+      "end_line": 118,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.167104+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "f3b1aa6e-4a24-43e6-9307-73e0f2d6cb33"
+      }
+    },
+    {
+      "uuid": "3c92f386-2f52-407e-b702-28de47b24d8d",
+      "counter": 119,
+      "stdout": "Include load-vars to resolve user config file paths --------------------- 0.03s",
+      "start_line": 118,
+      "end_line": 119,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.167455+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "3c92f386-2f52-407e-b702-28de47b24d8d"
+      }
+    },
+    {
+      "uuid": "538aee1a-d3dd-4e47-af7c-6e6fb66c1d80",
+      "counter": 120,
+      "stdout": "Include config schema validation tasks ---------------------------------- 0.03s",
+      "start_line": 119,
+      "end_line": 120,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.168337+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "538aee1a-d3dd-4e47-af7c-6e6fb66c1d80"
+      }
+    },
+    {
+      "uuid": "3e4f5ec8-1133-4cf6-96e6-32fa5dfd4b4e",
+      "counter": 121,
+      "stdout": "Include deployment defaults --------------------------------------------- 0.02s",
+      "start_line": 120,
+      "end_line": 121,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.168677+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "3e4f5ec8-1133-4cf6-96e6-32fa5dfd4b4e"
+      }
+    },
+    {
+      "uuid": "7daac2f1-8134-4f4a-8748-daab9ba5b003",
+      "counter": 122,
+      "stdout": "Validate plugin config against schemas/config.yaml (if present and config file exists) --- 0.02s",
+      "start_line": 121,
+      "end_line": 122,
+      "runner_ident": "567f1d74-fb6d-4a1f-a769-fd1ee5e8a7f4",
+      "event": "verbose",
+      "pid": 18473,
+      "created": "2026-06-16T14:13:32.169571+00:00",
+      "parent_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+      "event_data": {
+        "playbook": "playbooks/validation/validate-schema.yaml",
+        "playbook_uuid": "4f656328-23f7-4151-b46a-cf24c1871990",
+        "uuid": "7daac2f1-8134-4f4a-8748-daab9ba5b003"
+      }
+    }
+  ]
+}

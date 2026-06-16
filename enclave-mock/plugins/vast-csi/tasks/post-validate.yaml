@@ -1,0 +1,25 @@
+- name: Set validation variables
+  ansible.builtin.set_fact:
+    vast_tenant: '{{ vastDefaults.infraTenant }}'
+    vast_expected_protocols: '{{ vastDefaults.tiers | map(attribute=''protocol'') | unique | list }}'
+- name: Verify CSI drivers are registered
+  loop: '{{ vast_expected_protocols }}'
+  register: r_csi_verify
+  ansible.builtin.debug:
+    msg: 'NOOP: Verify CSI drivers are registered'
+- name: Verify StorageClasses exist for each tier
+  loop: '{{ vastDefaults.tiers }}'
+  loop_control:
+    label: '{{ vast_tenant }}-{{ item.name }}'
+  register: r_sc_verify
+  ansible.builtin.debug:
+    msg: 'NOOP: Verify StorageClasses exist for each tier'
+- name: Verify CSI credentials Secret exists
+  register: r_secret_verify
+  ansible.builtin.debug:
+    msg: 'NOOP: Verify CSI credentials Secret exists'
+- name: Report VAST plugin deployment status
+  ansible.builtin.debug:
+    msg: 'VAST CSI plugin deployed successfully. Infra tenant: {{ vast_tenant }} Protocols: {{ vast_expected_protocols | join('',
+      '') }} StorageClasses: {{ vastDefaults.tiers | map(attribute=''name'') | map(''regex_replace'', ''^(.*)$'', vast_tenant
+      ~ ''-\1'') | list | join('', '') }}'

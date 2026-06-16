@@ -1,0 +1,12 @@
+---
+name: trust-manager
+type: addon
+order: 100
+
+helm:
+  - release: trust-manager
+    repo: https://charts.jetstack.io
+    chart: trust-manager
+    version: v0.20.0
+    namespace: cert-manager
+    createNamespace: false
