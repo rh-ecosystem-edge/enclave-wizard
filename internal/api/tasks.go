@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net/http"
 	"sort"
+	"time"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/config"
@@ -197,21 +198,12 @@ func (h *TasksHandler) startDeploy(ctx context.Context, _ *StartDeployInput) (*S
 		return &StartTaskOutput{Body: *run}, nil
 	}
 
-	ar, ok := h.runner.(*tasks.AnsibleRunner)
-	if !ok {
-		run, err := h.runner.Start(req)
-		if err != nil {
-			return nil, mapTaskError(err)
-		}
-		return &StartTaskOutput{Body: *run}, nil
-	}
-
-	run, done, err := ar.StartWithDone(req)
+	run, err := h.runner.Start(req)
 	if err != nil {
 		return nil, mapTaskError(err)
 	}
 
-	go h.chainAddonPlugins(done, run.ID, addonPlugins)
+	go h.chainAddonPlugins(run.ID, addonPlugins)
 
 	return &StartTaskOutput{Body: *run}, nil
 }
@@ -246,7 +238,7 @@ func (h *TasksHandler) addonPluginsFromConfig() []string {
 	return result
 }
 
-func (h *TasksHandler) chainAddonPlugins(mainDone <-chan struct{}, mainRunID string, pluginNames []string) {
+func (h *TasksHandler) chainAddonPlugins(mainRunID string, pluginNames []string) {
 	defer func() {
 		if r := recover(); r != nil {
 			slog.Error("addon plugin chain panicked", "error", r)
@@ -254,17 +246,22 @@ func (h *TasksHandler) chainAddonPlugins(mainDone <-chan struct{}, mainRunID str
 	}()
 
 	slog.Info("waiting for main deploy to complete before addon plugins", "plugins", pluginNames)
-	<-mainDone
 
-	mainRun, err := h.runner.Get(mainRunID)
-	if err != nil {
-		slog.Error("failed to get main run status", "run_id", mainRunID, "error", err)
-		return
-	}
-	if mainRun.Status != models.TaskStatusSuccessful {
-		slog.Warn("skipping addon plugin deploy — main playbook did not succeed",
-			"run_id", mainRunID, "status", mainRun.Status)
-		return
+	for {
+		time.Sleep(10 * time.Second)
+		mainRun, err := h.runner.Get(mainRunID)
+		if err != nil {
+			continue
+		}
+		if mainRun.Status == models.TaskStatusRunning {
+			continue
+		}
+		if mainRun.Status != models.TaskStatusSuccessful {
+			slog.Warn("skipping addon plugin deploy — main playbook did not succeed",
+				"run_id", mainRunID, "status", mainRun.Status)
+			return
+		}
+		break
 	}
 
 	slog.Info("main deploy completed, deploying addon plugins", "plugins", pluginNames)

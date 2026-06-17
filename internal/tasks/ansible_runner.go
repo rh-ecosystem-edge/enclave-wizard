@@ -79,10 +79,6 @@ func (r *AnsibleRunner) Start(req StartRequest) (*models.TaskRun, error) {
 	return run, err
 }
 
-func (r *AnsibleRunner) StartWithDone(req StartRequest) (*models.TaskRun, <-chan struct{}, error) {
-	return r.runAsync(req)
-}
-
 func (r *AnsibleRunner) RunSync(ctx context.Context, req StartRequest) (*models.TaskRun, []byte, error) {
 	run, done, err := r.runAsync(req)
 	if err != nil {
