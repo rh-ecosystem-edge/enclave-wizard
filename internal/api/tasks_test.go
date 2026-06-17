@@ -21,7 +21,7 @@ func setupTasksAPI(runner tasks.Runner) *httptest.Server {
 	registry := plugins.NewRegistry([]models.Plugin{
 		{Name: "lvms", Type: models.PluginTypeFoundation},
 	})
-	NewTasksHandler(runner, registry, "/opt/enclave").Register(api)
+	NewTasksHandler(runner, registry, nil, "/opt/enclave").Register(api)
 	return httptest.NewServer(mux)
 }
 

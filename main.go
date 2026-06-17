@@ -72,7 +72,7 @@ func SetupAPI(mux *http.ServeMux, enclaveDir string, authStore *auth.Store, opts
 	}
 
 	if runner != nil {
-		api.NewTasksHandler(runner, registry, enclaveDir).Register(humaAPI)
+		api.NewTasksHandler(runner, registry, reader, enclaveDir).Register(humaAPI)
 	}
 
 	validator := validation.NewValidator(enclaveDir, runner)
