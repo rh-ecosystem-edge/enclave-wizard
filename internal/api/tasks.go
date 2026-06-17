@@ -187,6 +187,8 @@ func (h *TasksHandler) startDeploy(ctx context.Context, _ *StartDeployInput) (*S
 		},
 	}
 
+	slog.Info("deploy requested", "addon_plugins", addonPlugins)
+
 	if len(addonPlugins) == 0 {
 		run, err := h.runner.Start(req)
 		if err != nil {
@@ -245,10 +247,21 @@ func (h *TasksHandler) addonPluginsFromConfig() []string {
 }
 
 func (h *TasksHandler) chainAddonPlugins(mainDone <-chan struct{}, mainRunID string, pluginNames []string) {
+	defer func() {
+		if r := recover(); r != nil {
+			slog.Error("addon plugin chain panicked", "error", r)
+		}
+	}()
+
+	slog.Info("waiting for main deploy to complete before addon plugins", "plugins", pluginNames)
 	<-mainDone
 
 	mainRun, err := h.runner.Get(mainRunID)
-	if err != nil || mainRun.Status != models.TaskStatusSuccessful {
+	if err != nil {
+		slog.Error("failed to get main run status", "run_id", mainRunID, "error", err)
+		return
+	}
+	if mainRun.Status != models.TaskStatusSuccessful {
 		slog.Warn("skipping addon plugin deploy — main playbook did not succeed",
 			"run_id", mainRunID, "status", mainRun.Status)
 		return
