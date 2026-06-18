@@ -7,8 +7,10 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"os"
+	"path/filepath"
 	"sort"
-	"time"
+	"strings"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/config"
@@ -179,32 +181,28 @@ func (h *TasksHandler) Register(api huma.API) {
 
 func (h *TasksHandler) startDeploy(ctx context.Context, _ *StartDeployInput) (*StartTaskOutput, error) {
 	addonPlugins := h.addonPluginsFromConfig()
+	playbook := "playbooks/main.yaml"
 
-	req := tasks.StartRequest{
+	if len(addonPlugins) > 0 {
+		slog.Info("deploy with addon plugins", "plugins", addonPlugins)
+		pb, err := h.writeDeployWithPluginsPlaybook(addonPlugins)
+		if err != nil {
+			slog.Error("failed to generate deploy playbook", "error", err)
+		} else {
+			playbook = pb
+		}
+	}
+
+	run, err := h.runner.Start(tasks.StartRequest{
 		Type:     models.TaskTypeDeploy,
-		Playbook: "playbooks/main.yaml",
+		Playbook: playbook,
 		ExtraVars: map[string]string{
 			"workingDir": h.enclaveDir,
 		},
-	}
-
-	slog.Info("deploy requested", "addon_plugins", addonPlugins)
-
-	if len(addonPlugins) == 0 {
-		run, err := h.runner.Start(req)
-		if err != nil {
-			return nil, mapTaskError(err)
-		}
-		return &StartTaskOutput{Body: *run}, nil
-	}
-
-	run, err := h.runner.Start(req)
+	})
 	if err != nil {
 		return nil, mapTaskError(err)
 	}
-
-	go h.chainAddonPlugins(run.ID, addonPlugins)
-
 	return &StartTaskOutput{Body: *run}, nil
 }
 
@@ -238,56 +236,29 @@ func (h *TasksHandler) addonPluginsFromConfig() []string {
 	return result
 }
 
-func (h *TasksHandler) chainAddonPlugins(mainRunID string, pluginNames []string) {
-	defer func() {
-		if r := recover(); r != nil {
-			slog.Error("addon plugin chain panicked", "error", r)
-		}
-	}()
+func (h *TasksHandler) writeDeployWithPluginsPlaybook(addonPlugins []string) (string, error) {
+	var buf strings.Builder
+	buf.WriteString("---\n")
+	buf.WriteString("# Auto-generated: deploy cluster + addon plugins\n")
+	buf.WriteString("- ansible.builtin.import_playbook: main.yaml\n\n")
 
-	slog.Info("waiting for main deploy to complete before addon plugins", "plugins", pluginNames)
-
-	for {
-		time.Sleep(10 * time.Second)
-		mainRun, err := h.runner.Get(mainRunID)
-		if err != nil {
-			continue
-		}
-		if mainRun.Status == models.TaskStatusRunning {
-			continue
-		}
-		if mainRun.Status != models.TaskStatusSuccessful {
-			slog.Warn("skipping addon plugin deploy — main playbook did not succeed",
-				"run_id", mainRunID, "status", mainRun.Status)
-			return
-		}
-		break
+	for _, name := range addonPlugins {
+		buf.WriteString(fmt.Sprintf("- name: Deploy addon plugin %s\n", name))
+		buf.WriteString("  hosts: localhost\n")
+		buf.WriteString("  gather_facts: false\n")
+		buf.WriteString("  tasks:\n")
+		buf.WriteString("    - name: Include plugin deploy tasks\n")
+		buf.WriteString("      ansible.builtin.include_tasks:\n")
+		buf.WriteString("        file: tasks/deploy_plugin.yaml\n")
+		buf.WriteString("      vars:\n")
+		buf.WriteString(fmt.Sprintf("        plugin_name: %s\n\n", name))
 	}
 
-	slog.Info("main deploy completed, deploying addon plugins", "plugins", pluginNames)
-
-	for _, name := range pluginNames {
-		slog.Info("deploying addon plugin", "plugin", name)
-		run, _, err := h.runner.RunSync(context.Background(), tasks.StartRequest{
-			Type:     models.TaskTypeDeployPlugin,
-			Playbook: "playbooks/deploy-plugin.yaml",
-			ExtraVars: map[string]string{
-				"plugin_name": name,
-				"workingDir":  h.enclaveDir,
-			},
-		})
-		if err != nil {
-			slog.Error("addon plugin deploy failed to start", "plugin", name, "error", err)
-			return
-		}
-		if run.Status != models.TaskStatusSuccessful {
-			slog.Error("addon plugin deploy failed", "plugin", name, "status", run.Status)
-			return
-		}
-		slog.Info("addon plugin deployed", "plugin", name)
+	path := filepath.Join(h.enclaveDir, "playbooks", "wizard-deploy.yaml")
+	if err := os.WriteFile(path, []byte(buf.String()), 0640); err != nil {
+		return "", fmt.Errorf("writing deploy playbook: %w", err)
 	}
-
-	slog.Info("all addon plugins deployed successfully")
+	return "playbooks/wizard-deploy.yaml", nil
 }
 
 func (h *TasksHandler) startDeployPhase(ctx context.Context, input *StartDeployPhaseInput) (*StartTaskOutput, error) {
