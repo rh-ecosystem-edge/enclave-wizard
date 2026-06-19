@@ -2,14 +2,6 @@ import { getExperiencePlugins } from "./experiences.ts";
 
 export type FlavorId = "caas" | "vmaas" | "bmaas";
 
-export interface FlavorAddon {
-  id: string;
-  label: string;
-  description: string;
-  experienceId?: string;
-  plugins: string[];
-}
-
 export interface FlavorDefinition {
   id: FlavorId;
   title: string;
@@ -17,8 +9,6 @@ export interface FlavorDefinition {
   description: string;
   osacProfile: string;
   experienceId: string;
-  extraPlugins: string[];
-  addons?: FlavorAddon[];
 }
 
 export const FLAVORS: FlavorDefinition[] = [
@@ -27,33 +17,30 @@ export const FLAVORS: FlavorDefinition[] = [
     title: "CaaS",
     subtitle: "Containers as a Service",
     description:
-      "On-demand container clusters with built-in scalability, resilience, and lifecycle management. Provision and manage OpenShift spoke clusters from the hub.",
+      "Self-service OpenShift cluster provisioning with Hosted Control Planes on bare metal infrastructure.",
     osacProfile: "caas",
-    experienceId: "osac",
-    extraPlugins: [],
+    experienceId: "caas",
   },
   {
     id: "vmaas",
     title: "VMaaS",
     subtitle: "VMs as a Service",
     description:
-      "Run and manage virtual machines alongside containers using OpenShift Virtualization. Migrate existing VM workloads to a cloud-native platform.",
+      "Self-service virtual machine provisioning on OpenShift Virtualization. Migrate existing VM workloads to a cloud-native platform.",
     osacProfile: "vmaas",
-    experienceId: "osac",
-    extraPlugins: ["cnv"],
+    experienceId: "vmaas",
   },
   {
     id: "bmaas",
     title: "BMaaS",
     subtitle: "Bare Metal as a Service",
     description:
-      "Provision and manage bare metal servers on demand. Automated hardware lifecycle from discovery to decommissioning via Metal3 and Ironic.",
+      "Self-service bare metal server provisioning and lifecycle management via Metal3 and Ironic.",
     osacProfile: "bmaas",
-    experienceId: "osac",
-    extraPlugins: [],
+    experienceId: "bmaas",
   },
 ];
 
 export function getFlavorPlugins(flavor: FlavorDefinition): string[] {
-  return [...getExperiencePlugins(flavor.experienceId), ...flavor.extraPlugins];
+  return getExperiencePlugins(flavor.experienceId);
 }
