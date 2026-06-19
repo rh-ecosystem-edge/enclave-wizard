@@ -6,7 +6,9 @@ import {
   FormGroup,
   HelperText,
   HelperTextItem,
+  NumberInput,
   Radio,
+  Switch,
   TextInput,
   Title,
 } from "@patternfly/react-core";
@@ -23,6 +25,12 @@ export const OsacStep: React.FC = () => {
   const aapLicenseFile = (globalData.osacAapLicenseFile as string) ?? "";
   const byoDatabase = (globalData.osacBYODatabase as boolean) ?? false;
   const databaseUrl = (globalData.osacDatabaseUrl as string) ?? "";
+
+  // RHBK settings
+  const rhbkInstances = (globalData.rhbk_instances as number) ?? 1;
+  const rhbkDeployDatabase =
+    (globalData.rhbk_deploy_database as boolean) ?? true;
+  const rhbkDbSize = (globalData.rhbk_db_size as string) ?? "5Gi";
 
   const [uploadFilename, setUploadFilename] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -69,13 +77,14 @@ export const OsacStep: React.FC = () => {
     <Flex direction={{ default: "column" }} gap={{ default: "gapLg" }}>
       <FlexItem>
         <Title headingLevel="h3" size="lg">
-          OSAC Configuration
+          OSAC Platform
         </Title>
         <Content component="p" className={stepStyles.subtitle}>
-          Configure the Open Sovereign AI Cloud platform settings.
+          Configure the Open Sovereign AI Cloud platform.
         </Content>
       </FlexItem>
 
+      {/* AAP License */}
       <FlexItem>
         <FormGroup
           label="AAP subscription file"
@@ -85,7 +94,10 @@ export const OsacStep: React.FC = () => {
           <FileUpload
             id="aap-license-upload"
             type="dataURL"
-            filename={uploadFilename || (aapLicenseFile ? aapLicenseFile.split("/").pop() : "")}
+            filename={
+              uploadFilename ||
+              (aapLicenseFile ? aapLicenseFile.split("/").pop() : "")
+            }
             filenamePlaceholder="Upload your AAP license manifest.zip"
             onFileInputChange={(_e, file) => handleFileUpload(_e, file)}
             onClearClick={handleFileClear}
@@ -114,15 +126,20 @@ export const OsacStep: React.FC = () => {
           {!aapLicenseFile && !uploadError && (
             <HelperText>
               <HelperTextItem>
-                Obtain from access.redhat.com/management/subscription_allocations
+                Obtain from
+                access.redhat.com/management/subscription_allocations
               </HelperTextItem>
             </HelperText>
           )}
         </FormGroup>
       </FlexItem>
 
+      {/* Fulfillment Database */}
       <FlexItem>
-        <FormGroup label="Database" fieldId="byo-database">
+        <Title headingLevel="h4" size="md">
+          Fulfillment Database
+        </Title>
+        <FormGroup label="Database backend" fieldId="byo-database">
           <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }}>
             <Radio
               id="db-builtin"
@@ -162,6 +179,80 @@ export const OsacStep: React.FC = () => {
                   : "default"
               }
             />
+          </FormGroup>
+        </FlexItem>
+      )}
+
+      {/* Identity Provider (RHBK/Keycloak) */}
+      <FlexItem>
+        <Title headingLevel="h4" size="md">
+          Identity Provider (Keycloak)
+        </Title>
+      </FlexItem>
+
+      <FlexItem>
+        <FormGroup label="Keycloak replicas" fieldId="rhbk-instances">
+          <NumberInput
+            id="rhbk-instances"
+            value={rhbkInstances}
+            min={1}
+            max={5}
+            onMinus={() =>
+              setField("rhbk_instances", Math.max(1, rhbkInstances - 1))
+            }
+            onPlus={() =>
+              setField("rhbk_instances", Math.min(5, rhbkInstances + 1))
+            }
+            onChange={(e) => {
+              const v = Number.parseInt(
+                (e.target as HTMLInputElement).value,
+                10,
+              );
+              if (v >= 1 && v <= 5) setField("rhbk_instances", v);
+            }}
+          />
+          <HelperText>
+            <HelperTextItem>
+              Use 3+ for production high availability
+            </HelperTextItem>
+          </HelperText>
+        </FormGroup>
+      </FlexItem>
+
+      <FlexItem>
+        <FormGroup
+          label="Keycloak database"
+          fieldId="rhbk-deploy-database"
+        >
+          <Switch
+            id="rhbk-deploy-database"
+            label="Deploy built-in PostgreSQL for Keycloak"
+            labelOff="Use external database for Keycloak"
+            isChecked={rhbkDeployDatabase}
+            onChange={(_e, checked) =>
+              setField("rhbk_deploy_database", checked)
+            }
+          />
+        </FormGroup>
+      </FlexItem>
+
+      {rhbkDeployDatabase && (
+        <FlexItem>
+          <FormGroup
+            label="Keycloak database size"
+            fieldId="rhbk-db-size"
+          >
+            <TextInput
+              id="rhbk-db-size"
+              value={rhbkDbSize}
+              onChange={(_e, val) => setField("rhbk_db_size", val)}
+              placeholder="5Gi"
+            />
+            <HelperText>
+              <HelperTextItem>
+                PVC size for the Keycloak PostgreSQL volume
+              </HelperTextItem>
+            </HelperText>
           </FormGroup>
         </FlexItem>
       )}

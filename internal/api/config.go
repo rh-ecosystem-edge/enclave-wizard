@@ -208,6 +208,9 @@ func (h *ConfigHandler) writeConfig(_ context.Context, input *WriteConfigInput) 
 		input.Body.Global.PluginsConfig.OsacAapLicenseFile = nil
 		input.Body.Global.PluginsConfig.OsacBYODatabase = nil
 		input.Body.Global.PluginsConfig.OsacDatabaseUrl = nil
+		input.Body.Global.PluginsConfig.RhbkInstances = nil
+		input.Body.Global.PluginsConfig.RhbkDeployDatabase = nil
+		input.Body.Global.PluginsConfig.RhbkDbSize = nil
 
 		errs := h.validator.Validate(&input.Body)
 

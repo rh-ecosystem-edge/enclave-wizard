@@ -24,6 +24,7 @@ func (w *Writer) WriteAll(cfg *models.EnclaveConfig) error {
 	}
 
 	osacConfig := extractOsacConfig(&cfg.Global.PluginsConfig)
+	rhbkConfig := extractRhbkConfig(&cfg.Global.PluginsConfig)
 
 	if err := writeYAMLFile(filepath.Join(configDir, "global.yaml"), &cfg.Global); err != nil {
 		return fmt.Errorf("writing global.yaml: %w", err)
@@ -35,13 +36,20 @@ func (w *Writer) WriteAll(cfg *models.EnclaveConfig) error {
 		return fmt.Errorf("writing cloud_infra.yaml: %w", err)
 	}
 
-	if osacConfig != nil {
-		pluginsDir := filepath.Join(configDir, "plugins")
+	pluginsDir := filepath.Join(configDir, "plugins")
+	if osacConfig != nil || rhbkConfig != nil {
 		if err := os.MkdirAll(pluginsDir, 0750); err != nil {
 			return fmt.Errorf("creating plugins config directory: %w", err)
 		}
+	}
+	if osacConfig != nil {
 		if err := writeYAMLFile(filepath.Join(pluginsDir, "osac.yaml"), osacConfig); err != nil {
 			return fmt.Errorf("writing osac.yaml: %w", err)
+		}
+	}
+	if rhbkConfig != nil {
+		if err := writeYAMLFile(filepath.Join(pluginsDir, "rhbk.yaml"), rhbkConfig); err != nil {
+			return fmt.Errorf("writing rhbk.yaml: %w", err)
 		}
 	}
 
@@ -75,6 +83,32 @@ func extractOsacConfig(pc *models.PluginsConfig) *osacPluginConfig {
 	if pc.OsacDatabaseUrl != nil {
 		cfg.OsacDatabaseUrl = *pc.OsacDatabaseUrl
 		pc.OsacDatabaseUrl = nil
+	}
+	return cfg
+}
+
+type rhbkPluginConfig struct {
+	RhbkInstances      int    `yaml:"rhbk_instances,omitempty"`
+	RhbkDeployDatabase *bool  `yaml:"rhbk_deploy_database,omitempty"`
+	RhbkDbSize         string `yaml:"rhbk_db_size,omitempty"`
+}
+
+func extractRhbkConfig(pc *models.PluginsConfig) *rhbkPluginConfig {
+	if pc.RhbkInstances == nil && pc.RhbkDeployDatabase == nil && pc.RhbkDbSize == nil {
+		return nil
+	}
+	cfg := &rhbkPluginConfig{}
+	if pc.RhbkInstances != nil {
+		cfg.RhbkInstances = *pc.RhbkInstances
+		pc.RhbkInstances = nil
+	}
+	if pc.RhbkDeployDatabase != nil {
+		cfg.RhbkDeployDatabase = pc.RhbkDeployDatabase
+		pc.RhbkDeployDatabase = nil
+	}
+	if pc.RhbkDbSize != nil {
+		cfg.RhbkDbSize = *pc.RhbkDbSize
+		pc.RhbkDbSize = nil
 	}
 	return cfg
 }
