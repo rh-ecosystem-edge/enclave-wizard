@@ -12,4 +12,5 @@ RUN apk add --no-cache python3 py3-pip && \
 WORKDIR /app
 COPY --from=build /app/enclave-wizard .
 EXPOSE 8080
+
 ENTRYPOINT ["./enclave-wizard"]
