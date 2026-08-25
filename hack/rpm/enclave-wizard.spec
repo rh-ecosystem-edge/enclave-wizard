@@ -8,8 +8,6 @@ URL:            https://github.com/rh-ecosystem-edge/enclave-wizard
 Source0:        enclave-wizard
 Source1:        enclave-wizard.service
 
-Requires:       enclave
-
 %description
 Web-based install wizard for Red Hat Sovereign Enclave (RHSE).
 Single binary that serves both the API and the embedded UI with TLS.
