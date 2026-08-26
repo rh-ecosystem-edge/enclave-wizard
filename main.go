@@ -39,14 +39,15 @@ var (
 var uiFiles embed.FS
 
 type Options struct {
-	HTTPPort     int    `help:"HTTP port (redirects to HTTPS)" default:"3001"`
-	HTTPSPort    int    `help:"HTTPS port" default:"3443"`
-	TLSCert      string `help:"Path to TLS certificate" default:"/etc/enclave-wizard/tls/server.crt"`
-	TLSKey       string `help:"Path to TLS key" default:"/etc/enclave-wizard/tls/server.key"`
-	EnclaveDir   string `help:"Path to the Enclave repository root" default:"../enclave"`
-	PasswordFile string `help:"Path to the password file" default:"/etc/enclave-wizard/password"`
-	LogLevel     string `help:"Log level (trace, debug, info, warn, error)" default:"info"`
-	NoAuth       bool   `help:"Disable authentication (local development only)" default:"false"`
+	HTTPPort      int    `help:"HTTP port (redirects to HTTPS)" default:"3001"`
+	HTTPSPort     int    `help:"HTTPS port" default:"3443"`
+	TLSCert       string `help:"Path to TLS certificate" default:"/etc/enclave-wizard/tls/server.crt"`
+	TLSKey        string `help:"Path to TLS key" default:"/etc/enclave-wizard/tls/server.key"`
+	EnclaveDir    string `help:"Path to the Enclave repository root" default:"../enclave"`
+	PasswordFile  string `help:"Path to the password file" default:"/etc/enclave-wizard/password"`
+	AnsibleBinDir string `help:"Extra directory to search for ansible-runner, prepended to PATH" default:""`
+	LogLevel      string `help:"Log level (trace, debug, info, warn, error)" default:"info"`
+	NoAuth        bool   `help:"Disable authentication (local development only)" default:"false"`
 	DevOptions
 }
 

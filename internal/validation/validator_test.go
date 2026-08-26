@@ -78,6 +78,21 @@ func TestParseFailedEvents_CensoredFallsBackToTaskName(t *testing.T) {
 	}
 }
 
+func TestParseFailedEvents_PlaybookLevelError(t *testing.T) {
+	event := map[string]any{
+		"event":  "error",
+		"stdout": "[ERROR]: couldn't resolve module/action 'ansible.utils.validate'. This often indicates a misspelling, missing collection, or incorrect module path.",
+	}
+	raw, _ := json.Marshal(event)
+	errs := parseFailedEvents([]json.RawMessage{raw})
+	if len(errs) != 1 {
+		t.Fatalf("expected 1 error, got %d: %v", len(errs), errs)
+	}
+	if !strings.Contains(errs[0].Message, "ansible.utils.validate") {
+		t.Errorf("expected stdout message surfaced, got %q", errs[0].Message)
+	}
+}
+
 func TestParseFailedEvents_IgnoresNonFailure(t *testing.T) {
 	event := map[string]any{
 		"event":      "runner_on_ok",

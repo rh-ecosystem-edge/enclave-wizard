@@ -132,11 +132,12 @@ func parseFailedEvents(events []json.RawMessage) []models.ValidationError {
 	for _, raw := range events {
 		var ev struct {
 			Event     string `json:"event"`
+			Stdout    string `json:"stdout"`
 			EventData struct {
 				Task string `json:"task"`
 				Res  struct {
-					Msg     string `json:"msg"`
-					Errors  []struct {
+					Msg    string `json:"msg"`
+					Errors []struct {
 						Message    string `json:"message"`
 						DataPath   string `json:"data_path"`
 						SchemaPath string `json:"schema_path"`
@@ -151,6 +152,19 @@ func parseFailedEvents(events []json.RawMessage) []models.ValidationError {
 		if json.Unmarshal(raw, &ev) != nil {
 			continue
 		}
+
+		// ansible-runner reports playbook-level failures (missing collection,
+		// syntax errors, etc. — anything before a task even starts) as an
+		// "error" event with the message only in stdout, not event_data.res.
+		if ev.Event == "error" {
+			msg := strings.TrimSpace(ev.Stdout)
+			if msg == "" {
+				msg = "playbook error"
+			}
+			result = append(result, models.ValidationError{Message: msg})
+			continue
+		}
+
 		if ev.Event != "runner_on_failed" {
 			continue
 		}
@@ -196,4 +210,3 @@ func parseFailedEvents(events []json.RawMessage) []models.ValidationError {
 	}
 	return result
 }
-

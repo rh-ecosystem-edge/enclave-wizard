@@ -20,8 +20,10 @@ import (
 // AnsibleRunner executes ansible-runner subprocesses. It enforces single-task
 // execution through a mutex combined with an advisory file lock.
 type AnsibleRunner struct {
-	enclaveDir   string
-	artifactsDir string
+	enclaveDir       string
+	artifactsDir     string
+	binDir           string // extra directory prepended to PATH when resolving/running ansible-runner
+	ansibleRunnerBin string // resolved absolute path to the ansible-runner binary
 
 	mu       sync.Mutex
 	lockFile *os.File
@@ -31,8 +33,35 @@ type AnsibleRunner struct {
 	done      chan struct{} // closed by waitForCompletion when the process exits
 }
 
+// pathWithBinDir prepends binDir (if set and not already present) to the given PATH.
+func pathWithBinDir(binDir, currentPath string) string {
+	if binDir == "" || strings.Contains(currentPath, binDir) {
+		return currentPath
+	}
+	return binDir + ":" + currentPath
+}
+
+// resolveBinary returns the absolute path to name, preferring binDir over the
+// process's own PATH. exec.Command resolves bare command names using the
+// current process's PATH at construction time — not cmd.Env — so callers
+// that want a subprocess to find a binary via a custom bin dir must resolve
+// the absolute path themselves and pass that to exec.Command instead of the
+// bare name.
+func resolveBinary(name, binDir string) (string, error) {
+	if binDir != "" {
+		candidate := filepath.Join(binDir, name)
+		if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
+			return candidate, nil
+		}
+	}
+	return exec.LookPath(name)
+}
+
 // NewAnsibleRunner creates a runner that executes real ansible-runner subprocesses.
-func NewAnsibleRunner(enclaveDir string) (*AnsibleRunner, error) {
+// binDir, if non-empty, is prepended to PATH when locating and running ansible-runner,
+// so deployments can point at wherever ansible-runner was installed without relying
+// on the invoking user's own PATH/HOME.
+func NewAnsibleRunner(enclaveDir, binDir string) (*AnsibleRunner, error) {
 	absDir, err := filepath.Abs(enclaveDir)
 	if err != nil {
 		return nil, fmt.Errorf("resolving enclave directory: %w", err)
@@ -40,8 +69,14 @@ func NewAnsibleRunner(enclaveDir string) (*AnsibleRunner, error) {
 	if _, err := os.Stat(absDir); err != nil {
 		return nil, fmt.Errorf("enclave directory: %w", err)
 	}
-	if _, err := exec.LookPath("ansible-runner"); err != nil {
-		return nil, ErrRunnerBin
+
+	uvBinDir := filepath.Join(absDir, ".local", "bin")
+	ansibleRunnerBin, err := resolveBinary("ansible-runner", binDir)
+	if err != nil {
+		ansibleRunnerBin, err = resolveBinary("ansible-runner", uvBinDir)
+		if err != nil {
+			return nil, ErrRunnerBin
+		}
 	}
 
 	artifactsDir := filepath.Join(absDir, "artifacts")
@@ -50,8 +85,10 @@ func NewAnsibleRunner(enclaveDir string) (*AnsibleRunner, error) {
 	}
 
 	return &AnsibleRunner{
-		enclaveDir:   absDir,
-		artifactsDir: artifactsDir,
+		enclaveDir:       absDir,
+		artifactsDir:     artifactsDir,
+		binDir:           binDir,
+		ansibleRunnerBin: ansibleRunnerBin,
 	}, nil
 }
 
@@ -118,14 +155,12 @@ func (r *AnsibleRunner) runAsync(req StartRequest) (*models.TaskRun, <-chan stru
 		args = append(args, "--cmdline", strings.Join(cmdParts, " "))
 	}
 
-	cmd := exec.Command("ansible-runner", args...)
+	cmd := exec.Command(r.ansibleRunnerBin, args...)
 	cmd.Dir = r.enclaveDir
 
 	uvBinDir := filepath.Join(r.enclaveDir, ".local", "bin")
-	currentPath := os.Getenv("PATH")
-	if !strings.Contains(currentPath, uvBinDir) {
-		currentPath = uvBinDir + ":" + currentPath
-	}
+	currentPath := pathWithBinDir(uvBinDir, os.Getenv("PATH"))
+	currentPath = pathWithBinDir(r.binDir, currentPath)
 	cmd.Env = append(os.Environ(),
 		"ANSIBLE_CONFIG="+filepath.Join(r.enclaveDir, "ansible.cfg"),
 		"PATH="+currentPath,

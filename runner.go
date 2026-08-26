@@ -7,7 +7,7 @@ import (
 )
 
 func initRunner(opts *Options, enclaveDir string) (runner.Runner, error) {
-	real, err := runner.NewAnsibleRunner(enclaveDir)
+	real, err := runner.NewAnsibleRunner(enclaveDir, opts.AnsibleBinDir)
 	if err != nil {
 		slog.Warn("task runner unavailable, tasks API disabled", "error", err)
 		return applyRunnerMode(opts, nil, enclaveDir)

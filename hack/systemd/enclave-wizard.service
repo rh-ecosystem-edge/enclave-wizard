@@ -6,6 +6,12 @@ After=network-online.target
 Environment=HOME=/home/enclave
 Environment=XDG_CACHE_HOME=/home/enclave/.cache
 Environment=PATH=/home/enclave/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# SERVICE_ANSIBLE_BIN_DIR points the wizard at wherever ansible-runner was
+# installed (uv tool bin dir), independent of which user/home ran that
+# install. Override by dropping a file at /etc/enclave-wizard/environment,
+# e.g. when enclave was installed manually under a different user's home.
+Environment=SERVICE_ANSIBLE_BIN_DIR=/home/enclave/.local/bin
+EnvironmentFile=-/etc/enclave-wizard/environment
 ExecStart=/usr/local/bin/enclave-wizard --enclave-dir /opt/enclave --password-file /etc/enclave-wizard/password
 Restart=on-failure
 RestartSec=5

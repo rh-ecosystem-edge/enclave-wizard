@@ -15,16 +15,38 @@ import (
 // --- NewAnsibleRunner ---
 
 func TestNewAnsibleRunner_DirNotFound(t *testing.T) {
-	_, err := NewAnsibleRunner("/nonexistent/does-not-exist-xyz")
+	_, err := NewAnsibleRunner("/nonexistent/does-not-exist-xyz", "")
 	if err == nil {
 		t.Fatal("expected error for missing directory, got nil")
+	}
+}
+
+func TestNewAnsibleRunner_ResolvesBinaryFromBinDir(t *testing.T) {
+	binDir := t.TempDir()
+	fakeBin := filepath.Join(binDir, "ansible-runner")
+	if err := os.WriteFile(fakeBin, []byte("#!/bin/sh\nexit 0\n"), 0755); err != nil {
+		t.Fatalf("writing fake ansible-runner: %v", err)
+	}
+
+	t.Setenv("PATH", "")
+
+	if _, err := NewAnsibleRunner(t.TempDir(), binDir); err != nil {
+		t.Fatalf("expected ansible-runner to resolve via binDir, got: %v", err)
+	}
+}
+
+func TestNewAnsibleRunner_MissingBinaryEvenWithBinDir(t *testing.T) {
+	t.Setenv("PATH", "")
+
+	if _, err := NewAnsibleRunner(t.TempDir(), t.TempDir()); err != ErrRunnerBin {
+		t.Fatalf("expected ErrRunnerBin, got: %v", err)
 	}
 }
 
 func TestNewAnsibleRunner_CreatesArtifactsDir(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
 	dir := t.TempDir()
-	if _, err := NewAnsibleRunner(dir); err != nil {
+	if _, err := NewAnsibleRunner(dir, ""); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	if _, err := os.Stat(filepath.Join(dir, "artifacts")); err != nil {
@@ -163,7 +185,7 @@ func TestAnsibleRunner_Cancel(t *testing.T) {
 
 func TestAnsibleRunner_Cancel_NotFound(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -177,7 +199,7 @@ func TestAnsibleRunner_Cancel_NotFound(t *testing.T) {
 
 func TestAnsibleRunner_Get_NotFound(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -188,7 +210,7 @@ func TestAnsibleRunner_Get_NotFound(t *testing.T) {
 
 func TestAnsibleRunner_Get_ReturnsStoredFields(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -223,7 +245,7 @@ func TestAnsibleRunner_Get_ReturnsStoredFields(t *testing.T) {
 
 func TestAnsibleRunner_List_Empty(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -238,7 +260,7 @@ func TestAnsibleRunner_List_Empty(t *testing.T) {
 
 func TestAnsibleRunner_List_SortedNewestFirst(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -274,7 +296,7 @@ func TestAnsibleRunner_List_SortedNewestFirst(t *testing.T) {
 
 func TestAnsibleRunner_Logs_NotFound(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -285,7 +307,7 @@ func TestAnsibleRunner_Logs_NotFound(t *testing.T) {
 
 func TestAnsibleRunner_Logs_EmptyWhenStdoutMissing(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -324,7 +346,7 @@ func TestAnsibleRunner_Logs_Integration(t *testing.T) {
 
 func TestAnsibleRunner_Events_NotFound(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -335,7 +357,7 @@ func TestAnsibleRunner_Events_NotFound(t *testing.T) {
 
 func TestAnsibleRunner_Events_EmptyWhenEventsDirMissing(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -354,7 +376,7 @@ func TestAnsibleRunner_Events_EmptyWhenEventsDirMissing(t *testing.T) {
 
 func TestAnsibleRunner_Events_OrderedByNumericPrefix(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -402,7 +424,7 @@ func TestAnsibleRunner_Events_OrderedByNumericPrefix(t *testing.T) {
 
 func TestAnsibleRunner_Events_SkipsNonJSONFiles(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -450,7 +472,7 @@ func TestAnsibleRunner_Events_Integration(t *testing.T) {
 
 func TestAnsibleRunner_Stream_NotFound(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -461,7 +483,7 @@ func TestAnsibleRunner_Stream_NotFound(t *testing.T) {
 
 func TestAnsibleRunner_Stream_CompletedRun(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -492,7 +514,7 @@ func TestAnsibleRunner_Stream_CompletedRun(t *testing.T) {
 
 func TestAnsibleRunner_Delete_NotFound(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -503,7 +525,7 @@ func TestAnsibleRunner_Delete_NotFound(t *testing.T) {
 
 func TestAnsibleRunner_Delete_RemovesDirectory(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -541,7 +563,7 @@ func TestAnsibleRunner_Delete_ActiveRunReturnsErrRunning(t *testing.T) {
 
 func TestAnsibleRunner_Recover_DeadProcessNoStatus(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -576,7 +598,7 @@ func TestAnsibleRunner_Recover_DeadProcessNoStatus(t *testing.T) {
 
 func TestAnsibleRunner_Recover_DeadProcessWithSuccessStatus(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -613,7 +635,7 @@ func TestAnsibleRunner_Recover_DeadProcessWithSuccessStatus(t *testing.T) {
 
 func TestAnsibleRunner_Recover_SkipsAlreadyCompletedRuns(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -643,7 +665,7 @@ func TestAnsibleRunner_Recover_SkipsAlreadyCompletedRuns(t *testing.T) {
 
 func TestAnsibleRunner_Shutdown_NoActiveRun(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(t.TempDir())
+	r, err := NewAnsibleRunner(t.TempDir(), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}
@@ -654,7 +676,7 @@ func TestAnsibleRunner_Shutdown_NoActiveRun(t *testing.T) {
 
 func TestAnsibleRunner_Shutdown_CancelsActiveRun(t *testing.T) {
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(newTestProject(t))
+	r, err := NewAnsibleRunner(newTestProject(t), "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}

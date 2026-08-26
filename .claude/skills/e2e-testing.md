@@ -161,15 +161,17 @@ Set `SKIP_AUTH=true` before sourcing helpers.sh if your test needs to handle aut
 - **Check wizard logs**: `vm_exec "sudo journalctl -u enclave-wizard --no-pager -n 100"`
 - **Check config files**: `vm_exec "cat /opt/enclave/config/global.yaml"`
 
-## RPM Build Details
+## Build Details
 
-`hack/rpm/build-rpm.sh` builds two RPMs:
+`make deploy` runs two independent build steps before provisioning:
 
-1. **enclave.rpm** - Clones the enclave repo, installs to `/opt/enclave` with ansible-runner, collections, and Python deps
-2. **enclave-wizard.rpm** - Installs the binary, systemd service, generates TLS certs, opens firewall ports
+1. **`make rpm`** (`hack/rpm/build-rpm.sh`) - Builds only the `enclave-wizard` RPM (binary + systemd service). No longer builds an enclave RPM.
+2. **`make enclave-tarball`** (`hack/fetch-enclave.sh`) - Clones enclave at `ENCLAVE_VERSION` on the local machine (not the VM), applies overrides from `hack/enclave/`, and packages it as `out/enclave-repo.tar.gz`.
+
+On the VM, `hack/deploy-wizard` extracts that tarball to `/opt/enclave` and runs enclave's own `setup_env.sh` (system packages, as root) and `setup_ansible.sh` (uv/ansible/collections, as the `wizard` user) — the same install path documented in enclave's own README, instead of an RPM. It then adds `ansible-runner` into that same uv tool env (required by the wizard, not by enclave itself) and points the wizard at it via `/etc/enclave-wizard/environment`.
 
 Environment variables:
 - `ENCLAVE_REPO` - Git URL for enclave repo (default: upstream GitHub)
-- `ENCLAVE_BRANCH` - Branch to clone (default: main)
+- `ENCLAVE_VERSION` - Git ref to clone: branch, tag, or commit SHA (default: `main`, or the local `../enclave` checkout's SHA if present)
 
 Output goes to `out/` directory.

@@ -11,7 +11,8 @@ Source1:        enclave-wizard.service
 %description
 Web-based install wizard for Red Hat Sovereign Enclave (RHSE).
 Single binary that serves both the API and the embedded UI with TLS.
-Requires the enclave package for schemas, playbooks, and runtime deps.
+Expects an enclave checkout (schemas, playbooks, ansible-runner) already
+provisioned at the --enclave-dir path; see hack/deploy-wizard.
 
 %install
 install -D -m 0755 %{SOURCE0} %{buildroot}/usr/local/bin/enclave-wizard

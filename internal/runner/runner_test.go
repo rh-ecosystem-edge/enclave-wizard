@@ -102,7 +102,7 @@ func newTestProject(t *testing.T) string {
 func newRunner(t *testing.T, dir string) *AnsibleRunner {
 	t.Helper()
 	skipIfNoAnsibleRunner(t)
-	r, err := NewAnsibleRunner(dir)
+	r, err := NewAnsibleRunner(dir, "")
 	if err != nil {
 		t.Fatalf("NewAnsibleRunner: %v", err)
 	}

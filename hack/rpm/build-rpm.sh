@@ -5,70 +5,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 OUT_DIR="${REPO_DIR}/out"
 
-ENCLAVE_REPO="${ENCLAVE_REPO:-https://github.com/rh-ecosystem-edge/enclave.git}"
-ENCLAVE_BRANCH="${ENCLAVE_BRANCH:-main}"
+echo "=== Building Enclave Wizard RPM ==="
 
-echo "=== Building Enclave Wizard RPMs ==="
-echo "  Enclave repo:   ${ENCLAVE_REPO}"
-echo "  Enclave branch: ${ENCLAVE_BRANCH}"
-
-# --- Build wizard binary (includes embedded UI) ---
+# --- Build enclave-wizard RPM ---
+# Expects the wizard binary (with embedded UI) to already be built — the
+# `rpm` Makefile target has `build-linux` as a prerequisite for this.
 echo ""
-echo "[1/5] Building wizard binary with embedded UI..."
-make -C "${REPO_DIR}" build-linux
-
-# --- Clone enclave repo (skip if RPM exists) ---
-ENCLAVE_RPM=$(find "${OUT_DIR}" -maxdepth 1 -name "enclave-[0-9]*.rpm" 2>/dev/null | head -1)
-if [ -n "${ENCLAVE_RPM}" ]; then
-  echo "[2/5] Enclave RPM already exists: $(basename ${ENCLAVE_RPM}) — skipping"
-  echo "[3/5] Skipped"
-else
-  echo "[2/5] Cloning enclave repo (${ENCLAVE_BRANCH})..."
-  ENCLAVE_TMP=$(mktemp -d)
-  git clone --depth 1 --branch "${ENCLAVE_BRANCH}" "${ENCLAVE_REPO}" "${ENCLAVE_TMP}/enclave"
-
-  # Apply enclave-wizard overrides (pinned images, etc.)
-  OVERRIDES_DIR="${REPO_DIR}/hack/enclave"
-  if [ -d "${OVERRIDES_DIR}" ]; then
-    echo "    Applying overrides from hack/enclave/..."
-    cp -rv "${OVERRIDES_DIR}/." "${ENCLAVE_TMP}/enclave/" | tail -5
-  fi
-
-  tar czf "${REPO_DIR}/enclave-repo.tar.gz" -C "${ENCLAVE_TMP}" enclave
-  rm -rf "${ENCLAVE_TMP}"
-
-  # --- Build enclave RPM ---
-  echo "[3/5] Building enclave RPM..."
-  mkdir -p "${OUT_DIR}"
-
-  podman run --rm \
-      -v "${REPO_DIR}:/src:z" \
-      -v "${OUT_DIR}:/out:z" \
-      -w /src \
-      fedora:latest \
-      bash -c '
-          set -e
-          dnf install -y rpm-build 2>/dev/null | tail -1
-
-          RPMBUILD_DIR=$(mktemp -d)
-          mkdir -p ${RPMBUILD_DIR}/{SOURCES,SPECS,RPMS,BUILD,SRPMS}
-
-          cp /src/enclave-repo.tar.gz  ${RPMBUILD_DIR}/SOURCES/enclave-repo.tar.gz
-          cp /src/hack/rpm/enclave.spec ${RPMBUILD_DIR}/SPECS/
-
-          rpmbuild -bb \
-              --define "_topdir ${RPMBUILD_DIR}" \
-              ${RPMBUILD_DIR}/SPECS/enclave.spec
-
-          cp ${RPMBUILD_DIR}/RPMS/*/*.rpm /out/
-          rm -rf ${RPMBUILD_DIR}
-      '
-
-  rm -f "${REPO_DIR}/enclave-repo.tar.gz"
-fi
-
-# --- Build enclave-wizard RPM (always) ---
-echo "[4/5] Building enclave-wizard RPM..."
+echo "[1/2] Building enclave-wizard RPM..."
 mkdir -p "${OUT_DIR}"
 
 podman run --rm \
@@ -96,15 +39,10 @@ podman run --rm \
     '
 
 # --- Generate checksums ---
-echo "[5/5] Done."
-for rpm in "${OUT_DIR}/"*.rpm; do
+echo "[2/2] Done."
+for rpm in "${OUT_DIR}/"enclave-wizard-*.rpm; do
     sha256sum "${rpm}" > "${rpm}.sha256"
 done
 
 echo ""
-ls -lh "${OUT_DIR}/"*.rpm
-echo ""
-echo "RPMs built:"
-for rpm in "${OUT_DIR}/"*.rpm; do
-    echo "  $(basename ${rpm})"
-done
+ls -lh "${OUT_DIR}/"enclave-wizard-*.rpm

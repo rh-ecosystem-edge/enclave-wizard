@@ -25,21 +25,25 @@ CLOUD_IMAGE_URL="https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-S
 
 echo "=== Deploying Enclave Wizard to ${TARGET} (in VM) ==="
 
-# --- Find RPMs ---
-ENCLAVE_RPM=$(ls -t "${REPO_DIR}/out/"enclave-0*.rpm 2>/dev/null | head -1)
+# --- Find build artifacts ---
 WIZARD_RPM=$(ls -t "${REPO_DIR}/out/"enclave-wizard-*.rpm 2>/dev/null | head -1)
+ENCLAVE_TARBALL="${REPO_DIR}/out/enclave-repo.tar.gz"
 if [ -z "${WIZARD_RPM}" ]; then
-    echo "ERROR: No RPMs found in out/. Run 'make rpm' first."
+    echo "ERROR: No wizard RPM found in out/. Run 'make rpm' first."
     exit 1
 fi
-[ -n "${ENCLAVE_RPM}" ] && echo "  Enclave RPM: $(basename ${ENCLAVE_RPM})"
-echo "  Wizard RPM:  $(basename ${WIZARD_RPM})"
+if [ ! -f "${ENCLAVE_TARBALL}" ]; then
+    echo "ERROR: No enclave tarball found in out/. Run 'make enclave-tarball' first."
+    exit 1
+fi
+echo "  Wizard RPM:     $(basename ${WIZARD_RPM})"
+echo "  Enclave source: $(basename ${ENCLAVE_TARBALL})"
 
-# --- Step 1: Transfer RPMs to target host ---
+# --- Step 1: Transfer build artifacts to target host ---
 echo ""
-echo "[1/6] Transferring RPMs to target host..."
-[ -n "${ENCLAVE_RPM}" ] && ${SCP} "${ENCLAVE_RPM}" "${TARGET}:/tmp/enclave.rpm"
+echo "[1/6] Transferring build artifacts to target host..."
 ${SCP} "${WIZARD_RPM}" "${TARGET}:/tmp/enclave-wizard.rpm"
+${SCP} "${ENCLAVE_TARBALL}" "${TARGET}:/tmp/enclave-repo.tar.gz"
 
 # --- Step 2: Download Fedora Cloud image on target ---
 echo "[2/6] Preparing VM image on target..."
@@ -130,6 +134,14 @@ if [ -z "${VM_IP}" ]; then
 fi
 echo "  VM IP: ${VM_IP}"
 
+# Libvirt reuses DHCP-leased IPs across VM (re)creations. A previous VM's
+# host key at this IP would otherwise trigger a hard host-key-mismatch abort
+# that StrictHostKeyChecking=no does NOT suppress (only unknown hosts, not
+# changed ones) — on both our own known_hosts and the target host's, since
+# some steps below run ssh/scp to the VM from the target host itself.
+ssh-keygen -R "${VM_IP}" >/dev/null 2>&1 || true
+${SSH} "${TARGET}" "ssh-keygen -R ${VM_IP} 2>/dev/null || true"
+
 # Wait for SSH inside VM (via target as jump host)
 echo "  Waiting for SSH..."
 for i in $(seq 1 30); do
@@ -140,23 +152,46 @@ done
 # --- Step 5: Provision inside VM ---
 echo "[5/6] Provisioning VM..."
 
-# Transfer RPM from target host into VM and install
+# Transfer build artifacts from target host into VM
 ${SSH} "${TARGET}" "
-  scp -o StrictHostKeyChecking=no /tmp/enclave*.rpm wizard@${VM_IP}:/tmp/
+  scp -o StrictHostKeyChecking=no /tmp/enclave-wizard.rpm /tmp/enclave-repo.tar.gz wizard@${VM_IP}:/tmp/
 "
 
 ${SSH} -J "${TARGET}" wizard@"${VM_IP}" "
   echo '  Waiting for cloud-init...'
   sudo cloud-init status --wait 2>/dev/null || sleep 10
   echo '  cloud-init done.'
-  if ls /tmp/enclave.rpm &>/dev/null; then
-    echo '  Installing enclave RPM (system packages)...'
-    sudo dnf install -y /tmp/enclave.rpm 2>&1 | tail -10
-    echo '  Enclave RPM installed.'
+
+  echo '  Extracting enclave source to /opt/enclave...'
+  sudo mkdir -p /opt/enclave
+  sudo tar xzf /tmp/enclave-repo.tar.gz --strip-components=1 -C /opt/enclave
+  sudo chown -R \"\$(id -un):\$(id -gn)\" /opt/enclave
+
+  echo '  Running enclave setup_env.sh (system packages)...'
+  cd /opt/enclave && sudo bash setup_env.sh 2>&1 | tail -10
+
+  echo '  Running enclave setup_ansible.sh (uv, ansible, collections)...'
+  cd /opt/enclave && bash setup_ansible.sh 2>&1 | tail -20
+
+  echo '  Adding ansible-runner (required by the wizard, not by enclave itself)...'
+  \"\${HOME}/.local/bin/uv\" tool install --force /opt/enclave \
+      --with-executables-from ansible-core \
+      --with-executables-from ansible-runner \
+      --with ansible-runner 2>&1 | tail -5
+
+  if [ ! -f \"\${HOME}/.ssh/id_rsa\" ]; then
+    ssh-keygen -t rsa -b 4096 -f \"\${HOME}/.ssh/id_rsa\" -N '' -q
   fi
+
   echo '  Installing wizard RPM...'
   sudo dnf install -y /tmp/enclave-wizard.rpm 2>&1 | tail -5
   echo '  Wizard RPM installed.'
+
+  # Point the wizard at wherever this deploy actually installed ansible-runner
+  # (this user's home), rather than the RPM unit's dedicated-user default.
+  printf 'SERVICE_ANSIBLE_BIN_DIR=%s/.local/bin\nHOME=%s\nXDG_CACHE_HOME=%s/.cache\n' \"\${HOME}\" \"\${HOME}\" \"\${HOME}\" | sudo tee /etc/enclave-wizard/environment > /dev/null
+  sudo systemctl daemon-reload
+  sudo systemctl restart enclave-wizard
 " 2>&1 | grep -v "^$"
 
 # Attach BMC network if bm-emulation was set up
@@ -167,7 +202,6 @@ if ${SSH} "${TARGET}" "virsh net-info enclave-bmc" &>/dev/null; then
     ${SSH} "${TARGET}" "virsh attach-interface ${VM_NAME} network enclave-bmc --model virtio --config --live"
     sleep 5
   fi
-  ${SSH} "${TARGET}" "ssh-keygen -R ${VM_IP} 2>/dev/null || true"
   # Extract cluster DNS entries from the BMC network and add to /etc/hosts
   ${SSH} "${TARGET}" "
     virsh net-dumpxml enclave-bmc 2>/dev/null | python3 -c \"

@@ -2,7 +2,8 @@ BINARY := enclave-wizard
 GO := go
 CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
 WIZARD_VERSION ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo dev)
-ENCLAVE_VERSION ?= $(shell git -C ../enclave rev-parse --short HEAD 2>/dev/null || echo dev)
+# Also used as the git ref (branch, tag, or commit SHA) to clone for deployment — see `make enclave-tarball`.
+ENCLAVE_VERSION ?= $(shell git -C ../enclave rev-parse --short HEAD 2>/dev/null || echo main)
 LDFLAGS := -w -s -X main.wizardVersion=$(WIZARD_VERSION) -X main.enclaveVersion=$(ENCLAVE_VERSION)
 
 .DEFAULT_GOAL := help
@@ -68,11 +69,16 @@ generate-schema: ## Generate Go types from enclave JSON schemas.
 generate: generate-schema ## Run all code generation.
 	$(GO) generate ./...
 
-rpm: build-linux update-enclave-overrides ## Build RPM package.
+rpm: build-linux ## Build the enclave-wizard RPM package.
 	hack/rpm/build-rpm.sh
 
 update-enclave-overrides: ## Sync plugin defaults from enclave repo into hack/enclave/.
 	hack/update-enclave-overrides.sh
+
+ENCLAVE_REPO ?= https://github.com/rh-ecosystem-edge/enclave.git
+
+enclave-tarball: update-enclave-overrides ## Clone enclave at ENCLAVE_VERSION (branch/tag/sha) and package it for deployment.
+	ENCLAVE_REPO='$(ENCLAVE_REPO)' ENCLAVE_VERSION='$(ENCLAVE_VERSION)' hack/fetch-enclave.sh
 
 ##@ Deploy
 
@@ -80,7 +86,7 @@ deploy-preview:
 	@test -n "$(TARGET)" || (echo "Usage: make deploy-preview TARGET=root@host [PORT=3443]" && exit 1)
 	hack/deploy-preview.sh $(TARGET) $(PORT)
 
-deploy: rpm ## Build RPM and deploy. TARGET=root@host [AUTH=none]
+deploy: rpm enclave-tarball ## Build wizard RPM + enclave tarball, then deploy. TARGET=root@host [AUTH=none] [ENCLAVE_VERSION=<branch/tag/sha>]
 	@test -n '$(TARGET)' || (echo "Usage: make deploy TARGET=root@host [AUTH=none]" && exit 1)
 	AUTH='$(AUTH)' hack/deploy-wizard '$(TARGET)'
 
