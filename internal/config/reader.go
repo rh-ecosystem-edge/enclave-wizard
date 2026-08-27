@@ -79,6 +79,12 @@ func (r *Reader) mergePluginConfigs(cfg *models.EnclaveConfig) {
 		if osac.OsacDatabaseUrl != "" {
 			cfg.Global.OsacDatabaseUrl = &osac.OsacDatabaseUrl
 		}
+		if osac.OsacDnsClass != "" {
+			cfg.Global.OsacDnsClass = &osac.OsacDnsClass
+		}
+		if osac.OsacDnsZone != "" {
+			cfg.Global.OsacDnsZone = &osac.OsacDnsZone
+		}
 		if len(osac.ClusterFulfillmentConfig) > 0 {
 			cfg.Global.ClusterFulfillmentConfig = osac.ClusterFulfillmentConfig
 		}
@@ -103,6 +109,8 @@ type osacPluginConfig struct {
 	OsacAapLicenseFile       string            `yaml:"osacAapLicenseFile,omitempty"`
 	OsacBYODatabase          bool              `yaml:"osacBYODatabase,omitempty"`
 	OsacDatabaseUrl          string            `yaml:"osacDatabaseUrl,omitempty"`
+	OsacDnsClass             string            `yaml:"osacDnsClass,omitempty"`
+	OsacDnsZone              string            `yaml:"osacDnsZone,omitempty"`
 	ClusterFulfillmentConfig map[string]string `yaml:"clusterFulfillmentConfig,omitempty"`
 }
 

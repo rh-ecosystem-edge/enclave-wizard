@@ -33,6 +33,8 @@ describe("buildFinalConfig", () => {
         osacProfile: "caas",
         osacAapLicenseFile: "/path/to/manifest.zip",
         osacBYODatabase: false,
+        osacDnsClass: "dns.route53.dns",
+        osacDnsZone: "example.com",
         enabled_plugins: [
           "lvms",
           "trust-manager",
@@ -48,6 +50,8 @@ describe("buildFinalConfig", () => {
     expect(wire.global.osacProfile).toBe("caas");
     expect(wire.global.osacAapLicenseFile).toBe("/path/to/manifest.zip");
     expect(wire.global.osacBYODatabase).toBe(false);
+    expect(wire.global.osacDnsClass).toBe("dns.route53.dns");
+    expect(wire.global.osacDnsZone).toBe("example.com");
     expect(wire.global.enabled_plugins).toEqual([
       "lvms",
       "trust-manager",

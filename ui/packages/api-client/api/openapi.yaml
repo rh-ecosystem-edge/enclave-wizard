@@ -396,6 +396,15 @@ components:
         odfExternalConfig:
           description: ODF external Ceph cluster config JSON (required when storage_plugin is odf)
           type: string
+        osacDnsClass:
+          description: Fully-qualified Ansible role name of the DNS driver
+          enum:
+            - dns.route53.dns
+          type: string
+        osacDnsZone:
+          description: DNS zone to operate in (defaults to EXTERNAL_ACCESS_BASE_DOMAIN)
+          pattern: ^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.?$
+          type: string
         pullSecret:
           description: OpenShift pull secret object
         quayBackend:
@@ -790,6 +799,15 @@ components:
         odfDefaults:
           $ref: "#/components/schemas/ODFConfig"
           description: ODF deployment configuration
+        osacDnsClass:
+          description: Fully-qualified Ansible role name of the DNS driver
+          enum:
+            - dns.route53.dns
+          type: string
+        osacDnsZone:
+          description: DNS zone to operate in (defaults to EXTERNAL_ACCESS_BASE_DOMAIN)
+          pattern: ^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.?$
+          type: string
         vastDefaults:
           $ref: "#/components/schemas/VASTConfig"
           description: VAST CSI deployment defaults

@@ -6,6 +6,7 @@ import {
 } from "../../schema/schemaUtils.ts";
 import { useCatalog } from "../contexts/CatalogContext.tsx";
 import { useConfig } from "../contexts/ConfigContext.tsx";
+import { isValidDnsZone } from "../dnsZone.ts";
 import { STEP_REQUIRED_FIELDS } from "../stepFields.ts";
 
 export function useStepValidation(
@@ -127,6 +128,31 @@ export function useStepValidation(
           path: "global.osacAapLicenseFile",
           label: "AAP subscription manifest",
           message: "AAP subscription manifest is required for OSAC",
+        });
+      }
+    }
+
+    if (currentSubStepId === "caas") {
+      const globalData = ((config.configData as Record<string, unknown>)
+        .global ?? {}) as Record<string, unknown>;
+      if (!((globalData.osacDnsClass as string) ?? "").trim()) {
+        errors.push({
+          path: "global.osacDnsClass",
+          label: "DNS class",
+          message: "DNS class is required for CaaS",
+        });
+      }
+      if (!((globalData.osacDnsZone as string) ?? "").trim()) {
+        errors.push({
+          path: "global.osacDnsZone",
+          label: "DNS zone",
+          message: "DNS zone is required for CaaS",
+        });
+      } else if (!isValidDnsZone(globalData.osacDnsZone as string)) {
+        errors.push({
+          path: "global.osacDnsZone",
+          label: "DNS zone",
+          message: "DNS zone must be a valid DNS name (e.g. example.com)",
         });
       }
     }

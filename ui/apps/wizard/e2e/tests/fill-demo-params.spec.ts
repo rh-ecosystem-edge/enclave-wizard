@@ -131,6 +131,15 @@ test("fill wizard from demo-params.json (stop before deploy)", async ({
   // Remove any empty discovery hosts on the CaaS step
   let safetyCount = 0;
   while (safetyCount < 10) {
+    if (
+      await page
+        .locator("#osac-dns-zone")
+        .isVisible({ timeout: 300 })
+        .catch(() => false)
+    ) {
+      await wizard.fillCaas({ dnsZone: params.infra.baseDomain });
+    }
+
     while (
       await page
         .locator('button[aria-label^="Remove host"]')

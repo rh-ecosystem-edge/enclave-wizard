@@ -3,6 +3,7 @@ export const STEP_REQUIRED_FIELDS: Record<string, string[]> = {
   storage: ["global.storage_plugin"],
   aap: ["global.aapDefaults.aapLicenseFile"],
   osac: ["global.osacAapLicenseFile"],
+  caas: ["global.osacDnsClass", "global.osacDnsZone"],
   "hub-cluster": [
     "global.baseDomain",
     "global.clusterName",

@@ -41,7 +41,7 @@ test.describe("Deploy flow (demo mode)", () => {
     await wizard.fillOsac({ rhbkInstances: 3, rhbkDbSize: "10Gi" });
     await wizard.clickNext();
 
-    // CaaS — skip
+    await wizard.fillCaas({ dnsZone: "deploy-demo.lab.local" });
     await wizard.clickNext();
 
     // Review — skip validation, go to Deploy
