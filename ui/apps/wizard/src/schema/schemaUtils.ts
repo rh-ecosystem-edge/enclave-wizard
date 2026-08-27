@@ -49,6 +49,8 @@ const LABEL_OVERRIDES: Record<string, string> = {
   quayBackend: "Quay Storage Backend",
   quayBackendRGWConfiguration: "RadosGW Configuration",
   storage_plugin: "Storage Plugin",
+  osacDnsClass: "DNS class",
+  osacDnsZone: "DNS zone",
   odfExternalConfig: "ODF External Config",
   lvmsConfig: "LVMS Configuration",
   enabled_plugins: "Enabled Plugins",

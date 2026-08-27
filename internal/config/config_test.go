@@ -408,6 +408,42 @@ func TestWriteAllThenReadAll_OsacPluginRoundTrips(t *testing.T) {
 	}
 }
 
+func TestWriteAllThenReadAll_OsacDnsFieldsRoundTrip(t *testing.T) {
+	root := t.TempDir()
+	dnsClass := "dns.route53.dns"
+	dnsZone := "example.com"
+
+	want := &models.EnclaveConfig{}
+	want.Global.OsacDnsClass = &dnsClass
+	want.Global.OsacDnsZone = &dnsZone
+
+	if err := NewWriter(root).WriteAll(want); err != nil {
+		t.Fatalf("WriteAll: %v", err)
+	}
+
+	got, err := NewReader(root).ReadAll()
+	if err != nil {
+		t.Fatalf("ReadAll: %v", err)
+	}
+
+	if got.Global.OsacDnsClass == nil || *got.Global.OsacDnsClass != dnsClass {
+		t.Errorf("OsacDnsClass: want %q, got %v", dnsClass, got.Global.OsacDnsClass)
+	}
+	if got.Global.OsacDnsZone == nil || *got.Global.OsacDnsZone != dnsZone {
+		t.Errorf("OsacDnsZone: want %q, got %v", dnsZone, got.Global.OsacDnsZone)
+	}
+
+	data, _ := os.ReadFile(filepath.Join(root, "config", "global.yaml"))
+	var global map[string]any
+	yaml.Unmarshal(data, &global)
+	if _, ok := global["osacDnsClass"]; ok {
+		t.Error("osacDnsClass should NOT be in global.yaml (should be in plugins/osac.yaml)")
+	}
+	if _, ok := global["osacDnsZone"]; ok {
+		t.Error("osacDnsZone should NOT be in global.yaml (should be in plugins/osac.yaml)")
+	}
+}
+
 func TestWriteAllThenReadAll_RhbkPluginRoundTrips(t *testing.T) {
 	root := t.TempDir()
 	instances := 3
@@ -594,4 +630,3 @@ func TestWriteAll_FilePermsAre0640(t *testing.T) {
 		}
 	}
 }
-

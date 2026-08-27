@@ -55,11 +55,13 @@ const BASE_CONFIG_FILES: ConfigFile[] = [
   { key: "certificates", label: "certificates.yaml", path: "certificates" },
 ];
 
-const OSAC_PLUGIN_KEYS = [
+export const OSAC_PLUGIN_KEYS = [
   "osacProfile",
   "osacAapLicenseFile",
   "osacBYODatabase",
   "osacDatabaseUrl",
+  "osacDnsClass",
+  "osacDnsZone",
   "clusterFulfillmentConfig",
 ];
 
@@ -69,7 +71,7 @@ const RHBK_PLUGIN_KEYS = [
   "rhbk_db_size",
 ];
 
-function extractPluginConfig(
+export function extractPluginConfig(
   globalData: Record<string, unknown>,
   keys: string[],
 ): Record<string, unknown> | null {
@@ -88,7 +90,7 @@ function extractPluginConfig(
   return hasValue ? result : null;
 }
 
-function stripPluginKeys(
+export function stripPluginKeys(
   globalData: Record<string, unknown>,
 ): Record<string, unknown> {
   const result = { ...globalData };

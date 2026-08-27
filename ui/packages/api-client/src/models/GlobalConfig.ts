@@ -153,6 +153,18 @@ export interface GlobalConfig {
      */
     osacDatabaseUrl?: string;
     /**
+     * Fully-qualified Ansible role name of the DNS driver
+     * @type {string}
+     * @memberof GlobalConfig
+     */
+    osacDnsClass?: string;
+    /**
+     * DNS zone to operate in (defaults to EXTERNAL_ACCESS_BASE_DOMAIN)
+     * @type {string}
+     * @memberof GlobalConfig
+     */
+    osacDnsZone?: string;
+    /**
      * Number of Keycloak replicas
      * @type {number}
      * @memberof GlobalConfig
@@ -391,6 +403,8 @@ export function GlobalConfigFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'osacAapLicenseFile': json['osacAapLicenseFile'] == null ? undefined : json['osacAapLicenseFile'],
         'osacBYODatabase': json['osacBYODatabase'] == null ? undefined : json['osacBYODatabase'],
         'osacDatabaseUrl': json['osacDatabaseUrl'] == null ? undefined : json['osacDatabaseUrl'],
+        'osacDnsClass': json['osacDnsClass'] == null ? undefined : json['osacDnsClass'],
+        'osacDnsZone': json['osacDnsZone'] == null ? undefined : json['osacDnsZone'],
         'rhbkInstances': json['rhbk_instances'] == null ? undefined : json['rhbk_instances'],
         'rhbkDeployDatabase': json['rhbk_deploy_database'] == null ? undefined : json['rhbk_deploy_database'],
         'rhbkDbSize': json['rhbk_db_size'] == null ? undefined : json['rhbk_db_size'],
@@ -446,6 +460,8 @@ export function GlobalConfigToJSONTyped(value?: GlobalConfig | null, ignoreDiscr
         'osacAapLicenseFile': value['osacAapLicenseFile'],
         'osacBYODatabase': value['osacBYODatabase'],
         'osacDatabaseUrl': value['osacDatabaseUrl'],
+        'osacDnsClass': value['osacDnsClass'],
+        'osacDnsZone': value['osacDnsZone'],
         'rhbk_instances': value['rhbkInstances'],
         'rhbk_deploy_database': value['rhbkDeployDatabase'],
         'rhbk_db_size': value['rhbkDbSize'],

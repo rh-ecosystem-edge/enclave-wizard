@@ -27,6 +27,7 @@ import {
   type StepValidationError,
 } from "../schema/schemaUtils.ts";
 import { useOpenApiSchema } from "../schema/useOpenApiSchema.ts";
+import { isValidDnsZone } from "./dnsZone.ts";
 import { STEP_REQUIRED_FIELDS } from "./stepFields.ts";
 import { AAPStep } from "./steps/AAPStep.tsx";
 import { CaasStep } from "./steps/CaasStep.tsx";
@@ -413,6 +414,18 @@ function WizardContent(): React.ReactElement {
       const globalData = ((state.configData as Record<string, unknown>).global ?? {}) as Record<string, unknown>;
       if (!((globalData.osacAapLicenseFile as string) ?? "").trim()) {
         errors.push({ path: "global.osacAapLicenseFile", label: "AAP subscription manifest", message: "AAP subscription manifest is required for OSAC" });
+      }
+    }
+
+    if (currentSubStepId === "caas") {
+      const globalData = ((state.configData as Record<string, unknown>).global ?? {}) as Record<string, unknown>;
+      if (!((globalData.osacDnsClass as string) ?? "").trim()) {
+        errors.push({ path: "global.osacDnsClass", label: "DNS class", message: "DNS class is required for CaaS" });
+      }
+      if (!((globalData.osacDnsZone as string) ?? "").trim()) {
+        errors.push({ path: "global.osacDnsZone", label: "DNS zone", message: "DNS zone is required for CaaS" });
+      } else if (!isValidDnsZone(globalData.osacDnsZone as string)) {
+        errors.push({ path: "global.osacDnsZone", label: "DNS zone", message: "DNS zone must be a valid DNS name (e.g. example.com)" });
       }
     }
 

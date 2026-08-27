@@ -302,4 +302,65 @@ describe("useStepValidation custom rules", () => {
       expect(aapErrors).toHaveLength(0);
     });
   });
+
+  describe("CaaS DNS validation", () => {
+    it("requires DNS class and zone for CaaS step", () => {
+      mockConfigState = { configData: { global: {} } };
+      mockCatalogState = { schema: MOCK_SCHEMA };
+      const { result } = renderValidation("caas");
+      const errors = result.current();
+      expect(errors.some((e) => e.path === "global.osacDnsClass")).toBe(true);
+      expect(errors.some((e) => e.path === "global.osacDnsZone")).toBe(true);
+    });
+
+    it("requires DNS zone when only class is set", () => {
+      mockConfigState = {
+        configData: { global: { osacDnsClass: "dns.route53.dns" } },
+      };
+      mockCatalogState = { schema: MOCK_SCHEMA };
+      const { result } = renderValidation("caas");
+      const errors = result.current();
+      expect(errors.some((e) => e.path === "global.osacDnsClass")).toBe(false);
+      expect(errors.some((e) => e.path === "global.osacDnsZone")).toBe(true);
+    });
+
+    it("passes when DNS class and zone are provided", () => {
+      mockConfigState = {
+        configData: {
+          global: {
+            osacDnsClass: "dns.route53.dns",
+            osacDnsZone: "example.com",
+          },
+        },
+      };
+      mockCatalogState = { schema: MOCK_SCHEMA };
+      const { result } = renderValidation("caas");
+      const errors = result.current();
+      const dnsErrors = errors.filter(
+        (e) => e.path === "global.osacDnsClass" || e.path === "global.osacDnsZone",
+      );
+      expect(dnsErrors).toHaveLength(0);
+    });
+
+    it("rejects a DNS zone that is not a valid DNS name", () => {
+      mockConfigState = {
+        configData: {
+          global: {
+            osacDnsClass: "dns.route53.dns",
+            osacDnsZone: "not a zone",
+          },
+        },
+      };
+      mockCatalogState = { schema: MOCK_SCHEMA };
+      const { result } = renderValidation("caas");
+      const errors = result.current();
+      expect(
+        errors.some(
+          (e) =>
+            e.path === "global.osacDnsZone" &&
+            e.message.includes("valid DNS name"),
+        ),
+      ).toBe(true);
+    });
+  });
 });

@@ -58,6 +58,11 @@ export interface OsacConfig {
   rhbkDbSize?: string;
 }
 
+export interface CaasConfig {
+  dnsClass?: string;
+  dnsZone: string;
+}
+
 export class WizardPage {
   constructor(private page: Page) {}
 
@@ -215,6 +220,15 @@ export class WizardPage {
     if (!(await checkbox.isChecked())) {
       await checkbox.click();
     }
+  }
+
+  // --- Step: CaaS ---
+
+  async fillCaas(config: CaasConfig) {
+    await this.page
+      .locator("#osac-dns-class")
+      .selectOption(config.dnsClass ?? "dns.route53.dns");
+    await this.page.fill("#osac-dns-zone", config.dnsZone);
   }
 
   // --- Step: OSAC Platform ---

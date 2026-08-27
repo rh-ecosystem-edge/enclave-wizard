@@ -80,7 +80,7 @@ func removeIfExists(path string) {
 
 // buildOsacConfig reads OSAC fields without mutating the source.
 func buildOsacConfig(pc *models.PluginsConfig) *osacPluginConfig {
-	if pc.OsacProfile == nil && pc.OsacAapLicenseFile == nil && len(pc.ClusterFulfillmentConfig) == 0 {
+	if pc.OsacProfile == nil && pc.OsacAapLicenseFile == nil && pc.OsacDnsClass == nil && pc.OsacDnsZone == nil && len(pc.ClusterFulfillmentConfig) == 0 {
 		return nil
 	}
 	cfg := &osacPluginConfig{}
@@ -95,6 +95,12 @@ func buildOsacConfig(pc *models.PluginsConfig) *osacPluginConfig {
 	}
 	if pc.OsacDatabaseUrl != nil {
 		cfg.OsacDatabaseUrl = *pc.OsacDatabaseUrl
+	}
+	if pc.OsacDnsClass != nil {
+		cfg.OsacDnsClass = *pc.OsacDnsClass
+	}
+	if pc.OsacDnsZone != nil {
+		cfg.OsacDnsZone = *pc.OsacDnsZone
 	}
 	if len(pc.ClusterFulfillmentConfig) > 0 {
 		cfg.ClusterFulfillmentConfig = pc.ClusterFulfillmentConfig

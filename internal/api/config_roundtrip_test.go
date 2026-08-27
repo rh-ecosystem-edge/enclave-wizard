@@ -41,13 +41,13 @@ func validConfig() models.EnclaveConfig {
 				Disconnected: &disconnected,
 			},
 			ClusterConfig: models.ClusterConfig{
-				BaseDomain:    "example.com",
-				ClusterName:   "mgmt",
+				BaseDomain:     "example.com",
+				ClusterName:    "mgmt",
 				MachineNetwork: "192.168.1.0/24",
-				APIVIP:        "192.168.1.100",
-				IngressVIP:    "192.168.1.101",
-				RendezvousIP:  "192.168.1.10",
-				SSHPubKey:     "ssh-rsa AAAA...",
+				APIVIP:         "192.168.1.100",
+				IngressVIP:     "192.168.1.101",
+				RendezvousIP:   "192.168.1.10",
+				SSHPubKey:      "ssh-rsa AAAA...",
 				AgentHosts: []models.HostEntry{
 					{Name: "node1", MACAddress: "aa:bb:cc:dd:ee:01", IPAddress: "192.168.1.10", Redfish: "10.0.0.11", RedfishUser: "admin", RedfishPassword: "pass", RootDisk: "/dev/sda"},
 					{Name: "node2", MACAddress: "aa:bb:cc:dd:ee:02", IPAddress: "192.168.1.11", Redfish: "10.0.0.12", RedfishUser: "admin", RedfishPassword: "pass", RootDisk: "/dev/sda"},
@@ -213,6 +213,35 @@ func TestConfigRoundTrip_OsacPlugin(t *testing.T) {
 	global := readYAMLOnDisk(t, filepath.Join(enclaveDir, "config", "global.yaml"))
 	if _, ok := global["osacProfile"]; ok {
 		t.Error("osacProfile should NOT leak into global.yaml")
+	}
+}
+
+func TestConfigRoundTrip_OsacDnsFields(t *testing.T) {
+	srv, enclaveDir := setupConfigAPI(t)
+	defer srv.Close()
+
+	dnsClass := "dns.route53.dns"
+	dnsZone := "example.com"
+	cfg := validConfig()
+	cfg.Global.OsacDnsClass = &dnsClass
+	cfg.Global.OsacDnsZone = &dnsZone
+
+	putConfig(t, srv, cfg)
+
+	osac := readYAMLOnDisk(t, filepath.Join(enclaveDir, "config", "plugins", "osac.yaml"))
+	if osac["osacDnsClass"] != dnsClass {
+		t.Errorf("osacDnsClass: want %q, got %v", dnsClass, osac["osacDnsClass"])
+	}
+	if osac["osacDnsZone"] != dnsZone {
+		t.Errorf("osacDnsZone: want %q, got %v", dnsZone, osac["osacDnsZone"])
+	}
+
+	global := readYAMLOnDisk(t, filepath.Join(enclaveDir, "config", "global.yaml"))
+	if _, ok := global["osacDnsClass"]; ok {
+		t.Error("osacDnsClass should NOT leak into global.yaml")
+	}
+	if _, ok := global["osacDnsZone"]; ok {
+		t.Error("osacDnsZone should NOT leak into global.yaml")
 	}
 }
 

@@ -17,7 +17,7 @@ type ClusterConfig struct {
 	IngressVIP        string      `json:"ingressVIP" yaml:"ingressVIP" doc:"Virtual IP for ingress wildcard" pattern:"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"`
 	RendezvousIP      string      `json:"rendezvousIP" yaml:"rendezvousIP" doc:"IP of first control-plane node" pattern:"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"`
 	PullSecret        any         `json:"pullSecret" yaml:"pullSecret" doc:"OpenShift pull secret object"`
-	SSHPubKey        string      `json:"sshPubKey,omitempty" yaml:"sshPubKey" doc:"SSH public key content (e.g. ssh-rsa AAAA...)" minLength:"1"`
+	SSHPubKey         string      `json:"sshPubKey,omitempty" yaml:"sshPubKey" doc:"SSH public key content (e.g. ssh-rsa AAAA...)" minLength:"1"`
 	AgentHosts        []HostEntry `json:"agent_hosts" yaml:"agent_hosts" doc:"Control plane nodes (exactly 3)" minItems:"3" maxItems:"3"`
 	DiskEncryption    *bool       `json:"diskEncryption,omitempty" yaml:"diskEncryption,omitempty" doc:"Enable TPM v2 disk encryption"`
 	DefaultNTPServers []string    `json:"defaultNtpServers,omitempty" yaml:"defaultNtpServers,omitempty" doc:"Additional NTP server addresses"`
@@ -53,29 +53,31 @@ type LVMSStorageConfig struct {
 type StorageConfig struct {
 	StoragePlugin     string             `json:"storage_plugin" yaml:"storage_plugin" doc:"Storage plugin" enum:"lvms,odf,vast-csi"`
 	ODFExternalConfig *string            `json:"odfExternalConfig,omitempty" yaml:"odfExternalConfig,omitempty" doc:"ODF external Ceph cluster config JSON (required when storage_plugin is odf)"`
-	LVMSConfig          *LVMSStorageConfig `json:"lvmsConfig,omitempty" yaml:"lvmsConfig,omitempty" doc:"LVMS device selector configuration"`
-	VASTEndpoint        *string            `json:"vastEndpoint,omitempty" yaml:"vastEndpoint,omitempty" doc:"VAST management endpoint URL (required when storage_plugin is vast-csi)"`
-	VASTAdminUsername   *string            `json:"vastAdminUsername,omitempty" yaml:"vastAdminUsername,omitempty" doc:"VAST management API username"`
-	VASTAdminPassword   *string            `json:"vastAdminPassword,omitempty" yaml:"vastAdminPassword,omitempty" doc:"VAST management API password"`
-	VASTVipPool         *VASTVipPool       `json:"vastVipPool,omitempty" yaml:"vastVipPool,omitempty" doc:"VIP pool configuration for CSI traffic (required when storage_plugin is vast-csi)"`
+	LVMSConfig        *LVMSStorageConfig `json:"lvmsConfig,omitempty" yaml:"lvmsConfig,omitempty" doc:"LVMS device selector configuration"`
+	VASTEndpoint      *string            `json:"vastEndpoint,omitempty" yaml:"vastEndpoint,omitempty" doc:"VAST management endpoint URL (required when storage_plugin is vast-csi)"`
+	VASTAdminUsername *string            `json:"vastAdminUsername,omitempty" yaml:"vastAdminUsername,omitempty" doc:"VAST management API username"`
+	VASTAdminPassword *string            `json:"vastAdminPassword,omitempty" yaml:"vastAdminPassword,omitempty" doc:"VAST management API password"`
+	VASTVipPool       *VASTVipPool       `json:"vastVipPool,omitempty" yaml:"vastVipPool,omitempty" doc:"VIP pool configuration for CSI traffic (required when storage_plugin is vast-csi)"`
 }
 
 // Plugins
 type PluginsConfig struct {
-	EnabledPlugins     []string            `json:"enabled_plugins" yaml:"enabled_plugins" doc:"Plugins to deploy"`
-	OsacProfile        *string             `json:"osacProfile,omitempty" yaml:"osacProfile,omitempty" doc:"OSAC deployment profile" enum:"development,caas,vmaas,bmaas"`
-	OsacAapLicenseFile *string             `json:"osacAapLicenseFile,omitempty" yaml:"osacAapLicenseFile,omitempty" doc:"Path to AAP license manifest.zip on the landing zone"`
-	OsacBYODatabase    *bool               `json:"osacBYODatabase,omitempty" yaml:"osacBYODatabase,omitempty" doc:"Use external PostgreSQL instead of built-in"`
-	OsacDatabaseUrl    *string             `json:"osacDatabaseUrl,omitempty" yaml:"osacDatabaseUrl,omitempty" doc:"PostgreSQL connection URL when using BYO database"`
-	RhbkInstances      *int                `json:"rhbk_instances,omitempty" yaml:"rhbk_instances,omitempty" doc:"Number of Keycloak replicas" minimum:"1"`
-	RhbkDeployDatabase *bool               `json:"rhbk_deploy_database,omitempty" yaml:"rhbk_deploy_database,omitempty" doc:"Deploy PostgreSQL alongside Keycloak"`
-	RhbkDbSize                   *string             `json:"rhbk_db_size,omitempty" yaml:"rhbk_db_size,omitempty" doc:"PVC size for Keycloak PostgreSQL"`
-	ClusterFulfillmentConfig     map[string]string   `json:"clusterFulfillmentConfig,omitempty" yaml:"clusterFulfillmentConfig,omitempty" doc:"Cluster fulfillment configuration (passed through to osac-installer Helm values)"`
-	LVMSConfig                   *LVMSConfig         `json:"lvmsDefaults,omitempty" yaml:"lvmsDefaults,omitempty" doc:"LVMS deployment configuration"`
-	ODFConfig          *ODFConfig          `json:"odfDefaults,omitempty" yaml:"odfDefaults,omitempty" doc:"ODF deployment configuration"`
-	VASTConfig         *VASTConfig         `json:"vastDefaults,omitempty" yaml:"vastDefaults,omitempty" doc:"VAST CSI deployment defaults"`
-	AAPConfig          *AAPConfig          `json:"aapDefaults,omitempty" yaml:"aapDefaults,omitempty" doc:"AAP deployment configuration"`
-	TrustManagerConfig *TrustManagerConfig `json:"trustManagerDefaults,omitempty" yaml:"trustManagerDefaults,omitempty" doc:"Trust-manager CA issuer configuration"`
+	EnabledPlugins           []string            `json:"enabled_plugins" yaml:"enabled_plugins" doc:"Plugins to deploy"`
+	OsacProfile              *string             `json:"osacProfile,omitempty" yaml:"osacProfile,omitempty" doc:"OSAC deployment profile" enum:"development,caas,vmaas,bmaas"`
+	OsacAapLicenseFile       *string             `json:"osacAapLicenseFile,omitempty" yaml:"osacAapLicenseFile,omitempty" doc:"Path to AAP license manifest.zip on the landing zone"`
+	OsacBYODatabase          *bool               `json:"osacBYODatabase,omitempty" yaml:"osacBYODatabase,omitempty" doc:"Use external PostgreSQL instead of built-in"`
+	OsacDatabaseUrl          *string             `json:"osacDatabaseUrl,omitempty" yaml:"osacDatabaseUrl,omitempty" doc:"PostgreSQL connection URL when using BYO database"`
+	OsacDnsClass             *string             `json:"osacDnsClass,omitempty" yaml:"osacDnsClass,omitempty" doc:"Fully-qualified Ansible role name of the DNS driver" enum:"dns.route53.dns"`
+	OsacDnsZone              *string             `json:"osacDnsZone,omitempty" yaml:"osacDnsZone,omitempty" doc:"DNS zone to operate in (defaults to EXTERNAL_ACCESS_BASE_DOMAIN)" pattern:"^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.?$"`
+	RhbkInstances            *int                `json:"rhbk_instances,omitempty" yaml:"rhbk_instances,omitempty" doc:"Number of Keycloak replicas" minimum:"1"`
+	RhbkDeployDatabase       *bool               `json:"rhbk_deploy_database,omitempty" yaml:"rhbk_deploy_database,omitempty" doc:"Deploy PostgreSQL alongside Keycloak"`
+	RhbkDbSize               *string             `json:"rhbk_db_size,omitempty" yaml:"rhbk_db_size,omitempty" doc:"PVC size for Keycloak PostgreSQL"`
+	ClusterFulfillmentConfig map[string]string   `json:"clusterFulfillmentConfig,omitempty" yaml:"clusterFulfillmentConfig,omitempty" doc:"Cluster fulfillment configuration (passed through to osac-installer Helm values)"`
+	LVMSConfig               *LVMSConfig         `json:"lvmsDefaults,omitempty" yaml:"lvmsDefaults,omitempty" doc:"LVMS deployment configuration"`
+	ODFConfig                *ODFConfig          `json:"odfDefaults,omitempty" yaml:"odfDefaults,omitempty" doc:"ODF deployment configuration"`
+	VASTConfig               *VASTConfig         `json:"vastDefaults,omitempty" yaml:"vastDefaults,omitempty" doc:"VAST CSI deployment defaults"`
+	AAPConfig                *AAPConfig          `json:"aapDefaults,omitempty" yaml:"aapDefaults,omitempty" doc:"AAP deployment configuration"`
+	TrustManagerConfig       *TrustManagerConfig `json:"trustManagerDefaults,omitempty" yaml:"trustManagerDefaults,omitempty" doc:"Trust-manager CA issuer configuration"`
 }
 
 type GlobalConfig struct {
