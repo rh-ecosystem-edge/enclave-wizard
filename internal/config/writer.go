@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/models"
+	"github.com/rh-ecosystem-edge/enclave-wizard/internal/pem"
 	"gopkg.in/yaml.v3"
 )
 
@@ -39,6 +40,7 @@ func (w *Writer) WriteAll(cfg *models.EnclaveConfig) error {
 	}
 
 	certs := cfg.Certificates
+	normalizeCertPEMFields(&certs)
 	nilEmptyCertFields(&certs)
 	if err := writeYAMLFile(filepath.Join(configDir, "certificates.yaml"), &certs); err != nil {
 		return fmt.Errorf("writing certificates.yaml: %w", err)
@@ -140,6 +142,24 @@ func nilEmptyCertFields(c *models.CertificatesConfig) {
 	nilIfEmpty(&c.SSLCACertificate)
 	nilIfEmpty(&c.IronicHTTPSCertificate)
 	nilIfEmpty(&c.IronicHTTPSKey)
+}
+
+func normalizeCertPEMFields(c *models.CertificatesConfig) {
+	normalizePEMField(&c.SSLAPICertificateFullChain)
+	normalizePEMField(&c.SSLAPICertificateKey)
+	normalizePEMField(&c.SSLIngressCertificateFullChain)
+	normalizePEMField(&c.SSLIngressCertificateKey)
+	normalizePEMField(&c.SSLCACertificate)
+	normalizePEMField(&c.IronicHTTPSCertificate)
+	normalizePEMField(&c.IronicHTTPSKey)
+}
+
+func normalizePEMField(p **string) {
+	if p == nil || *p == nil || **p == "" {
+		return
+	}
+	normalized := pem.EnsureTrailingNewline(**p)
+	*p = &normalized
 }
 
 func writeYAMLFile[T any](path string, data *T) error {

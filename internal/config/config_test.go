@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/models"
@@ -612,6 +613,43 @@ func TestWriteAllThenReadAll_NilEnabledPluginsWritesEmptyList(t *testing.T) {
 	yaml.Unmarshal(data, &raw)
 	if _, ok := raw["enabled_plugins"]; !ok {
 		t.Fatal("enabled_plugins key must always be present in global.yaml")
+	}
+}
+
+func TestWriteAll_PEMWithoutTrailingNewline_DoesNotGlueCertAndKey(t *testing.T) {
+	root := t.TempDir()
+
+	fullchain := "-----BEGIN CERTIFICATE-----\nMIIBxTCCAW\n-----END CERTIFICATE-----"
+	key := "-----BEGIN PRIVATE KEY-----\nMIIEvQIBAD\n-----END PRIVATE KEY-----"
+
+	cfg := &models.EnclaveConfig{}
+	cfg.Certificates.SSLIngressCertificateFullChain = &fullchain
+	cfg.Certificates.SSLIngressCertificateKey = &key
+
+	if err := NewWriter(root).WriteAll(cfg); err != nil {
+		t.Fatalf("WriteAll: %v", err)
+	}
+
+	data, err := os.ReadFile(filepath.Join(root, "config", "certificates.yaml"))
+	if err != nil {
+		t.Fatalf("read certificates.yaml: %v", err)
+	}
+	content := string(data)
+
+	if strings.Contains(content, "sslIngressCertificateFullChain: |-") {
+		t.Errorf("expected literal block with trailing newline (|), got strip chomping (|-):\n%s", content)
+	}
+
+	got, err := NewReader(root).ReadAll()
+	if err != nil {
+		t.Fatalf("ReadAll: %v", err)
+	}
+	if got.Certificates.SSLIngressCertificateFullChain == nil || got.Certificates.SSLIngressCertificateKey == nil {
+		t.Fatal("expected ingress cert and key to round-trip")
+	}
+	joined := *got.Certificates.SSLIngressCertificateFullChain + *got.Certificates.SSLIngressCertificateKey
+	if strings.Contains(joined, "-----END CERTIFICATE----------BEGIN") {
+		t.Fatalf("joined PEM glued cert and key: %q", joined)
 	}
 }
 
