@@ -34,6 +34,14 @@ func TestEnsureTrailingNewline_stripsExtraTrailingNewlines(t *testing.T) {
 	}
 }
 
+func TestEnsureTrailingNewline_stripsExtraTrailingCRLF(t *testing.T) {
+	in := "-----END CERTIFICATE-----\r\n\r\n"
+	want := "-----END CERTIFICATE-----\n"
+	if got := EnsureTrailingNewline(in); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
 func TestConcatPEMBlocks_doesNotGlueCertAndKey(t *testing.T) {
 	fullchain := "-----BEGIN CERTIFICATE-----\nMIIB\n-----END CERTIFICATE-----"
 	key := "-----BEGIN PRIVATE KEY-----\nMIIE\n-----END PRIVATE KEY-----"

@@ -8,5 +8,5 @@ func EnsureTrailingNewline(pem string) string {
 	if pem == "" {
 		return pem
 	}
-	return strings.TrimRight(pem, "\n") + "\n"
+	return strings.TrimRight(pem, "\r\n") + "\n"
 }
