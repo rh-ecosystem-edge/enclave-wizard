@@ -11,6 +11,7 @@ import (
 
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/auth"
 	"github.com/rh-ecosystem-edge/enclave-wizard/internal/models"
+	"github.com/rh-ecosystem-edge/enclave-wizard/internal/pem"
 	"gopkg.in/yaml.v3"
 )
 
@@ -177,7 +178,7 @@ func TestWriteConfig(t *testing.T) {
 		if got.SSLCACertificate == nil {
 			t.Fatal("sslCACertificate is nil")
 		}
-		assertEqual(t, "sslCACertificate", *cfg.Certificates.SSLCACertificate, *got.SSLCACertificate)
+		assertPEMEqual(t, "sslCACertificate", *cfg.Certificates.SSLCACertificate, *got.SSLCACertificate)
 	})
 
 	// Verify cloud_infra.yaml
@@ -235,7 +236,7 @@ func TestWriteConfigRoundTrip(t *testing.T) {
 	if got.Certificates.SSLCACertificate == nil {
 		t.Fatal("round-trip: sslCACertificate is nil")
 	}
-	assertEqual(t, "sslCACertificate", *cfg.Certificates.SSLCACertificate, *got.Certificates.SSLCACertificate)
+	assertPEMEqual(t, "sslCACertificate", *cfg.Certificates.SSLCACertificate, *got.Certificates.SSLCACertificate)
 }
 
 func TestGetConfigSection(t *testing.T) {
@@ -337,7 +338,7 @@ func TestGetConfigSection(t *testing.T) {
 		if got.SSLCACertificate == nil {
 			t.Fatal("sslCACertificate is nil")
 		}
-		assertEqual(t, "sslCACertificate", *cfg.Certificates.SSLCACertificate, *got.SSLCACertificate)
+		assertPEMEqual(t, "sslCACertificate", *cfg.Certificates.SSLCACertificate, *got.SSLCACertificate)
 	})
 
 	t.Run("hosts", func(t *testing.T) {
@@ -425,7 +426,7 @@ func TestWriteConfigSection(t *testing.T) {
 		if gotCerts.SSLCACertificate == nil {
 			t.Fatal("sslCACertificate is nil after update")
 		}
-		assertEqual(t, "sslCACertificate", "-----BEGIN CERTIFICATE-----\nNEW\n-----END CERTIFICATE-----", *gotCerts.SSLCACertificate)
+		assertPEMEqual(t, "sslCACertificate", "-----BEGIN CERTIFICATE-----\nNEW\n-----END CERTIFICATE-----", *gotCerts.SSLCACertificate)
 
 		data, _ = os.ReadFile(filepath.Join(enclaveDir, "config", "global.yaml"))
 		var gotGlobal models.GlobalConfig
@@ -471,6 +472,11 @@ func TestWriteConfigSectionRoundTrip(t *testing.T) {
 		t.Fatal("odfExternalConfig is nil after round-trip")
 	}
 	assertEqual(t, "odfExternalConfig", *want.ODFExternalConfig, *got.ODFExternalConfig)
+}
+
+func assertPEMEqual(t *testing.T, field, want, got string) {
+	t.Helper()
+	assertEqual(t, field, pem.EnsureTrailingNewline(want), got)
 }
 
 func assertEqual[T comparable](t *testing.T, field string, want, got T) {
