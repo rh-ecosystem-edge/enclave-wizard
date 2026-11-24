@@ -53,4 +53,4 @@ File: `ui/apps/wizard/src/wizard/hooks/useStepValidation.ts` — add logic in th
 
 Run `make demo`, navigate to the step, confirm field renders correctly. Run `make test`.
 
-See `docs/howto-add-field.md` for the full guide with examples.
+See `docs/contributing/how-to/add-field.md` for the full guide with examples.

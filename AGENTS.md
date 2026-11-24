@@ -9,5 +9,5 @@
 
 | If you need to... | Read... |
 |-------------------|---------|
-| Contribute | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) |
-| Test | [docs/testing.md](docs/testing.md) |
+| Contribute | [docs/contributing/README.md](docs/contributing/README.md) |
+| Test | [docs/contributing/testing.md](docs/contributing/testing.md) |

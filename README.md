@@ -113,5 +113,6 @@ make lint             # go vet
 make tidy             # go mod tidy
 ```
 
-See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for the full developer guide
-(including commit message format and git hook details).
+See [docs/contributing/README.md](docs/contributing/README.md) for the full
+developer guide (including commit message format and git hook details).
+Docs index: [docs/README.md](docs/README.md).

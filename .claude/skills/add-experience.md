@@ -63,4 +63,4 @@ Also check `ui/apps/wizard/src/wizard/WizardPage.tsx` if it has its own routing.
 
 Create `ui/apps/wizard/src/wizard/steps/MyConfigStep.tsx` following existing patterns. Use `SchemaFormRenderer` for schema-driven fields.
 
-See `docs/howto-add-experience.md` for the full guide.
+See `docs/contributing/how-to/add-experience.md` for the full guide.
