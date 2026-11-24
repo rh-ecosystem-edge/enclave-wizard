@@ -8,8 +8,12 @@ description: Commit message format for enclave-wizard. Use before every git comm
 All commits in this project MUST follow this format:
 
 ```
-OSAC-<number>: (<type>) <short description>
+<issue>: (<type>) <short description>
+
+Assisted-by: <agent-name>
 ```
+
+`<issue>` is `OSAC-<number>` when a ticket exists, or `NO-ISSUE` when it does not.
 
 ## Types
 
@@ -24,14 +28,27 @@ OSAC-<number>: (<type>) <short description>
 
 ```
 OSAC-813: (feat) Add ansible-based schema validation
+
+Assisted-by: Claude Code
+```
+
+```
 OSAC-824: (fix) Release runner lock before signaling completion
-OSAC-813: (refactor) Replace blockStorageBackend with storage_plugin
+
+Assisted-by: Cursor
+```
+
+```
+NO-ISSUE: (docs) Clarify agent instruction layout
+
+Assisted-by: Cursor
 ```
 
 ## Rules
 
-- The OSAC ticket number comes first
+- Issue id comes first: `OSAC-<number>` or `NO-ISSUE`
 - Type is in parentheses after the colon
 - Short description in imperative mood, no period at end
 - Body is optional — use it for bullet points if the change is multi-faceted
-- Never add `Co-Authored-By` or AI attribution lines
+- End every commit with `Assisted-by: <agent-name>` (for example `Claude Code` or `Cursor`)
+- Do not use `Co-Authored-By` for AI attribution

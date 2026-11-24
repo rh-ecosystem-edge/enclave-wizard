@@ -119,10 +119,34 @@ See [deployment.md](deployment.md) for details on the RPM structure, systemd ser
 - [Adding a plugin](howto-add-plugin.md) — create a new enclave plugin
 - [Adding an API endpoint](howto-add-api-endpoint.md) — add a new REST endpoint
 
+## Agent instructions
+
+- Shared agent rules live in [`AGENTS.md`](../AGENTS.md) at the repo root.
+  `CLAUDE.md` is a thin stub that imports that file for Claude Code.
+- Shared project skills live under [`.claude/skills/`](../.claude/skills/).
+- Personal plugins and skill packs are up to each contributor. Do not commit them.
+
+### Personal skill index (`AGENTS.local.md`)
+
+Install personal skills where your agent harness expects them (user skill
+dir, plugin marketplace, and so on). Do **not** copy skill bodies into the
+repo or into `AGENTS.local.md`.
+
+Use `AGENTS.local.md` (gitignored) only as a short **When → Use** index so
+the agent knows which of *your* skills to load for a given situation:
+
+| When... | Use... |
+|---------|--------|
+| Opening or reviewing a PR | `pull-request-workflow` |
+| Searching Slack for prior discussion | `search-slack` |
+
+Keep rows concrete and task-shaped. The harness loads the skill content;
+the index only points at it.
+
 ## Other Documentation
 
 - [Enclave config reference](enclave-config.md) — config file format and fields
-- [OSAC configuration](OSAC_CONFIGURATION.md) — OSAC-specific settings
+- [OSAC configuration](osac-configuration.md) — OSAC-specific settings
 - [Deployment](deployment.md) — RPM packaging and remote deployment
 - [Testing patterns](enclave-testing-patterns.md) — test strategy and patterns
 - [Recording deployments](recording-deployment.md) — recording ansible-runner output for demo mode

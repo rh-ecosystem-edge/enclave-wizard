@@ -1,13 +1,13 @@
 # Enclave Lab Testing Patterns
 
 Comprehensive documentation of all testing patterns, frameworks, tools, and approaches
-used in the enclave repository (`/home/rpiccoli/src/enclave`).
+used in the [Enclave](https://github.com/rh-ecosystem-edge/enclave) repository.
 
 ---
 
 ## 1. Test Frameworks and Tools
 
-The enclave repo uses **no traditional unit test frameworks** (no pytest, no bats, no Go
+The Enclave repo uses **no traditional unit test frameworks** (no pytest, no bats, no Go
 test). Instead, it relies on a combination of linters, schema validators, Ansible-based
 validation playbooks, and shell-script-based verification scripts.
 
