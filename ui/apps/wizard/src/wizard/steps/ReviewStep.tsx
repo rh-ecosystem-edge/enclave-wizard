@@ -1,5 +1,4 @@
 import { css } from "@emotion/css";
-import { EnclaveConfigToJSON } from "@enclave-wizard-ui/api-client";
 import {
   Alert,
   Button,
@@ -22,6 +21,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useEnclaveApi } from "../../api/useEnclaveApi.ts";
 import { buildFinalConfig } from "../buildFinalConfig.ts";
 import { YamlEditor } from "../components/YamlEditor.tsx";
+import { toWireConfig } from "../toWireConfig.ts";
 import { useWizard } from "../WizardContext.tsx";
 
 const styles = {
@@ -144,10 +144,7 @@ export const ReviewStep: React.FC = () => {
   const [copied, setCopied] = useState(false);
 
   const finalConfig = useMemo(() => buildFinalConfig(state), [state]);
-  const wireConfig = useMemo(
-    () => EnclaveConfigToJSON(finalConfig) as Record<string, unknown>,
-    [finalConfig],
-  );
+  const wireConfig = useMemo(() => toWireConfig(finalConfig), [finalConfig]);
 
   const { configFiles, yamlContents } = useMemo(() => {
     const globalData = (wireConfig.global ?? {}) as Record<string, unknown>;
@@ -245,7 +242,7 @@ export const ReviewStep: React.FC = () => {
     navigator.clipboard.writeText(allYaml);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  }, [yamlContents]);
+  }, [configFiles, yamlContents]);
 
   const handleDownload = useCallback(() => {
     for (const file of configFiles) {
@@ -257,7 +254,7 @@ export const ReviewStep: React.FC = () => {
       a.click();
       URL.revokeObjectURL(url);
     }
-  }, [yamlContents]);
+  }, [configFiles, yamlContents]);
 
   const hasParseErrors = Object.keys(parseErrors).length > 0;
 

@@ -45,9 +45,13 @@ describe("wizardReducer", () => {
       path: "global.quayBackendRGWConfiguration.hostname",
       value: "rgw.example.com",
     });
-    expect(state.configData.global?.quayBackendRGWConfiguration?.hostname).toBe(
-      "rgw.example.com",
-    );
+    expect(
+      (
+        state.configData.global?.quayBackendRGWConfiguration as
+          | Record<string, unknown>
+          | undefined
+      )?.hostname,
+    ).toBe("rgw.example.com");
   });
 
   it("preserves existing fields when setting a new one", () => {

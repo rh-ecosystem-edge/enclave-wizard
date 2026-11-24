@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { SchemaStep } from "./SchemaStep.tsx";
-import { WizardProvider } from "../WizardContext.tsx";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { clearPluginSchemaCache } from "../../api/usePluginSchema.ts";
+import { WizardProvider } from "../WizardContext.tsx";
+import { SchemaStep } from "./SchemaStep.tsx";
 
 const MOCK_PLUGIN_SCHEMA = {
   type: "object",

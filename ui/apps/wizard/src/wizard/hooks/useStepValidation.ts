@@ -4,21 +4,19 @@ import {
   validateFields,
   validateHostEntries,
 } from "../../schema/schemaUtils.ts";
-import { useCatalog } from "../contexts/CatalogContext.tsx";
-import { useConfig } from "../contexts/ConfigContext.tsx";
 import { isValidDnsZone } from "../dnsZone.ts";
 import { validateOsacInventoryBackends } from "../osacBcmValidation.ts";
 import { validateOsacNetworking } from "../osacNetworkingValidation.ts";
 import { STEP_REQUIRED_FIELDS } from "../stepFields.ts";
+import { useWizard } from "../WizardContext.tsx";
 
 export function useStepValidation(
   currentSubStepId: string | undefined,
 ): () => StepValidationError[] {
-  const { state: config } = useConfig();
-  const { state: catalog } = useCatalog();
+  const { state: wizard } = useWizard();
 
   return useCallback((): StepValidationError[] => {
-    if (!catalog.schema || !currentSubStepId) return [];
+    if (!wizard.schema || !currentSubStepId) return [];
 
     const fieldsToValidate = STEP_REQUIRED_FIELDS[currentSubStepId];
     let errors: StepValidationError[] = [];
@@ -28,14 +26,14 @@ export function useStepValidation(
         (f) => f !== "global.agentHosts",
       );
       errors = validateFields(
-        catalog.schema,
+        wizard.schema,
         nonHostFields,
-        config.configData as Record<string, unknown>,
+        wizard.configData as Record<string, unknown>,
       );
     }
 
     if (currentSubStepId === "storage") {
-      const globalData = ((config.configData as Record<string, unknown>)
+      const globalData = ((wizard.configData as Record<string, unknown>)
         .global ?? {}) as Record<string, unknown>;
       const disconnected = globalData.disconnected !== false;
       const backend = globalData.storage_plugin as string;
@@ -123,7 +121,7 @@ export function useStepValidation(
     }
 
     if (currentSubStepId === "osac") {
-      const globalData = ((config.configData as Record<string, unknown>)
+      const globalData = ((wizard.configData as Record<string, unknown>)
         .global ?? {}) as Record<string, unknown>;
       if (!((globalData.osacAapLicenseFile as string) ?? "").trim()) {
         errors.push({
@@ -137,7 +135,7 @@ export function useStepValidation(
     }
 
     if (currentSubStepId === "caas") {
-      const globalData = ((config.configData as Record<string, unknown>)
+      const globalData = ((wizard.configData as Record<string, unknown>)
         .global ?? {}) as Record<string, unknown>;
       if (!((globalData.osacDnsClass as string) ?? "").trim()) {
         errors.push({
@@ -162,7 +160,7 @@ export function useStepValidation(
     }
 
     if (currentSubStepId === "aap") {
-      const globalData = ((config.configData as Record<string, unknown>)
+      const globalData = ((wizard.configData as Record<string, unknown>)
         .global ?? {}) as Record<string, unknown>;
       const aapDefaults = (globalData.aapDefaults ?? {}) as Record<
         string,
@@ -178,7 +176,7 @@ export function useStepValidation(
     }
 
     if (currentSubStepId === "hub-cluster") {
-      const globalData = ((config.configData as Record<string, unknown>)
+      const globalData = ((wizard.configData as Record<string, unknown>)
         .global ?? {}) as Record<string, unknown>;
       const agentHosts = Array.isArray(globalData.agent_hosts)
         ? (globalData.agent_hosts as Record<string, unknown>[])
@@ -191,10 +189,10 @@ export function useStepValidation(
         });
       }
       if (agentHosts.length === 3) {
-        errors.push(...validateHostEntries(catalog.schema, agentHosts, "Node"));
+        errors.push(...validateHostEntries(wizard.schema, agentHosts, "Node"));
       }
     }
 
     return errors;
-  }, [currentSubStepId, catalog.schema, config.configData]);
+  }, [currentSubStepId, wizard.schema, wizard.configData]);
 }

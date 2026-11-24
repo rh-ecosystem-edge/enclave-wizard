@@ -1,5 +1,5 @@
-import type { Download, Page } from "@playwright/test";
 import { readFile } from "node:fs/promises";
+import type { Download, Page } from "@playwright/test";
 
 export interface LandingZoneConfig {
   disconnected: boolean;
@@ -200,8 +200,17 @@ export class WizardPage {
     await this.page.fill("#ssh-pub-key", config.sshPubKey);
 
     // Remove any existing hosts first
-    while (await this.page.locator('button[aria-label^="Remove node"]').first().isVisible({ timeout: 500 }).catch(() => false)) {
-      await this.page.locator('button[aria-label^="Remove node"]').first().click();
+    while (
+      await this.page
+        .locator('button[aria-label^="Remove node"]')
+        .first()
+        .isVisible({ timeout: 500 })
+        .catch(() => false)
+    ) {
+      await this.page
+        .locator('button[aria-label^="Remove node"]')
+        .first()
+        .click();
       await this.page.waitForTimeout(200);
     }
 
@@ -327,10 +336,7 @@ export class WizardPage {
   async downloadConfigFiles(): Promise<
     Map<string, { download: Download; content: string }>
   > {
-    const results = new Map<
-      string,
-      { download: Download; content: string }
-    >();
+    const results = new Map<string, { download: Download; content: string }>();
     const downloads: Download[] = [];
 
     const collectDownloads = (d: Download) => downloads.push(d);
@@ -361,7 +367,9 @@ export class WizardPage {
 
   async clickWriteConfiguration() {
     // Legacy: tries "Write configuration" first, falls back to "Deploy"
-    const writeBtn = this.page.getByRole("button", { name: "Write configuration" });
+    const writeBtn = this.page.getByRole("button", {
+      name: "Write configuration",
+    });
     const deployBtn = this.page.getByRole("button", { name: "Deploy" });
     if (await writeBtn.isVisible({ timeout: 1000 }).catch(() => false)) {
       await writeBtn.click();
@@ -371,9 +379,8 @@ export class WizardPage {
   }
 
   async waitForWriteSuccess() {
-    // Accept either "Configuration written" or deploy task started
+    // Wait for the success message, or continue after 5 seconds.
     const written = this.page.getByText("Configuration written successfully");
-    const taskStarted = this.page.getByText("Deploy");
     await Promise.race([
       written.waitFor({ timeout: 30_000 }).catch(() => {}),
       this.page.waitForTimeout(5_000),
@@ -383,9 +390,7 @@ export class WizardPage {
   // --- Step: Provision ---
 
   async clickProvision() {
-    await this.page
-      .getByRole("button", { name: "Provision" })
-      .click();
+    await this.page.getByRole("button", { name: "Provision" }).click();
   }
 
   async getProvisionStatusFromPage(): Promise<string> {

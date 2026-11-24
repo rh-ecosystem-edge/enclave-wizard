@@ -6,8 +6,8 @@ import {
   Title,
 } from "@patternfly/react-core";
 import type React from "react";
-import { useWizard } from "../WizardContext.tsx";
 import { SchemaStep } from "../components/SchemaStep.tsx";
+import { useWizard } from "../WizardContext.tsx";
 import { stepStyles } from "./stepStyles.ts";
 
 const TRUST_MANAGER_FIELDS = [
@@ -53,17 +53,15 @@ const TrustManagerFallback: React.FC = () => {
         <TextInput
           id="tm-ca-duration"
           aria-label="CA certificate lifetime"
-          value={
-            (tmDefaults.trust_manager_ca_issuer_duration as string) ?? ""
-          }
+          value={(tmDefaults.trust_manager_ca_issuer_duration as string) ?? ""}
           onChange={(_e, v) =>
             setTM("trust_manager_ca_issuer_duration", v || undefined)
           }
           placeholder="87600h"
         />
         <FormHelperText>
-          Lifetime of the CA certificate (e.g. 87600h for 10 years). Leave
-          empty for default.
+          Lifetime of the CA certificate (e.g. 87600h for 10 years). Leave empty
+          for default.
         </FormHelperText>
       </FormGroup>
 
@@ -80,8 +78,8 @@ const TrustManagerFallback: React.FC = () => {
           placeholder="8760h"
         />
         <FormHelperText>
-          How long before expiry to renew the CA (e.g. 8760h for 1 year).
-          Leave empty for default.
+          How long before expiry to renew the CA (e.g. 8760h for 1 year). Leave
+          empty for default.
         </FormHelperText>
       </FormGroup>
     </Form>

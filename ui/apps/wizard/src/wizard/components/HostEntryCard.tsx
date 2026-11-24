@@ -53,7 +53,7 @@ export const HostEntryCard: React.FC<HostEntryCardProps> = ({
     onChange({ ...host, [field]: value });
 
   return (
-    <Card isRounded isCompact>
+    <Card isCompact>
       <CardBody>
         <Title headingLevel="h4" size="md">
           {label} {index + 1}
@@ -167,10 +167,7 @@ export const HostEntryCard: React.FC<HostEntryCardProps> = ({
             </FormGroup>
           </div>
           <div className={styles.fullWidth}>
-            <FormGroup
-              label="BMC System ID"
-              fieldId={`${prefix}-bmcsystemid`}
-            >
+            <FormGroup label="BMC System ID" fieldId={`${prefix}-bmcsystemid`}>
               <TextInput
                 id={`${prefix}-bmcsystemid`}
                 value={host.bmcSystemId ?? ""}
@@ -180,7 +177,8 @@ export const HostEntryCard: React.FC<HostEntryCardProps> = ({
               <FormHelperText>
                 <HelperText>
                   <HelperTextItem>
-                    Redfish System ID (UUID). Leave empty for single-system BMCs.
+                    Redfish System ID (UUID). Leave empty for single-system
+                    BMCs.
                   </HelperTextItem>
                 </HelperText>
               </FormHelperText>

@@ -43,7 +43,9 @@ export const DeployProgress: React.FC<{
   useEffect(() => {
     if (!follow || !isRunning || !logsEndRef.current) return;
     logsEndRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [follow, isRunning, logsHtml]);
+    // logs is not read above; it retriggers follow-scroll when output grows.
+    void logs;
+  }, [follow, isRunning, logs]);
 
   return (
     <Stack hasGutter>

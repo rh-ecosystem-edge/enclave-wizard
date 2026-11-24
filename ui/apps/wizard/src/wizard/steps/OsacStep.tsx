@@ -199,10 +199,6 @@ export const OsacStep: React.FC = () => {
         k8sManager: "",
         netris: {
           controllerUrl: netrisControllerUrl,
-          credentials: {
-            username: netrisUsername,
-            password: netrisPassword,
-          },
           siteId: netrisSiteId,
           tenantId: netrisTenantId,
           tenantName: netrisTenantName,
@@ -368,7 +364,10 @@ export const OsacStep: React.FC = () => {
               role="radiogroup"
               aria-label="Fabric manager"
             >
-              <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
+              <Flex
+                direction={{ default: "column" }}
+                gap={{ default: "gapMd" }}
+              >
                 <Radio
                   id="osac-fabric-none"
                   name="osac-fabric-manager"
@@ -398,9 +397,7 @@ export const OsacStep: React.FC = () => {
                   <TextInput
                     id="osac-netris-controller-url"
                     value={netrisControllerUrl}
-                    onChange={(_e, val) =>
-                      patchNetris({ controllerUrl: val })
-                    }
+                    onChange={(_e, val) => patchNetris({ controllerUrl: val })}
                     placeholder="https://ctl.netris.example.com"
                     validated={netrisUrlError ? "error" : "default"}
                   />
@@ -797,7 +794,6 @@ export const OsacStep: React.FC = () => {
                 <Switch
                   id="rhbk-deploy-database"
                   label="Deploy built-in PostgreSQL for Keycloak"
-                  labelOff="Use external database for Keycloak"
                   isChecked={rhbkDeployDatabase}
                   onChange={(_e, checked) =>
                     setField("rhbk_deploy_database", checked)

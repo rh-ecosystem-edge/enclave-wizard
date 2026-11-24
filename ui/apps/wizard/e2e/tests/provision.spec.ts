@@ -1,6 +1,6 @@
-import { test, expect } from "@playwright/test";
-import { WizardPage } from "../helpers/wizard-page";
+import { expect, test } from "@playwright/test";
 import { WizardApi } from "../helpers/wizard-api";
+import { WizardPage } from "../helpers/wizard-page";
 
 const minimalHubConfig = {
   baseDomain: "provision-test.local",
@@ -50,8 +50,11 @@ test.describe("Provision flow", () => {
   let api: WizardApi;
 
   test.beforeEach(async ({ page, request, baseURL }) => {
+    if (!baseURL) {
+      throw new Error("baseURL is required");
+    }
     wizard = new WizardPage(page);
-    api = new WizardApi(request, baseURL!);
+    api = new WizardApi(request, baseURL);
   });
 
   test("full wizard flow ending at deploy step", async () => {

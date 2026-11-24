@@ -1,6 +1,6 @@
 import type {
+  GetTaskEventsOutputBody,
   ListTasksOutputBody,
-  TaskEventsOutputBody,
   TaskRun,
   TasksApiInterface,
 } from "@enclave-wizard-ui/api-client";
@@ -12,7 +12,7 @@ export interface TasksApiClient {
   listTasks: () => Promise<ListTasksOutputBody>;
   getTask: (id: string) => Promise<TaskRun>;
   getTaskLogs: (id: string) => Promise<string>;
-  getTaskEvents: (id: string) => Promise<TaskEventsOutputBody>;
+  getTaskEvents: (id: string) => Promise<GetTaskEventsOutputBody>;
   startDeploy: () => Promise<TaskRun>;
   startDeployPhase: (phase: number) => Promise<TaskRun>;
   startDeployPlugin: (name: string) => Promise<TaskRun>;

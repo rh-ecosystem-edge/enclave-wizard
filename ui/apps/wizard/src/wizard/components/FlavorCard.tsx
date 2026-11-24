@@ -32,7 +32,6 @@ export const FlavorCard: React.FC<FlavorCardProps> = ({
   return (
     // biome-ignore lint/a11y/useSemanticElements: PatternFly Card with isSelectable behaves as a button
     <Card
-      isRounded
       isSelectable
       isSelected={isSelected}
       role="button"

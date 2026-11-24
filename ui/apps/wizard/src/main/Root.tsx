@@ -58,7 +58,7 @@ function AuthenticatedApp(): React.ReactElement {
   return (
     <DependencyInjectionProvider container={container}>
       <React.Suspense fallback={<Spinner />}>
-        <RouterProvider router={router} />
+        <RouterProvider router={router} future={{ v7_startTransition: true }} />
       </React.Suspense>
     </DependencyInjectionProvider>
   );

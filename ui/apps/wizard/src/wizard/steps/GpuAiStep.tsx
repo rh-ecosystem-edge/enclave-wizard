@@ -6,16 +6,14 @@ import {
   Title,
 } from "@patternfly/react-core";
 import type React from "react";
+import { SchemaStep } from "../components/SchemaStep.tsx";
 import { getExperiencePlugins } from "../experiences.ts";
 import { useWizard } from "../WizardContext.tsx";
-import { SchemaStep } from "../components/SchemaStep.tsx";
 import { stepStyles } from "./stepStyles.ts";
 
 const GPU_PLUGINS = getExperiencePlugins("gpu");
 
-const GPU_SCHEMA_FIELDS = [
-  "global.gpuPassthrough",
-];
+const GPU_SCHEMA_FIELDS = ["global.gpuPassthrough"];
 
 /**
  * Hand-crafted fallback form for when the plugin schema endpoint is not

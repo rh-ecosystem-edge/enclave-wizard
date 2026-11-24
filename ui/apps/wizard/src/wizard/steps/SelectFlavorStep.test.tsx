@@ -1,11 +1,10 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type React from "react";
 import { createElement } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { SelectFlavorStep } from "./SelectFlavorStep.tsx";
-import { FALLBACK_FLAVORS } from "../flavors.ts";
 import { FALLBACK_EXPERIENCES } from "../experiences.ts";
+import { FALLBACK_FLAVORS } from "../flavors.ts";
+import { SelectFlavorStep } from "./SelectFlavorStep.tsx";
 
 const mockDispatch = vi.fn();
 const mockState = {
@@ -71,8 +70,10 @@ describe("SelectFlavorStep", () => {
     renderStep();
 
     const caasCard = screen.getByText("CaaS").closest("[role='button']");
-    expect(caasCard).toBeTruthy();
-    await user.click(caasCard!);
+    if (!caasCard) {
+      throw new Error("CaaS card not found");
+    }
+    await user.click(caasCard);
 
     expect(mockDispatch).toHaveBeenCalledWith({
       type: "TOGGLE_FLAVOR",

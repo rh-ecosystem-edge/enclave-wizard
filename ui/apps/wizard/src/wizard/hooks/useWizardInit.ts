@@ -25,7 +25,9 @@ export function useWizardInit(): void {
         const res = await fetch("/api/v1/experiences");
         if (res.ok) {
           const body = await res.json();
-          experiences = Array.isArray(body) ? body : body.experiences ?? FALLBACK_EXPERIENCES;
+          experiences = Array.isArray(body)
+            ? body
+            : (body.experiences ?? FALLBACK_EXPERIENCES);
         } else {
           experiences = FALLBACK_EXPERIENCES;
         }
