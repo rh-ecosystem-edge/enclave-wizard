@@ -26,4 +26,4 @@ jobs:
         run: |
           echo "Release pipeline is not implemented yet."
           echo "Planned: full BE+FE build, e2e tests, distributable artifacts."
-          echo "See docs/contributing/decisions/ADR-001-github-actions-ci.md"
+          echo "See docs/decisions/ADR-001-github-actions-ci.md"
