@@ -9,6 +9,33 @@
 | Podman (or Docker) | latest | Used for UI builds, RPM packaging, and container-based cross-compilation |
 | make | any | GNU Make |
 
+### Git hooks and commit template
+
+One-time per clone:
+
+```bash
+make setup-githooks
+```
+
+This configures:
+
+| Setting | Value | Purpose |
+|---------|-------|---------|
+| `core.hooksPath` | `hack/git/hooks/` | `prepare-commit-msg` appends `Assisted-by:` when missing |
+| `commit.template` | `hack/git/commit-template` | Subject / Why / Notes skeleton for editor commits |
+
+Fill [`hack/git/commit-template`](../hack/git/commit-template) (Subject + Why required;
+Notes optional). Prefer `git commit -F <file> --cleanup=strip` after editing a copy
+of the template. `--cleanup=strip` removes `#` instruction lines. Bare
+`git commit -m "..."` skips the template.
+
+Override the Assisted-by name with `ASSISTED_BY` (or `GIT_ASSISTED_BY`) if
+auto-detection is wrong:
+
+```bash
+ASSISTED_BY='Cursor' git commit -F /tmp/commitmsg --cleanup=strip
+```
+
 ## Project Structure
 
 ```
@@ -30,7 +57,7 @@ enclave-wizard/
       e2e/                         # Playwright browser tests
     packages/api-client/           # Generated TypeScript API client
   enclave-mock/                    # Fake enclave directory for local dev
-  hack/                            # Scripts: deploy, RPM, e2e, infra
+  hack/                            # Scripts: deploy, RPM, e2e, infra, git hooks/template
 ```
 
 ## Running Locally
@@ -119,10 +146,34 @@ See [deployment.md](deployment.md) for details on the RPM structure, systemd ser
 - [Adding a plugin](howto-add-plugin.md) — create a new enclave plugin
 - [Adding an API endpoint](howto-add-api-endpoint.md) — add a new REST endpoint
 
+## Agent instructions
+
+- Shared agent rules live in [`AGENTS.md`](../AGENTS.md) at the repo root.
+  `CLAUDE.md` is a thin stub that imports that file for Claude Code.
+- Shared project skills live under [`.claude/skills/`](../.claude/skills/).
+- Personal plugins and skill packs are up to each contributor. Do not commit them.
+
+### Personal skill index (`AGENTS.local.md`)
+
+Install personal skills where your agent harness expects them (user skill
+dir, plugin marketplace, and so on). Do **not** copy skill bodies into the
+repo or into `AGENTS.local.md`.
+
+Use `AGENTS.local.md` (gitignored) only as a short **When → Use** index so
+the agent knows which of *your* skills to load for a given situation:
+
+| When... | Use... |
+|---------|--------|
+| Opening or reviewing a PR | `pull-request-workflow` |
+| Searching Slack for prior discussion | `search-slack` |
+
+Keep rows concrete and task-shaped. The harness loads the skill content;
+the index only points at it.
+
 ## Other Documentation
 
 - [Enclave config reference](enclave-config.md) — config file format and fields
-- [OSAC configuration](OSAC_CONFIGURATION.md) — OSAC-specific settings
+- [OSAC configuration](osac-configuration.md) — OSAC-specific settings
 - [Deployment](deployment.md) — RPM packaging and remote deployment
 - [Testing patterns](enclave-testing-patterns.md) — test strategy and patterns
 - [Recording deployments](recording-deployment.md) — recording ansible-runner output for demo mode

@@ -61,8 +61,8 @@ make e2e-full TARGET=root@myserver.example.com
 │  │  ┌─────────────────────────────────────────┐  │      │
 │  │  │ enclave-wizard-ui (podman quadlet)      │  │      │
 │  │  │   nginx container, host networking      │  │      │
-│  │  │   :3443 HTTPS → proxy /api/v1 → :8080  │  │      │
-│  │  │   :3001 HTTP  → 301 redirect to :3443  │  │      │
+│  │  │   :3443 HTTPS → proxy /api/v1 → :8080   │  │      │
+│  │  │   :3001 HTTP  → 301 redirect to :3443   │  │      │
 │  │  │   Self-signed TLS cert                  │  │      │
 │  │  └─────────────────────────────────────────┘  │      │
 │  │                                               │      │

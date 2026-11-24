@@ -1,0 +1,13 @@
+# === Subject (required) ===
+# Format: <issue>: (<type>) <short description>
+#   <issue> = OSAC-<n> or NO-ISSUE
+#   <type>  = feat | fix | refactor | docs | test | chore
+NO-ISSUE: (<type>) <short description>
+
+# === Why (required) ===
+# Write 1–2 sentences on the blank line below (not as # comments).
+
+
+# === Notes (optional) ===
+# Replace with real bullets, or delete this whole section.
+# - 
