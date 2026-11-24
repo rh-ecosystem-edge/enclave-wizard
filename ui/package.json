@@ -9,15 +9,18 @@
   "scripts": {
     "build:all": "yarn workspaces foreach -t --all run build",
     "clean:all": "rm -rf out && yarn workspaces foreach --all -p run clean",
-    "check:all": "yarn workspaces foreach --all -p run check",
-    "check:fix:all": "yarn workspaces foreach --all -p run check:fix",
-    "test:all": "yarn workspaces foreach --all -p run test",
-    "typecheck:all": "yarn workspaces foreach --all -p run typecheck",
+    "check:all": "biome check .",
+    "check:fix:all": "biome check --write .",
+    "test:all": "yarn workspace @enclave-wizard-ui/wizard test",
+    "typecheck:all": "yarn build:all",
     "start": "concurrently -k -n api,ui -c blue,green \"make -C .. dev\" \"yarn workspace @enclave-wizard-ui/wizard start\""
+  },
+  "engines": {
+    "node": ">=24"
   },
   "devDependencies": {
     "@biomejs/biome": "2.0.6",
-    "@types/node": "^22.0.0",
+    "@types/node": "^24.0.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "~6.3.0",

@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Stub only today. A real release pipeline will likely need contents: write
+# (and possibly id-token) in addition to contents: read.
+permissions:
+  contents: read
+
+# Run only on the canonical repo so forks stay idle for contributors.
+jobs:
+  release:
+    name: release
+    if: github.repository == 'rh-ecosystem-edge/enclave-wizard'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Release pipeline TBD
+        run: |
+          echo "Release pipeline is not implemented yet."
+          echo "Planned: full BE+FE build, e2e tests, distributable artifacts."
+          echo "See docs/decisions/ADR-001-github-actions-ci.md"

@@ -12,7 +12,7 @@ Run after modifying files under `ui/apps/wizard/src/`, after regenerating the AP
 ### 1. Run unit tests
 
 ```bash
-cd ui && podman run --rm -v $(pwd):/app:z -w /app node:22-alpine sh -c "corepack enable && yarn install && yarn workspace @enclave-wizard-ui/wizard test"
+cd ui && podman run --rm -v $(pwd):/app:z -w /app node:24-alpine sh -c "corepack enable && yarn install && yarn workspace @enclave-wizard-ui/wizard test"
 ```
 
 All tests must pass.
@@ -82,5 +82,5 @@ cd ui && podman-compose down
 ## Quick one-liner
 
 ```bash
-cd ui && podman run --rm -v $(pwd):/app:z -w /app node:22-alpine sh -c "corepack enable && yarn install && yarn workspace @enclave-wizard-ui/wizard test" && make fix-selinux && UID=$(id -u) GID=$(id -g) podman-compose up --build -d && sleep 6 && curl -sf http://localhost:3001 > /dev/null && curl -sf http://localhost:3001/api/v1/defaults > /dev/null && echo "SMOKE TEST PASSED" || echo "SMOKE TEST FAILED"
+cd ui && podman run --rm -v $(pwd):/app:z -w /app node:24-alpine sh -c "corepack enable && yarn install && yarn workspace @enclave-wizard-ui/wizard test" && make fix-selinux && UID=$(id -u) GID=$(id -g) podman-compose up --build -d && sleep 6 && curl -sf http://localhost:3001 > /dev/null && curl -sf http://localhost:3001/api/v1/defaults > /dev/null && echo "SMOKE TEST PASSED" || echo "SMOKE TEST FAILED"
 ```

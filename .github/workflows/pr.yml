@@ -1,0 +1,132 @@
+name: PR
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: pr-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+# Run only on the canonical repo. Forks stay idle so contributors need not
+# disable Actions. PRs from forks into upstream still run (workflow context
+# is rh-ecosystem-edge/enclave-wizard).
+
+jobs:
+  changes:
+    name: detect-changes
+    if: github.repository == 'rh-ecosystem-edge/enclave-wizard'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      ui: ${{ steps.filter.outputs.ui }}
+      go: ${{ steps.filter.outputs.go }}
+      shared: ${{ steps.filter.outputs.shared }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            ui:
+              - 'ui/**'
+            go:
+              - '**/*.go'
+              - 'go.mod'
+              - 'go.sum'
+              - 'enclave-mock/**'
+            shared:
+              - 'Makefile'
+              - '.golangci.yml'
+              - '.github/**'
+              - 'hack/**'
+              - 'Containerfile'
+
+  ui:
+    name: ui
+    needs: changes
+    if: >-
+      github.repository == 'rh-ecosystem-edge/enclave-wizard' &&
+      (needs.changes.outputs.ui == 'true' || needs.changes.outputs.shared == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ui
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: yarn
+          cache-dependency-path: ui/yarn.lock
+      - name: Enable corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Lint (Biome)
+        # Root biome.json excludes packages/api-client (generated code).
+        run: yarn check:all
+      - name: Build (includes typecheck)
+        run: yarn build:all
+      - name: Unit tests
+        run: yarn workspace @enclave-wizard-ui/wizard test
+
+  go:
+    name: go
+    needs: changes
+    if: >-
+      github.repository == 'rh-ecosystem-edge/enclave-wizard' &&
+      (needs.changes.outputs.go == 'true' || needs.changes.outputs.shared == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      # main.go embeds ui/apps/wizard/dist; create a stub before any go compile.
+      - name: Stub UI dist for go:embed
+        run: |
+          mkdir -p ui/apps/wizard/dist
+          printf '%s\n' '<!DOCTYPE html><html></html>' > ui/apps/wizard/dist/index.html
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.13.2
+      - name: Unit tests
+        run: make test
+      - name: Build
+        run: go build -o enclave-wizard .
+
+  # Single status for branch protection: passes when required jobs succeed or are skipped (e.g. docs-only).
+  ci:
+    name: ci
+    needs: [changes, ui, go]
+    if: always() && github.repository == 'rh-ecosystem-edge/enclave-wizard'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require successful or skipped stack jobs
+        run: |
+          changes="${{ needs.changes.result }}"
+          ui="${{ needs.ui.result }}"
+          go="${{ needs.go.result }}"
+          echo "changes=$changes ui=$ui go=$go"
+          if [ "$changes" != "success" ]; then
+            echo "detect-changes job failed"
+            exit 1
+          fi
+          if [ "$ui" != "success" ] && [ "$ui" != "skipped" ]; then
+            echo "ui job failed"
+            exit 1
+          fi
+          if [ "$go" != "success" ] && [ "$go" != "skipped" ]; then
+            echo "go job failed"
+            exit 1
+          fi

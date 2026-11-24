@@ -101,13 +101,13 @@ Run inside a container (no Node.js on host):
 cd ui && make test
 
 # Or directly
-distrobox enter osac -- bash -c "cd ui && podman run --rm -v \$(pwd):/app:z -w /app node:22-alpine sh -c 'corepack enable && yarn install && yarn workspace @enclave-wizard-ui/wizard test'"
+distrobox enter osac -- bash -c "cd ui && podman run --rm -v \$(pwd):/app:z -w /app node:24-alpine sh -c 'corepack enable && yarn install && yarn workspace @enclave-wizard-ui/wizard test'"
 ```
 
 ### TypeScript check
 
 ```bash
-distrobox enter osac -- bash -c "cd ui && podman run --rm -v \$(pwd):/app:z -w /app node:22-alpine sh -c 'corepack enable && yarn install && yarn workspace @enclave-wizard-ui/wizard run -T tsc --noEmit'"
+distrobox enter osac -- bash -c "cd ui && podman run --rm -v \$(pwd):/app:z -w /app node:24-alpine sh -c 'corepack enable && yarn install && yarn workspace @enclave-wizard-ui/wizard run -T tsc --noEmit'"
 ```
 
 ## Key Directories
