@@ -6,7 +6,7 @@
 |------|---------|-------|
 | Go | 1.25+ | Match `go.mod` (`go version`). Newer host toolchains are fine; Go may download the module toolchain via `GOTOOLCHAIN=auto` |
 | Node | 24 | **Not installed on host** — use `distrobox enter osac` for all Node/yarn/tsc commands |
-| golangci-lint | v2.13.x | Same pin as PR CI; install with `make lint-install` |
+| golangci-lint | v2.13.2 | Same pin as PR CI; install with `make lint-install` |
 | Podman (or Docker) | latest | Used for UI builds, RPM packaging, and container-based cross-compilation |
 | make | any | GNU Make |
 
@@ -106,7 +106,7 @@ Fork PRs that introduce new workflows may need a maintainer to **Approve and run
 
 ```bash
 # Go
-make lint-install              # once: golangci-lint v2.13.x into $(go env GOPATH)/bin
+make lint-install              # once: golangci-lint v2.13.2 into $(go env GOPATH)/bin
 make lint
 make test
 go build -o enclave-wizard .   # needs ui/apps/wizard/dist (or run make build-ui first)
@@ -132,7 +132,7 @@ go test ./...
 ### Go lint
 
 ```bash
-make lint-install   # once, pins v2.13.x to match .github/workflows/pr.yml
+make lint-install   # once, pins v2.13.2 to match .github/workflows/pr.yml
 make lint
 ```
 

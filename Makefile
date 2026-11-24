@@ -55,7 +55,7 @@ lint: ## Run golangci-lint.
 	golangci-lint run ./...
 
 lint-install: ## Install golangci-lint (version matches PR CI).
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $$(go env GOPATH)/bin $(GOLANGCI_LINT_VERSION)
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $$(go env GOPATH)/bin $(GOLANGCI_LINT_VERSION)
 
 ##@ Maintenance
 
