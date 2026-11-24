@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Appends Assisted-by trailer when missing.
+# Lives under hack/git/hooks/. Enable with: make setup-githooks
+set -euo pipefail
+
+msg_file=${1:?missing commit message file}
+source=${2:-}
+
+if [[ "$source" == "merge" || "$source" == "squash" ]]; then
+  exit 0
+fi
+
+if grep -q '^Assisted-by: ' "$msg_file"; then
+  exit 0
+fi
+
+agent="Unknown"
+if [[ -n "${ASSISTED_BY:-}" ]]; then
+  agent=$ASSISTED_BY
+elif [[ -n "${GIT_ASSISTED_BY:-}" ]]; then
+  agent=$GIT_ASSISTED_BY
+elif [[ -n "${CLAUDECODE:-}" || -n "${CLAUDE_CODE_ENTRYPOINT:-}" ]]; then
+  agent="Claude Code"
+elif [[ -n "${CURSOR_AGENT:-}" || -n "${CURSOR_TRACE_ID:-}" ]]; then
+  agent="Cursor"
+fi
+
+printf '\nAssisted-by: %s\n' "$agent" >> "$msg_file"

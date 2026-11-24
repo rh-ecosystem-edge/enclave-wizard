@@ -54,6 +54,11 @@ lint: ## Run go vet.
 
 ##@ Maintenance
 
+.PHONY: setup-githooks
+setup-githooks: ## Enable hack/git hooks and commit template for this clone.
+	git config core.hooksPath hack/git/hooks
+	git config commit.template hack/git/commit-template
+
 clean: ## Remove build artifacts.
 	rm -f $(BINARY)
 	rm -rf ui/apps/wizard/dist

@@ -106,10 +106,12 @@ Each run is represented by a `TaskRun` object:
 ## Development
 
 ```bash
-make build    # compile binary
-make test     # run tests
-make lint     # go vet
-make tidy     # go mod tidy
+make setup-githooks   # one-time: commit template + Assisted-by hook (hack/git/)
+make build            # compile binary
+make test             # run tests
+make lint             # go vet
+make tidy             # go mod tidy
 ```
 
-See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for the full developer guide.
+See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for the full developer guide
+(including commit message format and git hook details).

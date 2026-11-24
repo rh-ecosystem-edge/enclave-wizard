@@ -9,6 +9,32 @@
 | Podman (or Docker) | latest | Used for UI builds, RPM packaging, and container-based cross-compilation |
 | make | any | GNU Make |
 
+### Git hooks and commit template
+
+One-time per clone:
+
+```bash
+make setup-githooks
+```
+
+This configures:
+
+| Setting | Value | Purpose |
+|---------|-------|---------|
+| `core.hooksPath` | `hack/git/hooks/` | `prepare-commit-msg` appends `Assisted-by:` when missing |
+| `commit.template` | `hack/git/commit-template` | Subject / Why / Notes skeleton for editor commits |
+
+Fill [`hack/git/commit-template`](../hack/git/commit-template) (Subject + Why required;
+Notes optional). Prefer `git commit -F <file>` after editing a copy of the template.
+Bare `git commit -m "..."` skips the template.
+
+Override the Assisted-by name with `ASSISTED_BY` (or `GIT_ASSISTED_BY`) if
+auto-detection is wrong:
+
+```bash
+ASSISTED_BY='Cursor' git commit -F /tmp/commitmsg
+```
+
 ## Project Structure
 
 ```
@@ -30,7 +56,7 @@ enclave-wizard/
       e2e/                         # Playwright browser tests
     packages/api-client/           # Generated TypeScript API client
   enclave-mock/                    # Fake enclave directory for local dev
-  hack/                            # Scripts: deploy, RPM, e2e, infra
+  hack/                            # Scripts: deploy, RPM, e2e, infra, git hooks/template
 ```
 
 ## Running Locally
