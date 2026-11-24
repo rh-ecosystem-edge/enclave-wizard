@@ -29,22 +29,22 @@ build:
 
 test:
 	$(CONTAINER_RUNTIME) run --rm \
-		-v $(PWD):/app:z -w /app node:22-alpine \
+		-v $(PWD):/app:z -w /app node:24-alpine \
 		sh -c "corepack enable && yarn install && yarn workspace @enclave-wizard-ui/wizard test"
 
 test-watch:
 	$(CONTAINER_RUNTIME) run --rm -it \
-		-v $(PWD):/app:z -w /app node:22-alpine \
+		-v $(PWD):/app:z -w /app node:24-alpine \
 		sh -c "corepack enable && yarn install && yarn workspace @enclave-wizard-ui/wizard test --watch"
 
 check:
 	$(CONTAINER_RUNTIME) run --rm \
-		-v $(PWD):/app:z -w /app node:22-alpine \
+		-v $(PWD):/app:z -w /app node:24-alpine \
 		sh -c "corepack enable && yarn install && yarn check:all"
 
 check-fix:
 	$(CONTAINER_RUNTIME) run --rm \
-		-v $(PWD):/app:z -w /app node:22-alpine \
+		-v $(PWD):/app:z -w /app node:24-alpine \
 		sh -c "corepack enable && yarn install && yarn check:fix:all"
 
 openapi-generator-cli:

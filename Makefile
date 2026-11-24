@@ -18,7 +18,7 @@ help: ## Display this help.
 ##@ Build
 
 build-ui: ## Build the frontend (Vite).
-	$(CONTAINER_RUNTIME) run --rm -v $(PWD)/ui:/app:z -w /app node:22-alpine \
+	$(CONTAINER_RUNTIME) run --rm -v $(PWD)/ui:/app:z -w /app node:24-alpine \
 		sh -c "corepack enable && yarn install && \
 		yarn workspace @enclave-wizard-ui/wizard run -T vite build"
 
@@ -49,8 +49,8 @@ preview: build-ui
 test: ## Run all Go tests with coverage.
 	$(GO) test -cover ./...
 
-lint: ## Run go vet.
-	$(GO) vet ./...
+lint: ## Run golangci-lint.
+	golangci-lint run ./...
 
 ##@ Maintenance
 

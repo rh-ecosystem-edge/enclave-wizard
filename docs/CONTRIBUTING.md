@@ -4,8 +4,9 @@
 
 | Tool | Version | Notes |
 |------|---------|-------|
-| Go | 1.22+ | `go version` |
-| Node | 22 | **Not installed on host** — use `distrobox enter osac` for all Node/yarn/tsc commands |
+| Go | 1.25+ | Match `go.mod` (`go version`) |
+| Node | 24 | **Not installed on host** — use `distrobox enter osac` for all Node/yarn/tsc commands |
+| golangci-lint | v2.x | Used by `make lint` and PR CI |
 | Podman (or Docker) | latest | Used for UI builds, RPM packaging, and container-based cross-compilation |
 | make | any | GNU Make |
 
@@ -88,6 +89,33 @@ make run
 
 Builds the UI and Go binary, runs against `../enclave`. Requires a real enclave directory with schemas, playbooks, and config.
 
+## Continuous Integration
+
+See [ADR-001](decisions/ADR-001-github-actions-ci.md). Summary:
+
+| Workflow | When | What |
+|----------|------|------|
+| `.github/workflows/pr.yml` | Pull request to `main` | Path-aware UI and/or Go quality; docs-only skips stack jobs |
+| `.github/workflows/release.yml` | GitHub Release / manual | Stub only (full release pipeline TBD) |
+
+Require the **`ci`** check in branch protection (aggregator over path-skipped jobs).
+
+### Local commands that match PR CI
+
+```bash
+# Go
+make lint    # golangci-lint
+make test
+go build -o enclave-wizard .   # needs ui/apps/wizard/dist (or run make build-ui first)
+
+# UI (distrobox / Node 24)
+cd ui
+yarn install
+yarn check:all                 # Biome; excludes packages/api-client (generated)
+yarn build:all                 # build + typecheck
+yarn workspace @enclave-wizard-ui/wizard test
+```
+
 ## Running Tests
 
 ### Go unit tests
@@ -96,6 +124,13 @@ Builds the UI and Go binary, runs against `../enclave`. Requires a real enclave 
 make test
 # or
 go test ./...
+```
+
+### Go lint
+
+```bash
+make lint
+# requires golangci-lint: https://golangci-lint.run/welcome/install/
 ```
 
 ### UI unit tests
@@ -177,3 +212,4 @@ the index only points at it.
 - [Deployment](deployment.md) — RPM packaging and remote deployment
 - [Testing patterns](enclave-testing-patterns.md) — test strategy and patterns
 - [Recording deployments](recording-deployment.md) — recording ansible-runner output for demo mode
+- [ADR-001: GitHub Actions CI](decisions/ADR-001-github-actions-ci.md) — PR and release workflow decisions

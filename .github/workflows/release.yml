@@ -1,0 +1,22 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Run only on the canonical repo so forks stay idle for contributors.
+jobs:
+  release:
+    name: release
+    if: github.repository == 'rh-ecosystem-edge/enclave-wizard'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release pipeline TBD
+        run: |
+          echo "Release pipeline is not implemented yet."
+          echo "Planned: full BE+FE build, e2e tests, distributable artifacts."
+          echo "See docs/decisions/ADR-001-github-actions-ci.md"
