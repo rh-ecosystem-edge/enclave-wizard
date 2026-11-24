@@ -1,5 +1,7 @@
 import { useRef } from "react";
 
+let nextRowKey = 0;
+
 /**
  * React keys for rows that are added and removed by position.
  * The keys are not written to the saved configuration.
@@ -19,7 +21,7 @@ export function useRowKeys(length: number): {
   if (keys.length < length) {
     keys = keys.slice();
     while (keys.length < length) {
-      keys.push(crypto.randomUUID());
+      keys.push(`row-${nextRowKey++}`);
     }
     keysRef.current = keys;
   } else if (keys.length > length) {
