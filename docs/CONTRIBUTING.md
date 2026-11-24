@@ -4,9 +4,9 @@
 
 | Tool | Version | Notes |
 |------|---------|-------|
-| Go | 1.25+ | Match `go.mod` (`go version`) |
+| Go | 1.25+ | Match `go.mod` (`go version`). Newer host toolchains are fine; Go may download the module toolchain via `GOTOOLCHAIN=auto` |
 | Node | 24 | **Not installed on host** — use `distrobox enter osac` for all Node/yarn/tsc commands |
-| golangci-lint | v2.x | Used by `make lint` and PR CI |
+| golangci-lint | v2.13.x | Same pin as PR CI; install with `make lint-install` |
 | Podman (or Docker) | latest | Used for UI builds, RPM packaging, and container-based cross-compilation |
 | make | any | GNU Make |
 
@@ -98,13 +98,16 @@ See [ADR-001](decisions/ADR-001-github-actions-ci.md). Summary:
 | `.github/workflows/pr.yml` | Pull request to `main` | Path-aware UI and/or Go quality; docs-only skips stack jobs |
 | `.github/workflows/release.yml` | GitHub Release / manual | Stub only (full release pipeline TBD) |
 
-Require the **`ci`** check in branch protection (aggregator over path-skipped jobs).
+After this workflow is on `main`, require the **`ci`** status check on the `main` ruleset (aggregator over path-skipped jobs). Do not require `ui`/`go` individually.
+
+Fork PRs that introduce new workflows may need a maintainer to **Approve and run workflows** once before Actions appear.
 
 ### Local commands that match PR CI
 
 ```bash
 # Go
-make lint    # golangci-lint
+make lint-install              # once: golangci-lint v2.13.x into $(go env GOPATH)/bin
+make lint
 make test
 go build -o enclave-wizard .   # needs ui/apps/wizard/dist (or run make build-ui first)
 
@@ -129,8 +132,8 @@ go test ./...
 ### Go lint
 
 ```bash
+make lint-install   # once, pins v2.13.x to match .github/workflows/pr.yml
 make lint
-# requires golangci-lint: https://golangci-lint.run/welcome/install/
 ```
 
 ### UI unit tests

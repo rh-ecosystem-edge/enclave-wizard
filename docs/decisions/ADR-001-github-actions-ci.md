@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-The repository had no GitHub Actions workflows. Contributors merge to `main` through pull requests, and branch protection on `main` is already configured. The project is a full-stack app (Go API + React UI under `ui/`). Quality commands differ by stack. We need a minimal CI setup that:
+The repository had no GitHub Actions workflows. Contributors merge to `main` through pull requests. A repository ruleset already guards `main` (reviews, signatures, linear history); requiring the new `ci` status check is a follow-up after this workflow lands. The project is a full-stack app (Go API + React UI under `ui/`). Quality commands differ by stack. We need a minimal CI setup that:
 
 - Gives a clear green/red signal on PRs
 - Avoids a heavy pipeline (no e2e, RPM, or deploy in PR CI)
@@ -37,16 +37,16 @@ No dedicated workflow on push to `main`. Quality is enforced on the PR; merge-to
 ### Tooling
 
 - **Node:** project standard is **Node 24** (CI `setup-node`, container images, `engines` in `ui/package.json`).
-- **UI:** `yarn check:all` runs Biome from the `ui/` root. [`ui/biome.json`](../../ui/biome.json) excludes `packages/api-client/**` on purpose (generated OpenAPI client). Build via `yarn build:all`; unit tests via the wizard workspace.
-- **Go:** **golangci-lint** (`.golangci.yml`, `make lint`) plus `make test` and `go build` via `setup-go` (version from `go.mod`).
+- **UI:** `yarn check:all` runs Biome from the `ui/` root. [`ui/biome.json`](../../ui/biome.json) excludes `packages/api-client/**` on purpose (generated OpenAPI client). Build via `yarn build:all` (standalone `typecheck` is folded into that build via `tsc -b`); unit tests via the wizard workspace.
+- **Go:** **golangci-lint** v2.13.x (`.golangci.yml`, `make lint` / `make lint-install`) plus `make test` and `go build` via `setup-go` (version from `go.mod`).
 
 ### Go embed note
 
 `main.go` embeds `ui/apps/wizard/dist`. A Go-only CI job must ensure that directory exists (minimal stub file is enough) so `go build` succeeds without a full UI build.
 
-### Branch protection
+### Required status check (post-merge)
 
-Prefer requiring the aggregator job name **`ci`** so docs-only PRs and path-skipped stack jobs do not block merges incorrectly.
+After this workflow exists on `main`, add a required status check for the aggregator job name **`ci`** on the `main` ruleset so docs-only PRs and path-skipped stack jobs do not block merges incorrectly. Do not require `ui`/`go` individually.
 
 ### Fork guard
 
@@ -57,7 +57,7 @@ Every job is gated with `github.repository == 'rh-ecosystem-edge/enclave-wizard'
 ### Three workflows (`pr.yml`, `main.yml`, `release.yml`)
 
 - Pros: Explicit “build on merge to main”
-- Cons: Extra workflow to maintain; PR already gates quality; branch protection already requires PR checks
+- Cons: Extra workflow to maintain; PR already gates quality; ruleset can require the PR `ci` check after merge
 - Rejected: Two files only; no merge-to-main build workflow
 
 ### Always run full-stack CI on every PR

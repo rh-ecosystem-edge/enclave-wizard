@@ -1,6 +1,8 @@
 BINARY := enclave-wizard
 GO := go
 CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
+# Keep in sync with .github/workflows/pr.yml (golangci-lint-action version).
+GOLANGCI_LINT_VERSION ?= v2.13.2
 WIZARD_VERSION ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo dev)
 # Also used as the git ref (branch, tag, or commit SHA) to clone for deployment — see `make enclave-tarball`.
 ENCLAVE_VERSION ?= $(shell git -C ../enclave rev-parse --short HEAD 2>/dev/null || echo main)
@@ -13,7 +15,7 @@ LDFLAGS := -w -s -X main.wizardVersion=$(WIZARD_VERSION) -X main.enclaveVersion=
 help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9\/-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-.PHONY: build build-linux build-ui run test lint clean tidy deploy teardown generate generate-schema enclave-mock clean-enclave-mock run-mock preview deploy-preview bm-emulation bm-emulation-config bm-teardown test-config demo-build demo-start demo-stop demo-restart demo dev-ui
+.PHONY: build build-linux build-ui run test lint lint-install clean tidy deploy teardown generate generate-schema enclave-mock clean-enclave-mock run-mock preview deploy-preview bm-emulation bm-emulation-config bm-teardown test-config demo-build demo-start demo-stop demo-restart demo dev-ui
 
 ##@ Build
 
@@ -51,6 +53,9 @@ test: ## Run all Go tests with coverage.
 
 lint: ## Run golangci-lint.
 	golangci-lint run ./...
+
+lint-install: ## Install golangci-lint (version matches PR CI).
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $$(go env GOPATH)/bin $(GOLANGCI_LINT_VERSION)
 
 ##@ Maintenance
 

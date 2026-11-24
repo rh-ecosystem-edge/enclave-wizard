@@ -5,6 +5,12 @@ on:
     types: [published]
   workflow_dispatch:
 
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Stub only today. A real release pipeline will likely need contents: write
+# (and possibly id-token) in addition to contents: read.
 permissions:
   contents: read
 
@@ -14,6 +20,7 @@ jobs:
     name: release
     if: github.repository == 'rh-ecosystem-edge/enclave-wizard'
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Release pipeline TBD
         run: |

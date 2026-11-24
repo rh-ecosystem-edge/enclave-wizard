@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: pr-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   pull-requests: read
@@ -17,6 +21,7 @@ jobs:
     name: detect-changes
     if: github.repository == 'rh-ecosystem-edge/enclave-wizard'
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       ui: ${{ steps.filter.outputs.ui }}
       go: ${{ steps.filter.outputs.go }}
@@ -48,6 +53,7 @@ jobs:
       github.repository == 'rh-ecosystem-edge/enclave-wizard' &&
       (needs.changes.outputs.ui == 'true' || needs.changes.outputs.shared == 'true')
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: ui
@@ -77,11 +83,13 @@ jobs:
       github.repository == 'rh-ecosystem-edge/enclave-wizard' &&
       (needs.changes.outputs.go == 'true' || needs.changes.outputs.shared == 'true')
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+          cache: true
       # main.go embeds ui/apps/wizard/dist; create a stub before any go compile.
       - name: Stub UI dist for go:embed
         run: |
@@ -102,6 +110,7 @@ jobs:
     needs: [changes, ui, go]
     if: always() && github.repository == 'rh-ecosystem-edge/enclave-wizard'
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Require successful or skipped stack jobs
         run: |
