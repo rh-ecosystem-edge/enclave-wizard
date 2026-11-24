@@ -36,10 +36,11 @@ file (default path: `/etc/enclave-wizard/password`).
 | The password file is missing or empty | The server creates a random 16-character password, stores its bcrypt hash, and prints the plaintext password once. |
 
 On first generation, the server also writes the plaintext password to
-`/tmp/enclave-wizard-init-pass` with mode `0600` (owner read/write only).
-Deployment scripts and end-to-end (E2E) tests can read that file only if they
-run as the same user as the wizard process (or as root). Treat it as a
-temporary secret.
+`/tmp/enclave-wizard-init-pass`. That file is created with mode `0644`, so
+other local users on the host can read it until you remove it or change the
+admin password. Treat it as a temporary secret. Deployment scripts and
+end-to-end (E2E) tests that read it should run as the wizard process user or
+as root when the file mode is tightened later.
 
 The UI requires you to change the initial password on first successful login.
 Until you change it, the UI keeps you on the login flow and opens the
