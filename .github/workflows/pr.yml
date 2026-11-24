@@ -82,16 +82,17 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+      # main.go embeds ui/apps/wizard/dist; create a stub before any go compile.
+      - name: Stub UI dist for go:embed
+        run: |
+          mkdir -p ui/apps/wizard/dist
+          printf '%s\n' '<!DOCTYPE html><html></html>' > ui/apps/wizard/dist/index.html
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
           version: v2.13
       - name: Unit tests
         run: make test
-      - name: Stub UI dist for go:embed
-        run: |
-          mkdir -p ui/apps/wizard/dist
-          printf '%s\n' '<!DOCTYPE html><html></html>' > ui/apps/wizard/dist/index.html
       - name: Build
         run: go build -o enclave-wizard .
 
