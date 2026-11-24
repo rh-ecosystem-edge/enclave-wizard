@@ -6,6 +6,7 @@ Docs are split by audience.
 
 | Doc | Audience |
 |-----|----------|
+| [Authentication](authentication.md) | Operators and contributors who change auth |
 | [Deployment](deployment.md) | Operators who install or deploy the wizard |
 | [Enclave config reference](enclave-config.md) | Operators who edit Enclave config |
 | [OSAC configuration](osac-configuration.md) | Operators who configure OSAC |
