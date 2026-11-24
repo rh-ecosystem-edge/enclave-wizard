@@ -39,10 +39,13 @@ jobs:
               - 'go.mod'
               - 'go.sum'
               - 'enclave-mock/**'
+            # Workflow YAML alone does not force go/ui. A release.yml stub
+            # edit (or other .github-only change) should stay docs-like and
+            # skip stack jobs. Touch Makefile / .golangci.yml / hack / Containerfile
+            # when a change should re-validate both stacks.
             shared:
               - 'Makefile'
               - '.golangci.yml'
-              - '.github/**'
               - 'hack/**'
               - 'Containerfile'
 

@@ -29,8 +29,14 @@ Use **two** GitHub Actions workflows only:
 |------------|------|
 | `ui/**` only | UI: Biome lint, build (includes typecheck), unit tests (host Node 24 + yarn) |
 | Go source (`*.go`, `go.mod` / `go.sum`, `enclave-mock/**`) | Go: golangci-lint, `make test`, Go build |
-| Shared/root (`Makefile`, `.golangci.yml`, `.github/**`, `hack/**`, `Containerfile`) | Both job sets |
+| Shared/root (`Makefile`, `.golangci.yml`, `hack/**`, `Containerfile`) | Both job sets |
+| `.github/**` only (including `release.yml` / `pr.yml`) | Skip stack CI (`ci` aggregator still succeeds) |
 | `docs/**` only | Skip stack CI (`ci` aggregator still succeeds) |
+
+Workflow YAML alone does not force `go`/`ui`. The release stub and path-filter
+edits are not product-code changes. To re-validate both stacks after a CI
+workflow change, also touch a shared path (for example `Makefile`) or open a
+follow-up that changes Go/UI sources.
 
 No dedicated workflow on push to `main`. Quality is enforced on the PR; merge-to-main does not re-run quality or a separate build workflow.
 
