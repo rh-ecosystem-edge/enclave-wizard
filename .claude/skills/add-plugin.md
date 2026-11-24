@@ -61,4 +61,4 @@ make dev
 # Check GET /api/v1/plugins — plugin should appear
 ```
 
-See `docs/howto-add-plugin.md` for the full guide.
+See `docs/contributing/how-to/add-plugin.md` for the full guide.

@@ -76,4 +76,4 @@ make test
 curl -sk https://localhost:3443/api/v1/my-resource/test
 ```
 
-See `docs/howto-add-api-endpoint.md` for the full guide.
+See `docs/contributing/how-to/add-api-endpoint.md` for the full guide.

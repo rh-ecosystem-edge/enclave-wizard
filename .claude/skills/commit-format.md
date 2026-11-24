@@ -71,5 +71,5 @@ NO-ISSUE: (docs) Clarify agent instruction layout
 
 Keep shared agent rules in AGENTS.md and leave personal skills local.
 
-- Document When → Use index in CONTRIBUTING.md
+- Document When → Use index in docs/contributing/README.md
 ```

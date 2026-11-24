@@ -43,7 +43,7 @@ No dedicated workflow on push to `main`. Quality is enforced on the PR; merge-to
 ### Tooling
 
 - **Node:** project standard is **Node 24** (CI `setup-node`, container images, `engines` in `ui/package.json`).
-- **UI:** `yarn check:all` runs Biome from the `ui/` root. [`ui/biome.json`](../../ui/biome.json) excludes `packages/api-client/**` on purpose (generated OpenAPI client). Build via `yarn build:all` (standalone `typecheck` is folded into that build via `tsc -b`); unit tests via the wizard workspace.
+- **UI:** `yarn check:all` runs Biome from the `ui/` root. [`ui/biome.json`](../../../ui/biome.json) excludes `packages/api-client/**` on purpose (generated OpenAPI client). Build via `yarn build:all` (standalone `typecheck` is folded into that build via `tsc -b`); unit tests via the wizard workspace.
 - **Go:** **golangci-lint** v2.13.2 (`.golangci.yml`, `make lint` / `make lint-install`) plus `make test` and `go build` via `setup-go` (version from `go.mod`).
 
 ### Go embed note
