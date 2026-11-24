@@ -218,6 +218,7 @@ the index only points at it.
 ## Operator / reference docs
 
 - [Documentation index](../README.md) — full docs map by audience
+- [Authentication](../authentication.md) — login, tokens, and API auth
 - [Enclave config reference](../enclave-config.md) — config file format and fields
 - [OSAC configuration](../osac-configuration.md) — OSAC-specific settings
 - [Deployment](../deployment.md) — RPM packaging and remote deployment
