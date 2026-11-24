@@ -1,12 +1,16 @@
-import { EnclaveConfigToJSON } from "@enclave-wizard-ui/api-client";
 import { describe, expect, it } from "vitest";
 import { buildFinalConfig } from "./buildFinalConfig.ts";
+import { toWireConfig } from "./toWireConfig.ts";
 
-// Simulates the full path: UI state -> buildFinalConfig -> EnclaveConfigToJSON -> wire JSON
+// Simulates the full path: UI state -> buildFinalConfig -> ToJSON -> wire JSON
 // This is what the PUT /api/v1/config endpoint receives.
 function buildWireConfig(configData: Record<string, unknown>) {
   const typed = buildFinalConfig({ configData });
-  return EnclaveConfigToJSON(typed);
+  return toWireConfig(typed) as {
+    global: Record<string, unknown> & {
+      agent_hosts?: Array<Record<string, unknown>>;
+    };
+  };
 }
 
 describe("buildFinalConfig", () => {
@@ -98,7 +102,7 @@ describe("buildFinalConfig", () => {
       certificates: {},
       cloudInfra: { discovery_hosts: [] },
     });
-    expect(wire.global.agent_hosts[0].bmcSystemId).toBe("abc-123-uuid");
+    expect(wire.global.agent_hosts?.[0]?.bmcSystemId).toBe("abc-123-uuid");
   });
 
   it("sets default workingDir when not provided", () => {

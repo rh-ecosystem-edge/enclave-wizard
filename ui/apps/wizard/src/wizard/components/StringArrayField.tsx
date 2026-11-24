@@ -7,6 +7,7 @@ import {
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 import type React from "react";
 import { stepStyles } from "../steps/stepStyles.ts";
+import { useRowKeys } from "./useRowKeys.ts";
 
 interface StringArrayFieldProps {
   label: string;
@@ -23,28 +24,37 @@ export const StringArrayField: React.FC<StringArrayFieldProps> = ({
   onChange,
   isRequired = false,
 }) => {
+  const { keys, removeAt } = useRowKeys(values.length);
+  const rows = values.map((value, index) => ({
+    key: keys[index] ?? "",
+    value,
+    index,
+  }));
+
   const addItem = () => onChange([...values, ""]);
 
-  const removeItem = (index: number) =>
+  const removeItem = (index: number) => {
+    removeAt(index);
     onChange(values.filter((_, i) => i !== index));
+  };
 
   const updateItem = (index: number, value: string) =>
     onChange(values.map((v, i) => (i === index ? value : v)));
 
   return (
     <FormGroup label={label} isRequired={isRequired} fieldId={`field-${label}`}>
-      {values.map((value, index) => (
-        <div key={`${label}-${index}`} className={stepStyles.arrayItemRow}>
+      {rows.map((row) => (
+        <div key={row.key} className={stepStyles.arrayItemRow}>
           <TextInput
-            id={`field-${label}-${index}`}
-            value={value}
-            onChange={(_e, v) => updateItem(index, v)}
-            aria-label={`${label} item ${index + 1}`}
+            id={`field-${label}-${row.index}`}
+            value={row.value}
+            onChange={(_e, v) => updateItem(row.index, v)}
+            aria-label={`${label} item ${row.index + 1}`}
           />
           <Button
             variant="plain"
-            aria-label={`Remove ${label} item ${index + 1}`}
-            onClick={() => removeItem(index)}
+            aria-label={`Remove ${label} item ${row.index + 1}`}
+            onClick={() => removeItem(row.index)}
           >
             <MinusCircleIcon />
           </Button>

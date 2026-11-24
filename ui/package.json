@@ -13,17 +13,20 @@
     "check:fix:all": "yarn workspaces foreach --all -p run check:fix",
     "test:all": "yarn workspaces foreach --all -p run test",
     "typecheck:all": "yarn workspaces foreach --all -p run typecheck",
-    "dev:stack": "concurrently -k -n api,ui -c blue,green \"make -C .. dev\" \"yarn workspace @enclave-wizard-ui/wizard start\""
+    "start": "concurrently -k -n api,ui -c blue,green \"make -C .. dev\" \"yarn workspace @enclave-wizard-ui/wizard start\""
   },
   "devDependencies": {
     "@biomejs/biome": "2.0.6",
     "@types/node": "^22.0.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react-swc": "~4.3.0",
+    "@vitejs/plugin-react": "~6.3.0",
     "concurrently": "^9.2.0",
     "typescript": "~5.7.0",
-    "vite": "~6.3.0"
+    "vite": "~8.3.8"
+  },
+  "resolutions": {
+    "vite": "~8.3.8"
   },
   "packageManager": "yarn@4.12.0"
 }

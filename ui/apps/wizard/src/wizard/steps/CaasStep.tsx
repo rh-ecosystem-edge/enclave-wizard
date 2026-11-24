@@ -14,6 +14,7 @@ import {
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 import type React from "react";
 import { type HostEntry, HostEntryCard } from "../components/HostEntryCard.tsx";
+import { useRowKeys } from "../components/useRowKeys.ts";
 import { isValidDnsZone } from "../dnsZone.ts";
 import { useWizard } from "../WizardContext.tsx";
 import { stepStyles } from "./stepStyles.ts";
@@ -54,10 +55,20 @@ export const CaasStep: React.FC = () => {
       value: hosts,
     });
 
+  const { keys: hostKeys, removeAt: removeHostKey } = useRowKeys(
+    discoveryHosts.length,
+  );
+  const hostRows = discoveryHosts.map((host, index) => ({
+    key: hostKeys[index] ?? "",
+    host,
+    index,
+  }));
+
   const dnsClassError = state.showValidation && !dnsClass.trim();
   const dnsZoneMissing = !dnsZone.trim();
   const dnsZoneInvalid = !dnsZoneMissing && !isValidDnsZone(dnsZone);
-  const dnsZoneError = state.showValidation && (dnsZoneMissing || dnsZoneInvalid);
+  const dnsZoneError =
+    state.showValidation && (dnsZoneMissing || dnsZoneInvalid);
 
   return (
     <Form>
@@ -134,10 +145,11 @@ export const CaasStep: React.FC = () => {
             Available Hosts ({discoveryHosts.length})
           </Title>
           <Content component="p">
-            Register bare metal machines that form the resource pool for CaaS. The
-            platform draws from this pool when provisioning managed clusters. Each
-            machine is enrolled via its BMC (Redfish/IPMI) interface. You can add
-            machines later through the management interface.
+            Register bare metal machines that form the resource pool for CaaS.
+            The platform draws from this pool when provisioning managed
+            clusters. Each machine is enrolled via its BMC (Redfish/IPMI)
+            interface. You can add machines later through the management
+            interface.
           </Content>
         </FlexItem>
         <FlexItem>
@@ -165,19 +177,19 @@ export const CaasStep: React.FC = () => {
         gap={{ default: "gapMd" }}
         className={stepStyles.hostSection}
       >
-        {discoveryHosts.map((host, i) => (
-          <FlexItem key={`discovery-${i}`}>
+        {hostRows.map((row) => (
+          <FlexItem key={row.key}>
             <Flex
               alignItems={{ default: "alignItemsFlexStart" }}
               gap={{ default: "gapSm" }}
             >
               <FlexItem grow={{ default: "grow" }}>
                 <HostEntryCard
-                  index={i}
-                  host={host}
+                  index={row.index}
+                  host={row.host}
                   onChange={(h) => {
                     const updated = [...discoveryHosts];
-                    updated[i] = h;
+                    updated[row.index] = h;
                     setDiscoveryHosts(updated);
                   }}
                   label="Host"
@@ -186,12 +198,13 @@ export const CaasStep: React.FC = () => {
               <FlexItem>
                 <Button
                   variant="plain"
-                  aria-label={`Remove host ${i + 1}`}
-                  onClick={() =>
+                  aria-label={`Remove host ${row.index + 1}`}
+                  onClick={() => {
+                    removeHostKey(row.index);
                     setDiscoveryHosts(
-                      discoveryHosts.filter((_, idx) => idx !== i),
-                    )
-                  }
+                      discoveryHosts.filter((_, idx) => idx !== row.index),
+                    );
+                  }}
                   className={stepStyles.removeButton}
                 >
                   <MinusCircleIcon />

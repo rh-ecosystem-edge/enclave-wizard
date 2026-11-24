@@ -8,6 +8,7 @@ import {
   FormSelectOption,
   Title,
 } from "@patternfly/react-core";
+import type { DropEvent } from "@patternfly/react-core/dist/esm/helpers/typeUtils.js";
 import type React from "react";
 import { useState } from "react";
 import { useFileUpload } from "../../api/useFileUpload.ts";
@@ -40,10 +41,7 @@ export const AAPStep: React.FC = () => {
   const setAAP = (field: string, value: unknown) =>
     onChange(`global.aapDefaults.${field}`, value);
 
-  const handleFileChange = async (
-    _event: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLElement>,
-    file: File,
-  ) => {
+  const handleFileChange = async (_event: DropEvent, file: File) => {
     setUploadFilename(file.name);
     try {
       const data = await upload(file, "plugins/aap");
@@ -79,7 +77,6 @@ export const AAPStep: React.FC = () => {
       >
         <FileUpload
           id="aap-subscription-file"
-          type="simple"
           browseButtonText="Upload"
           filename={
             uploadFilename ||

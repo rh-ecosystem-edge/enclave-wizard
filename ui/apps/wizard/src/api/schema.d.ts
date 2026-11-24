@@ -4,2675 +4,2675 @@
  */
 
 export interface paths {
-    "/api/v1/auth/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Authenticate and get a bearer token */
-        post: operations["login"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+  "/api/v1/auth/login": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/auth/mode": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Check authentication mode */
-        get: operations["authMode"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /** Authenticate and get a bearer token */
+    post: operations["login"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/auth/mode": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/auth/password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Change admin password */
-        post: operations["changePassword"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Check authentication mode */
+    get: operations["authMode"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/auth/password": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/config": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Load existing configuration
-         * @description Reads config/global.yaml, config/certificates.yaml, and config/cloud_infra.yaml from the Enclave directory and returns the merged configuration.
-         */
-        get: operations["get-config"];
-        /**
-         * Write configuration to disk
-         * @description Accepts wizard state, serializes to YAML, and writes to the Enclave config directory.
-         */
-        put: operations["write-config"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /** Change admin password */
+    post: operations["changePassword"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/config": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/config/certificates": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Load TLS certificates */
-        get: operations["get-config-certificates"];
-        /** Update TLS certificates */
-        put: operations["write-config-certificates"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Load existing configuration
+     * @description Reads config/global.yaml, config/certificates.yaml, and config/cloud_infra.yaml from the Enclave directory and returns the merged configuration.
+     */
+    get: operations["get-config"];
+    /**
+     * Write configuration to disk
+     * @description Accepts wizard state, serializes to YAML, and writes to the Enclave config directory.
+     */
+    put: operations["write-config"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/config/certificates": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/config/cluster": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Load Management cluster install configuration */
-        get: operations["get-config-cluster"];
-        /** Update Management cluster install configuration */
-        put: operations["write-config-cluster"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Load TLS certificates */
+    get: operations["get-config-certificates"];
+    /** Update TLS certificates */
+    put: operations["write-config-certificates"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/config/cluster": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/config/hosts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Load Discovery hosts (cloud infrastructure) */
-        get: operations["get-config-hosts"];
-        /** Update Discovery hosts (cloud infrastructure) */
-        put: operations["write-config-hosts"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Load Management cluster install configuration */
+    get: operations["get-config-cluster"];
+    /** Update Management cluster install configuration */
+    put: operations["write-config-cluster"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/config/hosts": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/config/lz": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Load Landing zone configuration */
-        get: operations["get-config-lz"];
-        /** Update Landing zone configuration */
-        put: operations["write-config-lz"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Load Discovery hosts (cloud infrastructure) */
+    get: operations["get-config-hosts"];
+    /** Update Discovery hosts (cloud infrastructure) */
+    put: operations["write-config-hosts"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/config/lz": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/config/network": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Load Host network configuration */
-        get: operations["get-config-network"];
-        /** Update Host network configuration */
-        put: operations["write-config-network"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Load Landing zone configuration */
+    get: operations["get-config-lz"];
+    /** Update Landing zone configuration */
+    put: operations["write-config-lz"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/config/network": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/config/plugins": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Load Enabled plugins configuration */
-        get: operations["get-config-plugins"];
-        /** Update Enabled plugins configuration */
-        put: operations["write-config-plugins"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Load Host network configuration */
+    get: operations["get-config-network"];
+    /** Update Host network configuration */
+    put: operations["write-config-network"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/config/plugins": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/config/preview": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Preview rendered YAML
-         * @description Returns the rendered YAML content for each config file without writing to disk.
-         */
-        post: operations["preview-config"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Load Enabled plugins configuration */
+    get: operations["get-config-plugins"];
+    /** Update Enabled plugins configuration */
+    put: operations["write-config-plugins"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/config/preview": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/config/quay": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Load Quay registry configuration */
-        get: operations["get-config-quay"];
-        /** Update Quay registry configuration */
-        put: operations["write-config-quay"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Preview rendered YAML
+     * @description Returns the rendered YAML content for each config file without writing to disk.
+     */
+    post: operations["preview-config"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/config/quay": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/config/storage": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Load Block storage configuration */
-        get: operations["get-config-storage"];
-        /** Update Block storage configuration */
-        put: operations["write-config-storage"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Load Quay registry configuration */
+    get: operations["get-config-quay"];
+    /** Update Quay registry configuration */
+    put: operations["write-config-quay"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/config/storage": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/config/validate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Validate configuration
-         * @description Validates the candidate configuration against Enclave JSON schemas and returns structured errors.
-         */
-        post: operations["validate-config"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Load Block storage configuration */
+    get: operations["get-config-storage"];
+    /** Update Block storage configuration */
+    put: operations["write-config-storage"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/config/validate": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/defaults": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get default configuration values
-         * @description Returns default values read from defaults/deployment.yaml and plugin definitions.
-         */
-        get: operations["get-defaults"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Validate configuration
+     * @description Validates the candidate configuration against Enclave JSON schemas and returns structured errors.
+     */
+    post: operations["validate-config"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/defaults": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/experiences": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List available experiences
-         * @description Returns experience definitions loaded from the enclave directory.
-         */
-        get: operations["list-experiences"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get default configuration values
+     * @description Returns default values read from defaults/deployment.yaml and plugin definitions.
+     */
+    get: operations["get-defaults"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/experiences": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/files": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Upload a file
-         * @description Upload a file to the enclave config directory. The file is written to config/<dest>/<filename>.
-         */
-        post: operations["upload-file"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * List available experiences
+     * @description Returns experience definitions loaded from the enclave directory.
+     */
+    get: operations["list-experiences"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/files": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/plugins": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List available plugins
-         * @description Returns all known plugins and their types.
-         */
-        get: operations["list-plugins"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Upload a file
+     * @description Upload a file to the enclave config directory. The file is written to config/<dest>/<filename>.
+     */
+    post: operations["upload-file"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/plugins": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/plugins/validate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Validate plugin combination
-         * @description Checks whether the given set of plugins forms a valid deployment combination.
-         */
-        post: operations["validate-plugin-combination"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * List available plugins
+     * @description Returns all known plugins and their types.
+     */
+    get: operations["list-plugins"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/plugins/validate": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/plugins/{name}/schema": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get plugin config schema
-         * @description Returns the JSON schema for the named plugin's configuration. Used by the frontend for dynamic form rendering.
-         */
-        get: operations["get-plugin-schema"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Validate plugin combination
+     * @description Checks whether the given set of plugins forms a valid deployment combination.
+     */
+    post: operations["validate-plugin-combination"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/plugins/{name}/schema": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/tasks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List all task runs
-         * @description Returns all known task runs, most recent first.
-         */
-        get: operations["list-tasks"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get plugin config schema
+     * @description Returns the JSON schema for the named plugin's configuration. Used by the frontend for dynamic form rendering.
+     */
+    get: operations["get-plugin-schema"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/tasks": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/tasks/deploy": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Start full deployment
-         * @description Runs the main.yaml playbook (all 7 phases).
-         */
-        post: operations["start-deploy"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * List all task runs
+     * @description Returns all known task runs, most recent first.
+     */
+    get: operations["list-tasks"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/tasks/deploy": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/tasks/deploy/{phase}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Start a specific deployment phase
-         * @description Runs a single deployment phase (1-7).
-         */
-        post: operations["start-deploy-phase"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Start full deployment
+     * @description Runs the main.yaml playbook (all 7 phases).
+     */
+    post: operations["start-deploy"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/tasks/deploy/{phase}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/tasks/plugins/{name}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Deploy a plugin
-         * @description Runs the deploy-plugin.yaml playbook for the named plugin.
-         */
-        post: operations["start-deploy-plugin"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Start a specific deployment phase
+     * @description Runs a single deployment phase (1-7).
+     */
+    post: operations["start-deploy-phase"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/tasks/plugins/{name}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/tasks/validate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Run operational validation (validations.sh)
-         * @description Runs the enclave operational validation script that checks DNS, Redfish, certificates, and registry connectivity.
-         */
-        post: operations["start-validate"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Deploy a plugin
+     * @description Runs the deploy-plugin.yaml playbook for the named plugin.
+     */
+    post: operations["start-deploy-plugin"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/tasks/validate": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/tasks/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get task run details
-         * @description Returns status and metadata for a specific run.
-         */
-        get: operations["get-task"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete a task run
-         * @description Removes the ansible-runner directory for the given run. Returns 409 if the task is still running.
-         */
-        delete: operations["delete-task"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Run operational validation (validations.sh)
+     * @description Runs the enclave operational validation script that checks DNS, Redfish, certificates, and registry connectivity.
+     */
+    post: operations["start-validate"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/tasks/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/tasks/{id}/events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get task job events
-         * @description Returns ansible-runner job events as a JSON array.
-         */
-        get: operations["get-task-events"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get task run details
+     * @description Returns status and metadata for a specific run.
+     */
+    get: operations["get-task"];
+    put?: never;
+    post?: never;
+    /**
+     * Delete a task run
+     * @description Removes the ansible-runner directory for the given run. Returns 409 if the task is still running.
+     */
+    delete: operations["delete-task"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/tasks/{id}/events": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/tasks/{id}/logs": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get task output logs
-         * @description Returns ansible-runner stdout as text/plain. Use the offset query parameter for incremental reads.
-         */
-        get: operations["get-task-logs"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get task job events
+     * @description Returns ansible-runner job events as a JSON array.
+     */
+    get: operations["get-task-events"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/tasks/{id}/logs": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/v1/version": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get wizard and enclave versions */
-        get: operations["getVersion"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get task output logs
+     * @description Returns ansible-runner stdout as text/plain. Use the offset query parameter for incremental reads.
+     */
+    get: operations["get-task-logs"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/version": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    /** Get wizard and enclave versions */
+    get: operations["getVersion"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        AAPConfig: {
-            /** @description Path to AAP license manifest.zip on the Landing Zone */
-            aapLicenseFile: string;
-            /** @description Disable the Automation Controller component */
-            aap_controller_disabled?: boolean;
-            /** @description Disable the Event-Driven Ansible component */
-            aap_eda_disabled?: boolean;
-            /** @description Disable the Automation Hub component */
-            aap_hub_disabled?: boolean;
-            /**
-             * @description Image pull policy for AAP pods
-             * @enum {string}
-             */
-            aap_image_pull_policy?: "Always" | "IfNotPresent" | "Never";
-            /** @description Name of the Kubernetes secret holding the AAP license */
-            aap_license_secret?: string;
-            /** @description Disable the Ansible Lightspeed component */
-            aap_lightspeed_disabled?: boolean;
-            /** @description Name of the AAP instance */
-            aap_name?: string;
-            /** @description Suppress sensitive log output */
-            aap_no_log?: boolean;
-            /** @description Namespace for the AAP deployment */
-            aap_ns?: string;
-            /**
-             * @description Redis deployment mode
-             * @enum {string}
-             */
-            aap_redis_mode?: "standalone" | "cluster";
-            /**
-             * @description TLS termination type for AAP routes
-             * @enum {string}
-             */
-            aap_route_tls_termination?: "Edge" | "Passthrough" | "Reencrypt";
-        };
-        AuthModeOutputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/AuthModeOutputBody.json
-             */
-            readonly $schema?: string;
-            /** @description True if authentication is disabled */
-            noAuth: boolean;
-        };
-        CertificatesConfig: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/CertificatesConfig.json
-             */
-            readonly $schema?: string;
-            /** @description PEM-encoded TLS cert for Ironic vmedia HTTPS */
-            ironicHTTPSCertificate?: string;
-            /** @description PEM-encoded private key for Ironic HTTPS cert */
-            ironicHTTPSKey?: string;
-            /** @description PEM-encoded full cert chain for API server */
-            sslAPICertificateFullChain?: string;
-            /** @description PEM-encoded private key for API server cert */
-            sslAPICertificateKey?: string;
-            /** @description PEM-encoded root CA certificate */
-            sslCACertificate?: string;
-            /** @description PEM-encoded full cert chain for ingress wildcard */
-            sslIngressCertificateFullChain?: string;
-            /** @description PEM-encoded private key for ingress cert */
-            sslIngressCertificateKey?: string;
-        };
-        ChangePasswordInputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/ChangePasswordInputBody.json
-             */
-            readonly $schema?: string;
-            /** @description Current password */
-            currentPassword: string;
-            /** @description New password (min 8 characters) */
-            newPassword: string;
-        };
-        ChangePasswordOutputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/ChangePasswordOutputBody.json
-             */
-            readonly $schema?: string;
-            /** @description New bearer token (previous tokens are invalidated) */
-            token: string;
-        };
-        CloudInfraConfig: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/CloudInfraConfig.json
-             */
-            readonly $schema?: string;
-            /** @description Worker nodes for hardware discovery */
-            discovery_hosts: components["schemas"]["HostEntry"][] | null;
-        };
-        ClusterConfig: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/ClusterConfig.json
-             */
-            readonly $schema?: string;
-            /** @description Control plane nodes (exactly 3) */
-            agent_hosts: components["schemas"]["HostEntry"][] | null;
-            /** @description Virtual IP for Kubernetes API server */
-            apiVIP: string;
-            /** @description Base DNS domain for the cluster */
-            baseDomain: string;
-            /** @description OpenShift cluster name */
-            clusterName: string;
-            /** @description Additional NTP server addresses */
-            defaultNtpServers?: string[] | null;
-            /** @description Enable TPM v2 disk encryption */
-            diskEncryption?: boolean;
-            /** @description Virtual IP for ingress wildcard */
-            ingressVIP: string;
-            /** @description Network CIDR for cluster nodes */
-            machineNetwork: string;
-            /**
-             * Format: int64
-             * @description Maximum pods per node (default: 500)
-             */
-            masterMaxPods?: number;
-            /** @description OpenShift pull secret object */
-            pullSecret: unknown;
-            /** @description IP of first control-plane node */
-            rendezvousIP: string;
-            /** @description SSH public key content (e.g. ssh-rsa AAAA...) */
-            sshPubKey?: string;
-        };
-        Defaults: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/Defaults.json
-             */
-            readonly $schema?: string;
-            disconnected: boolean;
-            diskEncryption: boolean;
-            /** Format: int64 */
-            masterMaxPods: number;
-            ocMirrorLogLevel: string;
-            pluginDefaults?: {
-                [key: string]: unknown;
-            };
-            storagePlugin: string;
-        };
-        EnclaveConfig: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/EnclaveConfig.json
-             */
-            readonly $schema?: string;
-            /** @description TLS certificates (certificates.yaml) */
-            certificates: components["schemas"]["CertificatesConfig"];
-            /** @description Cloud infrastructure / discovery hosts (cloud_infra.yaml) */
-            cloudInfra: components["schemas"]["CloudInfraConfig"];
-            /** @description Primary cluster configuration (global.yaml) */
-            global: components["schemas"]["GlobalConfig"];
-        };
-        ErrorDetail: {
-            /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
-            location?: string;
-            /** @description Error message text */
-            message?: string;
-            /** @description The value at the given location */
-            value?: unknown;
-        };
-        ErrorModel: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/ErrorModel.json
-             */
-            readonly $schema?: string;
-            /**
-             * @description A human-readable explanation specific to this occurrence of the problem.
-             * @example Property foo is required but is missing.
-             */
-            detail?: string;
-            /** @description Optional list of individual error details */
-            errors?: components["schemas"]["ErrorDetail"][] | null;
-            /**
-             * Format: uri
-             * @description A URI reference that identifies the specific occurrence of the problem.
-             * @example https://example.com/error-log/abc123
-             */
-            instance?: string;
-            /**
-             * Format: int64
-             * @description HTTP status code
-             * @example 400
-             */
-            status?: number;
-            /**
-             * @description A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
-             * @example Bad Request
-             */
-            title?: string;
-            /**
-             * Format: uri
-             * @description A URI reference to human-readable documentation for the error.
-             * @default about:blank
-             * @example https://example.com/errors/example
-             */
-            type: string;
-        };
-        Experience: {
-            description: string;
-            id: string;
-            name: string;
-            plugins: components["schemas"]["ExperiencePlugin"][] | null;
-        };
-        ExperiencePlugin: {
-            name: string;
-            /** Format: int64 */
-            order?: number;
-        };
-        ExperiencesOutputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/ExperiencesOutputBody.json
-             */
-            readonly $schema?: string;
-            /** @description Available experience definitions */
-            experiences: components["schemas"]["Experience"][] | null;
-        };
-        FileUploadOutputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/FileUploadOutputBody.json
-             */
-            readonly $schema?: string;
-            /** @description Absolute path where the file was written */
-            path: string;
-        };
-        GlobalConfig: {
-            /** @description AAP deployment configuration */
-            aapDefaults?: components["schemas"]["AAPConfig"];
-            /** @description Control plane nodes (exactly 3) */
-            agent_hosts: components["schemas"]["HostEntry"][] | null;
-            /** @description Virtual IP for Kubernetes API server */
-            apiVIP: string;
-            /** @description Base DNS domain for the cluster */
-            baseDomain: string;
-            /** @description Cluster fulfillment configuration (passed through to osac-installer Helm values) */
-            clusterFulfillmentConfig?: {
-                [key: string]: string;
-            };
-            /** @description OpenShift cluster name */
-            clusterName: string;
-            /** @description DNS server IP for cluster nodes */
-            defaultDNS: string;
-            /** @description Default gateway IP for cluster nodes */
-            defaultGateway: string;
-            /** @description Additional NTP server addresses */
-            defaultNtpServers?: string[] | null;
-            /**
-             * Format: int64
-             * @description Subnet prefix length
-             */
-            defaultPrefix: number;
-            /** @description Air-gapped deployment mode */
-            disconnected: boolean | null;
-            /** @description Enable TPM v2 disk encryption */
-            diskEncryption?: boolean;
-            /** @description Plugins to deploy */
-            enabled_plugins: string[] | null;
-            /** @description Virtual IP for ingress wildcard */
-            ingressVIP: string;
-            /** @description LVMS device selector configuration */
-            lvmsConfig?: components["schemas"]["LVMSStorageConfig"];
-            /** @description DNS hostname for landing zone BMC interface */
-            lzBmcHostname?: string;
-            /** @description Landing zone BMC IP for boot ISO serving */
-            lzBmcIP: string;
-            /** @description Network CIDR for cluster nodes */
-            machineNetwork: string;
-            /**
-             * Format: int64
-             * @description Maximum pods per node (default: 500)
-             */
-            masterMaxPods?: number;
-            /**
-             * @description oc-mirror log level
-             * @enum {string}
-             */
-            ocMirrorLogLevel?: "trace" | "debug" | "info" | "error";
-            /** @description ODF deployment configuration */
-            odfDefaults?: components["schemas"]["ODFConfig"];
-            /** @description ODF external Ceph cluster config JSON (required when storage_plugin is odf) */
-            odfExternalConfig?: string;
-            /** @description Path to AAP license manifest.zip on the landing zone */
-            osacAapLicenseFile?: string;
-            /** @description Use external PostgreSQL instead of built-in */
-            osacBYODatabase?: boolean;
-            /** @description Namespace where BareMetalHost CRs are created for Metal3 power management */
-            osacBcmBmhNamespace?: string;
-            /** @description PEM-encoded CA certificate for verifying BCM server cert (optional) */
-            osacBcmCaCert?: string;
-            /** @description PEM-encoded client certificate for BCM mTLS authentication */
-            osacBcmCert?: string;
-            /** @description Enable BCM inventory backend for bare metal fulfillment */
-            osacBcmEnabled?: boolean;
-            /** @description Host class identifier for BCM inventory (default: bcm) */
-            osacBcmHostClass?: string;
-            /** @description Skip TLS verification of BCM server certificate (test environments only) */
-            osacBcmInsecureSkipVerify?: boolean;
-            /** @description PEM-encoded client private key for BCM mTLS authentication */
-            osacBcmKey?: string;
-            /** @description BCM head node API endpoint (e.g. https://bcm-head:8081) */
-            osacBcmUrl?: string;
-            /** @description PostgreSQL connection URL when using BYO database */
-            osacDatabaseUrl?: string;
-            /**
-             * @description Fully-qualified Ansible role name of the DNS driver
-             * @enum {string}
-             */
-            osacDnsClass?: "dns.route53.dns";
-            /** @description DNS zone to operate in (defaults to EXTERNAL_ACCESS_BASE_DOMAIN) */
-            osacDnsZone?: string;
-            osacNetworking?: components["schemas"]["OsacNetworkingConfig"];
-            /** @description Enable Metal3 inventory backend for bare metal fulfillment */
-            osacMetal3Enabled?: boolean;
-            /** @description Host class identifier for Metal3 inventory (default: metal3) */
-            osacMetal3HostClass?: string;
-            /** @description Namespace where BareMetalHost CRs are located */
-            osacMetal3Namespace?: string;
-            /**
-             * @description OSAC deployment profile
-             * @enum {string}
-             */
-            osacProfile?: "development" | "caas" | "vmaas" | "bmaas";
-            /** @description List of enabled service profiles: vmaas, caas, bmaas */
-            osacProfilesList?: string[] | null;
-            /** @description OpenShift pull secret object */
-            pullSecret: unknown;
-            /**
-             * @description Quay image storage backend
-             * @enum {string}
-             */
-            quayBackend: "RadosGWStorage" | "LocalStorage";
-            /** @description RadosGW/S3 backend config (required when quayBackend is RadosGWStorage) */
-            quayBackendRGWConfiguration?: components["schemas"]["QuayBackendRGWConfiguration"];
-            /** @description Admin password for Quay registry */
-            quayPassword: string;
-            /** @description Admin username for Quay registry */
-            quayUser: string;
-            /** @description IP of first control-plane node */
-            rendezvousIP: string;
-            /** @description PVC size for Keycloak PostgreSQL */
-            rhbk_db_size?: string;
-            /** @description Deploy PostgreSQL alongside Keycloak */
-            rhbk_deploy_database?: boolean;
-            /**
-             * Format: int64
-             * @description Number of Keycloak replicas
-             */
-            rhbk_instances?: number;
-            /** @description SSH public key content (e.g. ssh-rsa AAAA...) */
-            sshPubKey?: string;
-            /**
-             * @description Storage plugin
-             * @enum {string}
-             */
-            storage_plugin: "lvms" | "odf" | "vast-csi";
-            /** @description Trust-manager CA issuer configuration */
-            trustManagerDefaults?: components["schemas"]["TrustManagerConfig"];
-            /** @description VAST management API password */
-            vastAdminPassword?: string;
-            /** @description VAST management API username */
-            vastAdminUsername?: string;
-            /** @description VAST CSI deployment defaults */
-            vastDefaults?: components["schemas"]["VASTConfig"];
-            /** @description VAST management endpoint URL (required when storage_plugin is vast-csi) */
-            vastEndpoint?: string;
-            /** @description VIP pool configuration for CSI traffic (required when storage_plugin is vast-csi) */
-            vastVipPool?: components["schemas"]["VASTVipPool"];
-            /** @description Absolute path to root working directory */
-            workingDir: string;
-        };
-        HostEntry: {
-            /** @description Redfish system ID path component (default: 1) */
-            bmcSystemId?: string;
-            /** @description Node IPv4 address within machineNetwork */
-            ipAddress: string;
-            /** @description MAC address (xx:xx:xx:xx:xx:xx) */
-            macAddress: string;
-            /** @description Interface mapping for complex topologies */
-            mapInterfaces?: unknown;
-            /** @description Node name label */
-            name: string;
-            /** @description NMState network configuration for multi-NIC/VLAN */
-            networkConfig?: unknown;
-            /** @description Redfish/IPMI management IP */
-            redfish: string;
-            /** @description Redfish password */
-            redfishPassword: string;
-            /** @description Redfish username */
-            redfishUser: string;
-            /** @description Root disk path for OS installation */
-            rootDisk: string;
-        };
-        LVMSConfig: {
-            /** @description Set as default StorageClass */
-            defaultStorageClass: boolean;
-            /** @description LVM volume group device class name */
-            deviceClassName: string;
-            /** @description Thin pool settings */
-            thinPoolConfig: components["schemas"]["LVMSThinPoolConfig"];
-        };
-        LVMSDeviceSelector: {
-            /** @description Disk device paths for LVM volume group */
-            optionalPaths?: string[] | null;
-        };
-        LVMSStorageConfig: {
-            /** @description LVMS device selector */
-            deviceSelector: components["schemas"]["LVMSDeviceSelector"];
-        };
-        LVMSThinPoolConfig: {
-            /** @description Thin pool name */
-            name: string;
-            /**
-             * Format: int64
-             * @description Thin pool overprovisioning ratio
-             */
-            overprovisionRatio: number;
-            /**
-             * Format: int64
-             * @description Pool size as percentage of volume group
-             */
-            sizePercent: number;
-        };
-        LandingZoneConfig: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/LandingZoneConfig.json
-             */
-            readonly $schema?: string;
-            /** @description Air-gapped deployment mode */
-            disconnected: boolean | null;
-            /** @description DNS hostname for landing zone BMC interface */
-            lzBmcHostname?: string;
-            /** @description Landing zone BMC IP for boot ISO serving */
-            lzBmcIP: string;
-            /** @description Absolute path to root working directory */
-            workingDir: string;
-        };
-        LoginInputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/LoginInputBody.json
-             */
-            readonly $schema?: string;
-            /** @description Password */
-            password: string;
-            /** @description Username (always 'admin') */
-            username: string;
-        };
-        LoginOutputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/LoginOutputBody.json
-             */
-            readonly $schema?: string;
-            /** @description True if the initial password has not been changed yet */
-            mustChangePassword: boolean;
-            /** @description Bearer token for API access */
-            token: string;
-        };
-        NetworkConfig: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/NetworkConfig.json
-             */
-            readonly $schema?: string;
-            /** @description DNS server IP for cluster nodes */
-            defaultDNS: string;
-            /** @description Default gateway IP for cluster nodes */
-            defaultGateway: string;
-            /**
-             * Format: int64
-             * @description Subnet prefix length
-             */
-            defaultPrefix: number;
-        };
-        ODFConfig: {
-            /** @description Set as default StorageClass */
-            defaultStorageClass: boolean;
-        };
-        OsacNetworkingConfig: {
-            /** @description Fabric manager profile: empty string, netris, or reserved cudn_net/vlan */
-            fabricManager: string;
-            /** @description Kubernetes manager profile: empty string or k8s_only */
-            k8sManager: string;
-            /** @description Netris fabric manager configuration */
-            netris?: components["schemas"]["OsacNetworkingNetris"];
-        };
-        OsacNetworkingCredentials: {
-            /** @description Use externally managed netris-credentials Secret instead of inline password */
-            externalSecret?: boolean;
-            /** @description Netris API password (inline) */
-            password?: string;
-            /** @description Netris API username */
-            username?: string;
-        };
-        OsacNetworkingNetris: {
-            /** @description Netris controller API URL (HTTPS) */
-            controllerUrl?: string;
-            /** @description Netris API credentials */
-            credentials?: components["schemas"]["OsacNetworkingCredentials"];
-            /** @description Management VPC ID in Netris */
-            mgmtVpcId?: string;
-            /** @description Management VPC name in Netris */
-            mgmtVpcName?: string;
-            /** @description JSON mapping resource classes to Netris server cluster templates */
-            resourceClassMap?: string;
-            /** @description Netris site ID */
-            siteId?: string;
-            /** @description Netris tenant ID */
-            tenantId?: string;
-            /** @description Netris tenant name */
-            tenantName?: string;
-        };
-        Plugin: {
-            /** @description Plugin default configuration values */
-            defaults?: {
-                [key: string]: unknown;
-            };
-            /** @description Plugin identifier */
-            name: string;
-            /**
-             * Format: int64
-             * @description Deployment order within type
-             */
-            order?: number;
-            /**
-             * @description Plugin type
-             * @enum {string}
-             */
-            type: "foundation" | "addon";
-        };
-        PluginValidateInputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/PluginValidateInputBody.json
-             */
-            readonly $schema?: string;
-            /** @description Plugin names to validate as a combination */
-            plugins: string[] | null;
-        };
-        PluginValidateOutputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/PluginValidateOutputBody.json
-             */
-            readonly $schema?: string;
-            /** @description Validation errors, if any */
-            errors?: components["schemas"]["ValidationError"][] | null;
-            /** @description Whether the combination is valid */
-            valid: boolean;
-        };
-        PluginsConfig: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/PluginsConfig.json
-             */
-            readonly $schema?: string;
-            /** @description AAP deployment configuration */
-            aapDefaults?: components["schemas"]["AAPConfig"];
-            /** @description Cluster fulfillment configuration (passed through to osac-installer Helm values) */
-            clusterFulfillmentConfig?: {
-                [key: string]: string;
-            };
-            /** @description Plugins to deploy */
-            enabled_plugins: string[] | null;
-            /** @description LVMS deployment configuration */
-            lvmsDefaults?: components["schemas"]["LVMSConfig"];
-            /** @description ODF deployment configuration */
-            odfDefaults?: components["schemas"]["ODFConfig"];
-            /** @description Path to AAP license manifest.zip on the landing zone */
-            osacAapLicenseFile?: string;
-            /** @description Use external PostgreSQL instead of built-in */
-            osacBYODatabase?: boolean;
-            /** @description Namespace where BareMetalHost CRs are created for Metal3 power management */
-            osacBcmBmhNamespace?: string;
-            /** @description PEM-encoded CA certificate for verifying BCM server cert (optional) */
-            osacBcmCaCert?: string;
-            /** @description PEM-encoded client certificate for BCM mTLS authentication */
-            osacBcmCert?: string;
-            /** @description Enable BCM inventory backend for bare metal fulfillment */
-            osacBcmEnabled?: boolean;
-            /** @description Host class identifier for BCM inventory (default: bcm) */
-            osacBcmHostClass?: string;
-            /** @description Skip TLS verification of BCM server certificate (test environments only) */
-            osacBcmInsecureSkipVerify?: boolean;
-            /** @description PEM-encoded client private key for BCM mTLS authentication */
-            osacBcmKey?: string;
-            /** @description BCM head node API endpoint (e.g. https://bcm-head:8081) */
-            osacBcmUrl?: string;
-            /** @description PostgreSQL connection URL when using BYO database */
-            osacDatabaseUrl?: string;
-            /**
-             * @description Fully-qualified Ansible role name of the DNS driver
-             * @enum {string}
-             */
-            osacDnsClass?: "dns.route53.dns";
-            /** @description DNS zone to operate in (defaults to EXTERNAL_ACCESS_BASE_DOMAIN) */
-            osacDnsZone?: string;
-            osacNetworking?: components["schemas"]["OsacNetworkingConfig"];
-            /** @description Enable Metal3 inventory backend for bare metal fulfillment */
-            osacMetal3Enabled?: boolean;
-            /** @description Host class identifier for Metal3 inventory (default: metal3) */
-            osacMetal3HostClass?: string;
-            /** @description Namespace where BareMetalHost CRs are located */
-            osacMetal3Namespace?: string;
-            /**
-             * @description OSAC deployment profile
-             * @enum {string}
-             */
-            osacProfile?: "development" | "caas" | "vmaas" | "bmaas";
-            /** @description List of enabled service profiles: vmaas, caas, bmaas */
-            osacProfilesList?: string[] | null;
-            /** @description PVC size for Keycloak PostgreSQL */
-            rhbk_db_size?: string;
-            /** @description Deploy PostgreSQL alongside Keycloak */
-            rhbk_deploy_database?: boolean;
-            /**
-             * Format: int64
-             * @description Number of Keycloak replicas
-             */
-            rhbk_instances?: number;
-            /** @description Trust-manager CA issuer configuration */
-            trustManagerDefaults?: components["schemas"]["TrustManagerConfig"];
-            /** @description VAST CSI deployment defaults */
-            vastDefaults?: components["schemas"]["VASTConfig"];
-        };
-        PluginsOutputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/PluginsOutputBody.json
-             */
-            readonly $schema?: string;
-            /** @description Available plugins */
-            plugins: components["schemas"]["Plugin"][] | null;
-        };
-        PreviewConfigOutputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/PreviewConfigOutputBody.json
-             */
-            readonly $schema?: string;
-            /** @description Rendered certificates.yaml content */
-            certificatesYaml: string;
-            /** @description Rendered cloud_infra.yaml content */
-            cloudInfraYaml: string;
-            /** @description Rendered global.yaml content */
-            globalYaml: string;
-        };
-        QuayBackendRGWConfiguration: {
-            /** @description S3/RGW access key ID */
-            access_key: string;
-            /** @description S3 bucket name for Quay image storage */
-            bucket_name: string;
-            /** @description RadosGW/S3 endpoint hostname */
-            hostname: string;
-            /** @description Use HTTPS for backend storage (default: true) */
-            is_secure?: boolean;
-            /**
-             * Format: int64
-             * @description Maximum multipart upload chunk size in MB
-             */
-            maximum_chunk_size_mb?: number;
-            /**
-             * Format: int64
-             * @description Minimum multipart upload chunk size in MB
-             */
-            minimum_chunk_size_mb?: number;
-            /**
-             * Format: int64
-             * @description Backend storage endpoint port (default: 443)
-             */
-            port?: number;
-            /** @description S3/RGW secret access key */
-            secret_key: string;
-            /** @description Enable server-side assembly for multipart uploads */
-            server_side_assembly?: boolean;
-            /** @description Object storage path prefix (must start with /) */
-            storage_path?: string;
-        };
-        QuayConfig: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/QuayConfig.json
-             */
-            readonly $schema?: string;
-            /**
-             * @description oc-mirror log level
-             * @enum {string}
-             */
-            ocMirrorLogLevel?: "trace" | "debug" | "info" | "error";
-            /**
-             * @description Quay image storage backend
-             * @enum {string}
-             */
-            quayBackend: "RadosGWStorage" | "LocalStorage";
-            /** @description RadosGW/S3 backend config (required when quayBackend is RadosGWStorage) */
-            quayBackendRGWConfiguration?: components["schemas"]["QuayBackendRGWConfiguration"];
-            /** @description Admin password for Quay registry */
-            quayPassword: string;
-            /** @description Admin username for Quay registry */
-            quayUser: string;
-        };
-        StorageConfig: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/StorageConfig.json
-             */
-            readonly $schema?: string;
-            /** @description LVMS device selector configuration */
-            lvmsConfig?: components["schemas"]["LVMSStorageConfig"];
-            /** @description ODF external Ceph cluster config JSON (required when storage_plugin is odf) */
-            odfExternalConfig?: string;
-            /**
-             * @description Storage plugin
-             * @enum {string}
-             */
-            storage_plugin: "lvms" | "odf" | "vast-csi";
-            /** @description VAST management API password */
-            vastAdminPassword?: string;
-            /** @description VAST management API username */
-            vastAdminUsername?: string;
-            /** @description VAST management endpoint URL (required when storage_plugin is vast-csi) */
-            vastEndpoint?: string;
-            /** @description VIP pool configuration for CSI traffic (required when storage_plugin is vast-csi) */
-            vastVipPool?: components["schemas"]["VASTVipPool"];
-        };
-        TaskRun: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/TaskRun.json
-             */
-            readonly $schema?: string;
-            /**
-             * Format: date-time
-             * @description When the run completed
-             */
-            endedAt?: string;
-            /** @description Error message if failed */
-            error?: string;
-            /**
-             * Format: int64
-             * @description Process exit code
-             */
-            exitCode?: number;
-            /** @description Extra variables passed to ansible-runner */
-            extraVars?: {
-                [key: string]: string;
-            };
-            /** @description Unique run identifier */
-            id: string;
-            /**
-             * Format: int64
-             * @description OS process ID of ansible-runner
-             */
-            pid?: number;
-            /** @description Playbook path relative to enclave directory */
-            playbook: string;
-            /**
-             * Format: date-time
-             * @description When ansible-runner started
-             */
-            startedAt: string;
-            /**
-             * @description Current execution status
-             * @enum {string}
-             */
-            status: "running" | "successful" | "failed" | "canceled";
-            /**
-             * @description Type of task
-             * @enum {string}
-             */
-            type: "deploy" | "deploy-phase" | "deploy-plugin" | "validate";
-        };
-        ListTasksOutputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/ListTasksOutputBody.json
-             */
-            readonly $schema?: string;
-            /** @description All known task runs */
-            runs: components["schemas"]["TaskRun"][] | null;
-        };
-        GetTaskEventsOutputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/GetTaskEventsOutputBody.json
-             */
-            readonly $schema?: string;
-            /** @description Ansible Runner job events */
-            events: unknown[] | null;
-        };
-        TrustManagerConfig: {
-            /** @description CA certificate lifetime (e.g. 87600h for 10 years) */
-            trust_manager_ca_issuer_duration?: string;
-            /** @description How long before expiry to renew the CA (e.g. 8760h for 1 year) */
-            trust_manager_ca_issuer_renew_before?: string;
-        };
-        VASTConfig: {
-            /** @description Tenant name for infrastructure resources */
-            infraTenant?: string;
-            /** @description PVC size for Quay storage tier (e.g. 1000Gi) */
-            quayPvcSize?: string;
-            /** @description Root path on VAST cluster */
-            storagePath?: string;
-            /** @description Storage tiers to create on the VAST cluster */
-            tiers?: components["schemas"]["VASTTier"][] | null;
-            /**
-             * Format: int64
-             * @description VAST view policy ID
-             */
-            viewPolicyId?: number;
-        };
-        VASTIPRange: {
-            /** @description End IP address of the range */
-            end: string;
-            /** @description Start IP address of the range */
-            start: string;
-        };
-        VASTTier: {
-            /** @description Storage tier name (becomes StorageClass suffix) */
-            name: string;
-            /**
-             * @description Storage protocol
-             * @enum {string}
-             */
-            protocol: "nfs" | "block";
-        };
-        VASTVipPool: {
-            /** @description IP address ranges for VIP allocation */
-            ip_ranges: components["schemas"]["VASTIPRange"][] | null;
-            /**
-             * Format: int64
-             * @description Subnet prefix length
-             */
-            subnet_cidr: number;
-        };
-        ValidateConfigOutputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/ValidateConfigOutputBody.json
-             */
-            readonly $schema?: string;
-            /** @description Validation errors, if any */
-            errors?: components["schemas"]["ValidationError"][] | null;
-            /** @description Whether the config passes all validation checks */
-            valid: boolean;
-        };
-        ValidationError: {
-            /** @description JSON path to the invalid field */
-            field: string;
-            /** @description Human-readable error description */
-            message: string;
-        };
-        VersionOutputBody: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/VersionOutputBody.json
-             */
-            readonly $schema?: string;
-            /** @description Enclave version or git hash */
-            enclaveVersion: string;
-            /** @description Enclave Wizard version or git hash */
-            wizardVersion: string;
-        };
+  schemas: {
+    AAPConfig: {
+      /** @description Path to AAP license manifest.zip on the Landing Zone */
+      aapLicenseFile: string;
+      /** @description Disable the Automation Controller component */
+      aap_controller_disabled?: boolean;
+      /** @description Disable the Event-Driven Ansible component */
+      aap_eda_disabled?: boolean;
+      /** @description Disable the Automation Hub component */
+      aap_hub_disabled?: boolean;
+      /**
+       * @description Image pull policy for AAP pods
+       * @enum {string}
+       */
+      aap_image_pull_policy?: "Always" | "IfNotPresent" | "Never";
+      /** @description Name of the Kubernetes secret holding the AAP license */
+      aap_license_secret?: string;
+      /** @description Disable the Ansible Lightspeed component */
+      aap_lightspeed_disabled?: boolean;
+      /** @description Name of the AAP instance */
+      aap_name?: string;
+      /** @description Suppress sensitive log output */
+      aap_no_log?: boolean;
+      /** @description Namespace for the AAP deployment */
+      aap_ns?: string;
+      /**
+       * @description Redis deployment mode
+       * @enum {string}
+       */
+      aap_redis_mode?: "standalone" | "cluster";
+      /**
+       * @description TLS termination type for AAP routes
+       * @enum {string}
+       */
+      aap_route_tls_termination?: "Edge" | "Passthrough" | "Reencrypt";
     };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+    AuthModeOutputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/AuthModeOutputBody.json
+       */
+      readonly $schema?: string;
+      /** @description True if authentication is disabled */
+      noAuth: boolean;
+    };
+    CertificatesConfig: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/CertificatesConfig.json
+       */
+      readonly $schema?: string;
+      /** @description PEM-encoded TLS cert for Ironic vmedia HTTPS */
+      ironicHTTPSCertificate?: string;
+      /** @description PEM-encoded private key for Ironic HTTPS cert */
+      ironicHTTPSKey?: string;
+      /** @description PEM-encoded full cert chain for API server */
+      sslAPICertificateFullChain?: string;
+      /** @description PEM-encoded private key for API server cert */
+      sslAPICertificateKey?: string;
+      /** @description PEM-encoded root CA certificate */
+      sslCACertificate?: string;
+      /** @description PEM-encoded full cert chain for ingress wildcard */
+      sslIngressCertificateFullChain?: string;
+      /** @description PEM-encoded private key for ingress cert */
+      sslIngressCertificateKey?: string;
+    };
+    ChangePasswordInputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/ChangePasswordInputBody.json
+       */
+      readonly $schema?: string;
+      /** @description Current password */
+      currentPassword: string;
+      /** @description New password (min 8 characters) */
+      newPassword: string;
+    };
+    ChangePasswordOutputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/ChangePasswordOutputBody.json
+       */
+      readonly $schema?: string;
+      /** @description New bearer token (previous tokens are invalidated) */
+      token: string;
+    };
+    CloudInfraConfig: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/CloudInfraConfig.json
+       */
+      readonly $schema?: string;
+      /** @description Worker nodes for hardware discovery */
+      discovery_hosts: components["schemas"]["HostEntry"][] | null;
+    };
+    ClusterConfig: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/ClusterConfig.json
+       */
+      readonly $schema?: string;
+      /** @description Control plane nodes (exactly 3) */
+      agent_hosts: components["schemas"]["HostEntry"][] | null;
+      /** @description Virtual IP for Kubernetes API server */
+      apiVIP: string;
+      /** @description Base DNS domain for the cluster */
+      baseDomain: string;
+      /** @description OpenShift cluster name */
+      clusterName: string;
+      /** @description Additional NTP server addresses */
+      defaultNtpServers?: string[] | null;
+      /** @description Enable TPM v2 disk encryption */
+      diskEncryption?: boolean;
+      /** @description Virtual IP for ingress wildcard */
+      ingressVIP: string;
+      /** @description Network CIDR for cluster nodes */
+      machineNetwork: string;
+      /**
+       * Format: int64
+       * @description Maximum pods per node (default: 500)
+       */
+      masterMaxPods?: number;
+      /** @description OpenShift pull secret object */
+      pullSecret: unknown;
+      /** @description IP of first control-plane node */
+      rendezvousIP: string;
+      /** @description SSH public key content (e.g. ssh-rsa AAAA...) */
+      sshPubKey?: string;
+    };
+    Defaults: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/Defaults.json
+       */
+      readonly $schema?: string;
+      disconnected: boolean;
+      diskEncryption: boolean;
+      /** Format: int64 */
+      masterMaxPods: number;
+      ocMirrorLogLevel: string;
+      pluginDefaults?: {
+        [key: string]: unknown;
+      };
+      storagePlugin: string;
+    };
+    EnclaveConfig: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/EnclaveConfig.json
+       */
+      readonly $schema?: string;
+      /** @description TLS certificates (certificates.yaml) */
+      certificates: components["schemas"]["CertificatesConfig"];
+      /** @description Cloud infrastructure / discovery hosts (cloud_infra.yaml) */
+      cloudInfra: components["schemas"]["CloudInfraConfig"];
+      /** @description Primary cluster configuration (global.yaml) */
+      global: components["schemas"]["GlobalConfig"];
+    };
+    ErrorDetail: {
+      /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
+      location?: string;
+      /** @description Error message text */
+      message?: string;
+      /** @description The value at the given location */
+      value?: unknown;
+    };
+    ErrorModel: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/ErrorModel.json
+       */
+      readonly $schema?: string;
+      /**
+       * @description A human-readable explanation specific to this occurrence of the problem.
+       * @example Property foo is required but is missing.
+       */
+      detail?: string;
+      /** @description Optional list of individual error details */
+      errors?: components["schemas"]["ErrorDetail"][] | null;
+      /**
+       * Format: uri
+       * @description A URI reference that identifies the specific occurrence of the problem.
+       * @example https://example.com/error-log/abc123
+       */
+      instance?: string;
+      /**
+       * Format: int64
+       * @description HTTP status code
+       * @example 400
+       */
+      status?: number;
+      /**
+       * @description A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+       * @example Bad Request
+       */
+      title?: string;
+      /**
+       * Format: uri
+       * @description A URI reference to human-readable documentation for the error.
+       * @default about:blank
+       * @example https://example.com/errors/example
+       */
+      type: string;
+    };
+    Experience: {
+      description: string;
+      id: string;
+      name: string;
+      plugins: components["schemas"]["ExperiencePlugin"][] | null;
+    };
+    ExperiencePlugin: {
+      name: string;
+      /** Format: int64 */
+      order?: number;
+    };
+    ExperiencesOutputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/ExperiencesOutputBody.json
+       */
+      readonly $schema?: string;
+      /** @description Available experience definitions */
+      experiences: components["schemas"]["Experience"][] | null;
+    };
+    FileUploadOutputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/FileUploadOutputBody.json
+       */
+      readonly $schema?: string;
+      /** @description Absolute path where the file was written */
+      path: string;
+    };
+    GlobalConfig: {
+      /** @description AAP deployment configuration */
+      aapDefaults?: components["schemas"]["AAPConfig"];
+      /** @description Control plane nodes (exactly 3) */
+      agent_hosts: components["schemas"]["HostEntry"][] | null;
+      /** @description Virtual IP for Kubernetes API server */
+      apiVIP: string;
+      /** @description Base DNS domain for the cluster */
+      baseDomain: string;
+      /** @description Cluster fulfillment configuration (passed through to osac-installer Helm values) */
+      clusterFulfillmentConfig?: {
+        [key: string]: string;
+      };
+      /** @description OpenShift cluster name */
+      clusterName: string;
+      /** @description DNS server IP for cluster nodes */
+      defaultDNS: string;
+      /** @description Default gateway IP for cluster nodes */
+      defaultGateway: string;
+      /** @description Additional NTP server addresses */
+      defaultNtpServers?: string[] | null;
+      /**
+       * Format: int64
+       * @description Subnet prefix length
+       */
+      defaultPrefix: number;
+      /** @description Air-gapped deployment mode */
+      disconnected: boolean | null;
+      /** @description Enable TPM v2 disk encryption */
+      diskEncryption?: boolean;
+      /** @description Plugins to deploy */
+      enabled_plugins: string[] | null;
+      /** @description Virtual IP for ingress wildcard */
+      ingressVIP: string;
+      /** @description LVMS device selector configuration */
+      lvmsConfig?: components["schemas"]["LVMSStorageConfig"];
+      /** @description DNS hostname for landing zone BMC interface */
+      lzBmcHostname?: string;
+      /** @description Landing zone BMC IP for boot ISO serving */
+      lzBmcIP: string;
+      /** @description Network CIDR for cluster nodes */
+      machineNetwork: string;
+      /**
+       * Format: int64
+       * @description Maximum pods per node (default: 500)
+       */
+      masterMaxPods?: number;
+      /**
+       * @description oc-mirror log level
+       * @enum {string}
+       */
+      ocMirrorLogLevel?: "trace" | "debug" | "info" | "error";
+      /** @description ODF deployment configuration */
+      odfDefaults?: components["schemas"]["ODFConfig"];
+      /** @description ODF external Ceph cluster config JSON (required when storage_plugin is odf) */
+      odfExternalConfig?: string;
+      /** @description Path to AAP license manifest.zip on the landing zone */
+      osacAapLicenseFile?: string;
+      /** @description Use external PostgreSQL instead of built-in */
+      osacBYODatabase?: boolean;
+      /** @description Namespace where BareMetalHost CRs are created for Metal3 power management */
+      osacBcmBmhNamespace?: string;
+      /** @description PEM-encoded CA certificate for verifying BCM server cert (optional) */
+      osacBcmCaCert?: string;
+      /** @description PEM-encoded client certificate for BCM mTLS authentication */
+      osacBcmCert?: string;
+      /** @description Enable BCM inventory backend for bare metal fulfillment */
+      osacBcmEnabled?: boolean;
+      /** @description Host class identifier for BCM inventory (default: bcm) */
+      osacBcmHostClass?: string;
+      /** @description Skip TLS verification of BCM server certificate (test environments only) */
+      osacBcmInsecureSkipVerify?: boolean;
+      /** @description PEM-encoded client private key for BCM mTLS authentication */
+      osacBcmKey?: string;
+      /** @description BCM head node API endpoint (e.g. https://bcm-head:8081) */
+      osacBcmUrl?: string;
+      /** @description PostgreSQL connection URL when using BYO database */
+      osacDatabaseUrl?: string;
+      /**
+       * @description Fully-qualified Ansible role name of the DNS driver
+       * @enum {string}
+       */
+      osacDnsClass?: "dns.route53.dns";
+      /** @description DNS zone to operate in (defaults to EXTERNAL_ACCESS_BASE_DOMAIN) */
+      osacDnsZone?: string;
+      osacNetworking?: components["schemas"]["OsacNetworkingConfig"];
+      /** @description Enable Metal3 inventory backend for bare metal fulfillment */
+      osacMetal3Enabled?: boolean;
+      /** @description Host class identifier for Metal3 inventory (default: metal3) */
+      osacMetal3HostClass?: string;
+      /** @description Namespace where BareMetalHost CRs are located */
+      osacMetal3Namespace?: string;
+      /**
+       * @description OSAC deployment profile
+       * @enum {string}
+       */
+      osacProfile?: "development" | "caas" | "vmaas" | "bmaas";
+      /** @description List of enabled service profiles: vmaas, caas, bmaas */
+      osacProfilesList?: string[] | null;
+      /** @description OpenShift pull secret object */
+      pullSecret: unknown;
+      /**
+       * @description Quay image storage backend
+       * @enum {string}
+       */
+      quayBackend: "RadosGWStorage" | "LocalStorage";
+      /** @description RadosGW/S3 backend config (required when quayBackend is RadosGWStorage) */
+      quayBackendRGWConfiguration?: components["schemas"]["QuayBackendRGWConfiguration"];
+      /** @description Admin password for Quay registry */
+      quayPassword: string;
+      /** @description Admin username for Quay registry */
+      quayUser: string;
+      /** @description IP of first control-plane node */
+      rendezvousIP: string;
+      /** @description PVC size for Keycloak PostgreSQL */
+      rhbk_db_size?: string;
+      /** @description Deploy PostgreSQL alongside Keycloak */
+      rhbk_deploy_database?: boolean;
+      /**
+       * Format: int64
+       * @description Number of Keycloak replicas
+       */
+      rhbk_instances?: number;
+      /** @description SSH public key content (e.g. ssh-rsa AAAA...) */
+      sshPubKey?: string;
+      /**
+       * @description Storage plugin
+       * @enum {string}
+       */
+      storage_plugin: "lvms" | "odf" | "vast-csi";
+      /** @description Trust-manager CA issuer configuration */
+      trustManagerDefaults?: components["schemas"]["TrustManagerConfig"];
+      /** @description VAST management API password */
+      vastAdminPassword?: string;
+      /** @description VAST management API username */
+      vastAdminUsername?: string;
+      /** @description VAST CSI deployment defaults */
+      vastDefaults?: components["schemas"]["VASTConfig"];
+      /** @description VAST management endpoint URL (required when storage_plugin is vast-csi) */
+      vastEndpoint?: string;
+      /** @description VIP pool configuration for CSI traffic (required when storage_plugin is vast-csi) */
+      vastVipPool?: components["schemas"]["VASTVipPool"];
+      /** @description Absolute path to root working directory */
+      workingDir: string;
+    };
+    HostEntry: {
+      /** @description Redfish system ID path component (default: 1) */
+      bmcSystemId?: string;
+      /** @description Node IPv4 address within machineNetwork */
+      ipAddress: string;
+      /** @description MAC address (xx:xx:xx:xx:xx:xx) */
+      macAddress: string;
+      /** @description Interface mapping for complex topologies */
+      mapInterfaces?: unknown;
+      /** @description Node name label */
+      name: string;
+      /** @description NMState network configuration for multi-NIC/VLAN */
+      networkConfig?: unknown;
+      /** @description Redfish/IPMI management IP */
+      redfish: string;
+      /** @description Redfish password */
+      redfishPassword: string;
+      /** @description Redfish username */
+      redfishUser: string;
+      /** @description Root disk path for OS installation */
+      rootDisk: string;
+    };
+    LVMSConfig: {
+      /** @description Set as default StorageClass */
+      defaultStorageClass: boolean;
+      /** @description LVM volume group device class name */
+      deviceClassName: string;
+      /** @description Thin pool settings */
+      thinPoolConfig: components["schemas"]["LVMSThinPoolConfig"];
+    };
+    LVMSDeviceSelector: {
+      /** @description Disk device paths for LVM volume group */
+      optionalPaths?: string[] | null;
+    };
+    LVMSStorageConfig: {
+      /** @description LVMS device selector */
+      deviceSelector: components["schemas"]["LVMSDeviceSelector"];
+    };
+    LVMSThinPoolConfig: {
+      /** @description Thin pool name */
+      name: string;
+      /**
+       * Format: int64
+       * @description Thin pool overprovisioning ratio
+       */
+      overprovisionRatio: number;
+      /**
+       * Format: int64
+       * @description Pool size as percentage of volume group
+       */
+      sizePercent: number;
+    };
+    LandingZoneConfig: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/LandingZoneConfig.json
+       */
+      readonly $schema?: string;
+      /** @description Air-gapped deployment mode */
+      disconnected: boolean | null;
+      /** @description DNS hostname for landing zone BMC interface */
+      lzBmcHostname?: string;
+      /** @description Landing zone BMC IP for boot ISO serving */
+      lzBmcIP: string;
+      /** @description Absolute path to root working directory */
+      workingDir: string;
+    };
+    LoginInputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/LoginInputBody.json
+       */
+      readonly $schema?: string;
+      /** @description Password */
+      password: string;
+      /** @description Username (always 'admin') */
+      username: string;
+    };
+    LoginOutputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/LoginOutputBody.json
+       */
+      readonly $schema?: string;
+      /** @description True if the initial password has not been changed yet */
+      mustChangePassword: boolean;
+      /** @description Bearer token for API access */
+      token: string;
+    };
+    NetworkConfig: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/NetworkConfig.json
+       */
+      readonly $schema?: string;
+      /** @description DNS server IP for cluster nodes */
+      defaultDNS: string;
+      /** @description Default gateway IP for cluster nodes */
+      defaultGateway: string;
+      /**
+       * Format: int64
+       * @description Subnet prefix length
+       */
+      defaultPrefix: number;
+    };
+    ODFConfig: {
+      /** @description Set as default StorageClass */
+      defaultStorageClass: boolean;
+    };
+    OsacNetworkingConfig: {
+      /** @description Fabric manager profile: empty string, netris, or reserved cudn_net/vlan */
+      fabricManager: string;
+      /** @description Kubernetes manager profile: empty string or k8s_only */
+      k8sManager: string;
+      /** @description Netris fabric manager configuration */
+      netris?: components["schemas"]["OsacNetworkingNetris"];
+    };
+    OsacNetworkingCredentials: {
+      /** @description Use externally managed netris-credentials Secret instead of inline password */
+      externalSecret?: boolean;
+      /** @description Netris API password (inline) */
+      password?: string;
+      /** @description Netris API username */
+      username?: string;
+    };
+    OsacNetworkingNetris: {
+      /** @description Netris controller API URL (HTTPS) */
+      controllerUrl?: string;
+      /** @description Netris API credentials */
+      credentials?: components["schemas"]["OsacNetworkingCredentials"];
+      /** @description Management VPC ID in Netris */
+      mgmtVpcId?: string;
+      /** @description Management VPC name in Netris */
+      mgmtVpcName?: string;
+      /** @description JSON mapping resource classes to Netris server cluster templates */
+      resourceClassMap?: string;
+      /** @description Netris site ID */
+      siteId?: string;
+      /** @description Netris tenant ID */
+      tenantId?: string;
+      /** @description Netris tenant name */
+      tenantName?: string;
+    };
+    Plugin: {
+      /** @description Plugin default configuration values */
+      defaults?: {
+        [key: string]: unknown;
+      };
+      /** @description Plugin identifier */
+      name: string;
+      /**
+       * Format: int64
+       * @description Deployment order within type
+       */
+      order?: number;
+      /**
+       * @description Plugin type
+       * @enum {string}
+       */
+      type: "foundation" | "addon";
+    };
+    PluginValidateInputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/PluginValidateInputBody.json
+       */
+      readonly $schema?: string;
+      /** @description Plugin names to validate as a combination */
+      plugins: string[] | null;
+    };
+    PluginValidateOutputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/PluginValidateOutputBody.json
+       */
+      readonly $schema?: string;
+      /** @description Validation errors, if any */
+      errors?: components["schemas"]["ValidationError"][] | null;
+      /** @description Whether the combination is valid */
+      valid: boolean;
+    };
+    PluginsConfig: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/PluginsConfig.json
+       */
+      readonly $schema?: string;
+      /** @description AAP deployment configuration */
+      aapDefaults?: components["schemas"]["AAPConfig"];
+      /** @description Cluster fulfillment configuration (passed through to osac-installer Helm values) */
+      clusterFulfillmentConfig?: {
+        [key: string]: string;
+      };
+      /** @description Plugins to deploy */
+      enabled_plugins: string[] | null;
+      /** @description LVMS deployment configuration */
+      lvmsDefaults?: components["schemas"]["LVMSConfig"];
+      /** @description ODF deployment configuration */
+      odfDefaults?: components["schemas"]["ODFConfig"];
+      /** @description Path to AAP license manifest.zip on the landing zone */
+      osacAapLicenseFile?: string;
+      /** @description Use external PostgreSQL instead of built-in */
+      osacBYODatabase?: boolean;
+      /** @description Namespace where BareMetalHost CRs are created for Metal3 power management */
+      osacBcmBmhNamespace?: string;
+      /** @description PEM-encoded CA certificate for verifying BCM server cert (optional) */
+      osacBcmCaCert?: string;
+      /** @description PEM-encoded client certificate for BCM mTLS authentication */
+      osacBcmCert?: string;
+      /** @description Enable BCM inventory backend for bare metal fulfillment */
+      osacBcmEnabled?: boolean;
+      /** @description Host class identifier for BCM inventory (default: bcm) */
+      osacBcmHostClass?: string;
+      /** @description Skip TLS verification of BCM server certificate (test environments only) */
+      osacBcmInsecureSkipVerify?: boolean;
+      /** @description PEM-encoded client private key for BCM mTLS authentication */
+      osacBcmKey?: string;
+      /** @description BCM head node API endpoint (e.g. https://bcm-head:8081) */
+      osacBcmUrl?: string;
+      /** @description PostgreSQL connection URL when using BYO database */
+      osacDatabaseUrl?: string;
+      /**
+       * @description Fully-qualified Ansible role name of the DNS driver
+       * @enum {string}
+       */
+      osacDnsClass?: "dns.route53.dns";
+      /** @description DNS zone to operate in (defaults to EXTERNAL_ACCESS_BASE_DOMAIN) */
+      osacDnsZone?: string;
+      osacNetworking?: components["schemas"]["OsacNetworkingConfig"];
+      /** @description Enable Metal3 inventory backend for bare metal fulfillment */
+      osacMetal3Enabled?: boolean;
+      /** @description Host class identifier for Metal3 inventory (default: metal3) */
+      osacMetal3HostClass?: string;
+      /** @description Namespace where BareMetalHost CRs are located */
+      osacMetal3Namespace?: string;
+      /**
+       * @description OSAC deployment profile
+       * @enum {string}
+       */
+      osacProfile?: "development" | "caas" | "vmaas" | "bmaas";
+      /** @description List of enabled service profiles: vmaas, caas, bmaas */
+      osacProfilesList?: string[] | null;
+      /** @description PVC size for Keycloak PostgreSQL */
+      rhbk_db_size?: string;
+      /** @description Deploy PostgreSQL alongside Keycloak */
+      rhbk_deploy_database?: boolean;
+      /**
+       * Format: int64
+       * @description Number of Keycloak replicas
+       */
+      rhbk_instances?: number;
+      /** @description Trust-manager CA issuer configuration */
+      trustManagerDefaults?: components["schemas"]["TrustManagerConfig"];
+      /** @description VAST CSI deployment defaults */
+      vastDefaults?: components["schemas"]["VASTConfig"];
+    };
+    PluginsOutputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/PluginsOutputBody.json
+       */
+      readonly $schema?: string;
+      /** @description Available plugins */
+      plugins: components["schemas"]["Plugin"][] | null;
+    };
+    PreviewConfigOutputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/PreviewConfigOutputBody.json
+       */
+      readonly $schema?: string;
+      /** @description Rendered certificates.yaml content */
+      certificatesYaml: string;
+      /** @description Rendered cloud_infra.yaml content */
+      cloudInfraYaml: string;
+      /** @description Rendered global.yaml content */
+      globalYaml: string;
+    };
+    QuayBackendRGWConfiguration: {
+      /** @description S3/RGW access key ID */
+      access_key: string;
+      /** @description S3 bucket name for Quay image storage */
+      bucket_name: string;
+      /** @description RadosGW/S3 endpoint hostname */
+      hostname: string;
+      /** @description Use HTTPS for backend storage (default: true) */
+      is_secure?: boolean;
+      /**
+       * Format: int64
+       * @description Maximum multipart upload chunk size in MB
+       */
+      maximum_chunk_size_mb?: number;
+      /**
+       * Format: int64
+       * @description Minimum multipart upload chunk size in MB
+       */
+      minimum_chunk_size_mb?: number;
+      /**
+       * Format: int64
+       * @description Backend storage endpoint port (default: 443)
+       */
+      port?: number;
+      /** @description S3/RGW secret access key */
+      secret_key: string;
+      /** @description Enable server-side assembly for multipart uploads */
+      server_side_assembly?: boolean;
+      /** @description Object storage path prefix (must start with /) */
+      storage_path?: string;
+    };
+    QuayConfig: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/QuayConfig.json
+       */
+      readonly $schema?: string;
+      /**
+       * @description oc-mirror log level
+       * @enum {string}
+       */
+      ocMirrorLogLevel?: "trace" | "debug" | "info" | "error";
+      /**
+       * @description Quay image storage backend
+       * @enum {string}
+       */
+      quayBackend: "RadosGWStorage" | "LocalStorage";
+      /** @description RadosGW/S3 backend config (required when quayBackend is RadosGWStorage) */
+      quayBackendRGWConfiguration?: components["schemas"]["QuayBackendRGWConfiguration"];
+      /** @description Admin password for Quay registry */
+      quayPassword: string;
+      /** @description Admin username for Quay registry */
+      quayUser: string;
+    };
+    StorageConfig: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/StorageConfig.json
+       */
+      readonly $schema?: string;
+      /** @description LVMS device selector configuration */
+      lvmsConfig?: components["schemas"]["LVMSStorageConfig"];
+      /** @description ODF external Ceph cluster config JSON (required when storage_plugin is odf) */
+      odfExternalConfig?: string;
+      /**
+       * @description Storage plugin
+       * @enum {string}
+       */
+      storage_plugin: "lvms" | "odf" | "vast-csi";
+      /** @description VAST management API password */
+      vastAdminPassword?: string;
+      /** @description VAST management API username */
+      vastAdminUsername?: string;
+      /** @description VAST management endpoint URL (required when storage_plugin is vast-csi) */
+      vastEndpoint?: string;
+      /** @description VIP pool configuration for CSI traffic (required when storage_plugin is vast-csi) */
+      vastVipPool?: components["schemas"]["VASTVipPool"];
+    };
+    TaskRun: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/TaskRun.json
+       */
+      readonly $schema?: string;
+      /**
+       * Format: date-time
+       * @description When the run completed
+       */
+      endedAt?: string;
+      /** @description Error message if failed */
+      error?: string;
+      /**
+       * Format: int64
+       * @description Process exit code
+       */
+      exitCode?: number;
+      /** @description Extra variables passed to ansible-runner */
+      extraVars?: {
+        [key: string]: string;
+      };
+      /** @description Unique run identifier */
+      id: string;
+      /**
+       * Format: int64
+       * @description OS process ID of ansible-runner
+       */
+      pid?: number;
+      /** @description Playbook path relative to enclave directory */
+      playbook: string;
+      /**
+       * Format: date-time
+       * @description When ansible-runner started
+       */
+      startedAt: string;
+      /**
+       * @description Current execution status
+       * @enum {string}
+       */
+      status: "running" | "successful" | "failed" | "canceled";
+      /**
+       * @description Type of task
+       * @enum {string}
+       */
+      type: "deploy" | "deploy-phase" | "deploy-plugin" | "validate";
+    };
+    ListTasksOutputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/ListTasksOutputBody.json
+       */
+      readonly $schema?: string;
+      /** @description All known task runs */
+      runs: components["schemas"]["TaskRun"][] | null;
+    };
+    GetTaskEventsOutputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/GetTaskEventsOutputBody.json
+       */
+      readonly $schema?: string;
+      /** @description Ansible Runner job events */
+      events: unknown[] | null;
+    };
+    TrustManagerConfig: {
+      /** @description CA certificate lifetime (e.g. 87600h for 10 years) */
+      trust_manager_ca_issuer_duration?: string;
+      /** @description How long before expiry to renew the CA (e.g. 8760h for 1 year) */
+      trust_manager_ca_issuer_renew_before?: string;
+    };
+    VASTConfig: {
+      /** @description Tenant name for infrastructure resources */
+      infraTenant?: string;
+      /** @description PVC size for Quay storage tier (e.g. 1000Gi) */
+      quayPvcSize?: string;
+      /** @description Root path on VAST cluster */
+      storagePath?: string;
+      /** @description Storage tiers to create on the VAST cluster */
+      tiers?: components["schemas"]["VASTTier"][] | null;
+      /**
+       * Format: int64
+       * @description VAST view policy ID
+       */
+      viewPolicyId?: number;
+    };
+    VASTIPRange: {
+      /** @description End IP address of the range */
+      end: string;
+      /** @description Start IP address of the range */
+      start: string;
+    };
+    VASTTier: {
+      /** @description Storage tier name (becomes StorageClass suffix) */
+      name: string;
+      /**
+       * @description Storage protocol
+       * @enum {string}
+       */
+      protocol: "nfs" | "block";
+    };
+    VASTVipPool: {
+      /** @description IP address ranges for VIP allocation */
+      ip_ranges: components["schemas"]["VASTIPRange"][] | null;
+      /**
+       * Format: int64
+       * @description Subnet prefix length
+       */
+      subnet_cidr: number;
+    };
+    ValidateConfigOutputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/ValidateConfigOutputBody.json
+       */
+      readonly $schema?: string;
+      /** @description Validation errors, if any */
+      errors?: components["schemas"]["ValidationError"][] | null;
+      /** @description Whether the config passes all validation checks */
+      valid: boolean;
+    };
+    ValidationError: {
+      /** @description JSON path to the invalid field */
+      field: string;
+      /** @description Human-readable error description */
+      message: string;
+    };
+    VersionOutputBody: {
+      /**
+       * Format: uri
+       * @description A URL to the JSON Schema for this object.
+       * @example https://example.com/schemas/VersionOutputBody.json
+       */
+      readonly $schema?: string;
+      /** @description Enclave version or git hash */
+      enclaveVersion: string;
+      /** @description Enclave Wizard version or git hash */
+      wizardVersion: string;
+    };
+  };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    login: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LoginInputBody"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LoginOutputBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  login: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    authMode: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthModeOutputBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LoginInputBody"];
+      };
     };
-    changePassword: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ChangePasswordInputBody"];
-            };
+        content: {
+          "application/json": components["schemas"]["LoginOutputBody"];
         };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ChangePasswordOutputBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
     };
-    "get-config": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EnclaveConfig"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  authMode: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "write-config": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["EnclaveConfig"];
-            };
+        content: {
+          "application/json": components["schemas"]["AuthModeOutputBody"];
         };
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
     };
-    "get-config-certificates": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CertificatesConfig"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  changePassword: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "write-config-certificates": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CertificatesConfig"];
-            };
-        };
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ChangePasswordInputBody"];
+      };
     };
-    "get-config-cluster": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ClusterConfig"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["ChangePasswordOutputBody"];
         };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
     };
-    "write-config-cluster": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ClusterConfig"];
-            };
-        };
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  "get-config": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "get-config-hosts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CloudInfraConfig"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["EnclaveConfig"];
         };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
     };
-    "write-config-hosts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CloudInfraConfig"];
-            };
-        };
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  "write-config": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "get-config-lz": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LandingZoneConfig"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EnclaveConfig"];
+      };
     };
-    "write-config-lz": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LandingZoneConfig"];
-            };
+        content?: never;
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
         };
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
         };
+      };
     };
-    "get-config-network": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NetworkConfig"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  "get-config-certificates": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "write-config-network": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["NetworkConfig"];
-            };
+        content: {
+          "application/json": components["schemas"]["CertificatesConfig"];
         };
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
     };
-    "get-config-plugins": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PluginsConfig"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  "write-config-certificates": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "write-config-plugins": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PluginsConfig"];
-            };
-        };
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CertificatesConfig"];
+      };
     };
-    "preview-config": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["EnclaveConfig"];
-            };
+        content?: never;
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
         };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PreviewConfigOutputBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
         };
+      };
     };
-    "get-config-quay": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["QuayConfig"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  "get-config-cluster": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "write-config-quay": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["QuayConfig"];
-            };
+        content: {
+          "application/json": components["schemas"]["ClusterConfig"];
         };
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
     };
-    "get-config-storage": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["StorageConfig"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  "write-config-cluster": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "write-config-storage": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StorageConfig"];
-            };
-        };
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ClusterConfig"];
+      };
     };
-    "validate-config": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["EnclaveConfig"];
-            };
+        content?: never;
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
         };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ValidateConfigOutputBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
         };
+      };
     };
-    "get-defaults": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Defaults"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  "get-config-hosts": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "list-experiences": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ExperiencesOutputBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["CloudInfraConfig"];
         };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
     };
-    "upload-file": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": {
-                    /**
-                     * Format: binary
-                     * @description filename of the file being uploaded
-                     */
-                    filename?: string;
-                    /** @description general purpose name for multipart form value */
-                    name?: string;
-                };
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FileUploadOutputBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  "write-config-hosts": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "list-plugins": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PluginsOutputBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CloudInfraConfig"];
+      };
     };
-    "validate-plugin-combination": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PluginValidateInputBody"];
-            };
+        content?: never;
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
         };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PluginValidateOutputBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
         };
+      };
     };
-    "get-plugin-schema": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Plugin name */
-                name: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  "get-config-lz": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "list-tasks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ListTasksOutputBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["LandingZoneConfig"];
         };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
     };
-    "start-deploy": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskRun"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  "write-config-lz": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "start-deploy-phase": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Deployment phase number (1-7) */
-                phase: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskRun"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LandingZoneConfig"];
+      };
     };
-    "start-deploy-plugin": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Plugin name */
-                name: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskRun"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+        content?: never;
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
     };
-    "start-validate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskRun"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  "get-config-network": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "get-task": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Run identifier */
-                id: string;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TaskRun"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["NetworkConfig"];
         };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
     };
-    "delete-task": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Run identifier */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  "write-config-network": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "get-task-events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Run identifier */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GetTaskEventsOutputBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["NetworkConfig"];
+      };
     };
-    "get-task-logs": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Run identifier */
-                id: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": string;
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
+        content?: never;
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
     };
-    getVersion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["VersionOutputBody"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
+  };
+  "get-config-plugins": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PluginsConfig"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "write-config-plugins": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PluginsConfig"];
+      };
+    };
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "preview-config": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EnclaveConfig"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PreviewConfigOutputBody"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "get-config-quay": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["QuayConfig"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "write-config-quay": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["QuayConfig"];
+      };
+    };
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "get-config-storage": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["StorageConfig"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "write-config-storage": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["StorageConfig"];
+      };
+    };
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "validate-config": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EnclaveConfig"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ValidateConfigOutputBody"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "get-defaults": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Defaults"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "list-experiences": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExperiencesOutputBody"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "upload-file": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "multipart/form-data": {
+          /**
+           * Format: binary
+           * @description filename of the file being uploaded
+           */
+          filename?: string;
+          /** @description general purpose name for multipart form value */
+          name?: string;
+        };
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["FileUploadOutputBody"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "list-plugins": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PluginsOutputBody"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "validate-plugin-combination": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PluginValidateInputBody"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PluginValidateOutputBody"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "get-plugin-schema": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Plugin name */
+        name: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "list-tasks": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ListTasksOutputBody"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "start-deploy": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TaskRun"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "start-deploy-phase": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Deployment phase number (1-7) */
+        phase: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TaskRun"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "start-deploy-plugin": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Plugin name */
+        name: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TaskRun"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "start-validate": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TaskRun"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "get-task": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Run identifier */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TaskRun"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "delete-task": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Run identifier */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "get-task-events": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Run identifier */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GetTaskEventsOutputBody"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  "get-task-logs": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Run identifier */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": string;
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
+  getVersion: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["VersionOutputBody"];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ErrorModel"];
+        };
+      };
+    };
+  };
 }

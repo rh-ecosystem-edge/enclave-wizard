@@ -21,10 +21,19 @@ import { AnsiUp } from "ansi_up";
 import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDeployment } from "../../api/useDeployment.ts";
-import { useWizard } from "../WizardContext.tsx";
-import { buildFinalConfig } from "../buildFinalConfig.ts";
 import { TaskStatusLabel } from "../../tasks/components/TaskStatusLabel.tsx";
 import { tasksStyles as styles } from "../../tasks/tasksStyles.ts";
+import { buildFinalConfig } from "../buildFinalConfig.ts";
+import { useWizard } from "../WizardContext.tsx";
+
+function errorDetailRows(details: string[]): { key: string; detail: string }[] {
+  const seen = new Map<string, number>();
+  return details.map((detail) => {
+    const occurrence = seen.get(detail) ?? 0;
+    seen.set(detail, occurrence + 1);
+    return { key: `${occurrence}:${detail}`, detail };
+  });
+}
 
 function formatDuration(start?: Date | null, end?: Date | null): string {
   if (!start) return "—";
@@ -65,7 +74,9 @@ export const DeployStep: React.FC = () => {
     if (follow && isRunning && logsEndRef.current) {
       logsEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [logsHtml, follow, isRunning]);
+    // deployment.logs is not read above; it retriggers follow-scroll when output grows.
+    void deployment.logs;
+  }, [deployment.logs, follow, isRunning]);
 
   if (deployment.phase === "writing") {
     return (
@@ -101,8 +112,8 @@ export const DeployStep: React.FC = () => {
           >
             {deployment.error.details.length > 0 && (
               <ul style={{ margin: 0, paddingLeft: "1.25rem" }}>
-                {deployment.error.details.map((d, i) => (
-                  <li key={i}>{d}</li>
+                {errorDetailRows(deployment.error.details).map((row) => (
+                  <li key={row.key}>{row.detail}</li>
                 ))}
               </ul>
             )}
@@ -164,13 +175,22 @@ export const DeployStep: React.FC = () => {
       {deployment.progress && (
         <StackItem>
           <Progress
-            value={deployment.phase === "complete" ? 100 : (deployment.progress.percentage ?? 0)}
-            title={deployment.progress.currentTask || (isRunning ? "Starting..." : "")}
+            value={
+              deployment.phase === "complete"
+                ? 100
+                : (deployment.progress.percentage ?? 0)
+            }
+            title={
+              deployment.progress.currentTask ||
+              (isRunning ? "Starting..." : "")
+            }
             measureLocation={ProgressMeasureLocation.top}
             variant={
-              deployment.phase === "failed" ? ProgressVariant.danger
-              : deployment.phase === "complete" ? ProgressVariant.success
-              : undefined
+              deployment.phase === "failed"
+                ? ProgressVariant.danger
+                : deployment.phase === "complete"
+                  ? ProgressVariant.success
+                  : undefined
             }
             aria-label="Deployment progress"
           />
@@ -221,6 +241,7 @@ export const DeployStep: React.FC = () => {
       <StackItem>
         <div className={styles.logsContainer}>
           {logsHtml ? (
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is local ANSI conversion of deploy logs, not untrusted markup
             <div dangerouslySetInnerHTML={{ __html: logsHtml }} />
           ) : isRunning ? (
             "Waiting for output..."

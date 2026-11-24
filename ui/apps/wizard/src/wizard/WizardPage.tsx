@@ -1,5 +1,4 @@
 import { css } from "@emotion/css";
-import { EnclaveConfigToJSON } from "@enclave-wizard-ui/api-client";
 import {
   Alert,
   Button,
@@ -29,11 +28,10 @@ import {
 } from "../schema/schemaUtils.ts";
 import { useOpenApiSchema } from "../schema/useOpenApiSchema.ts";
 import { CatalogProvider } from "./contexts/CatalogContext.tsx";
+import type { ConfigData } from "./contexts/ConfigContext.tsx";
 import { isValidDnsZone } from "./dnsZone.ts";
 import { useWizardInit } from "./hooks/useWizardInit.ts";
-import {
-  validateOsacInventoryBackends,
-} from "./osacBcmValidation.ts";
+import { validateOsacInventoryBackends } from "./osacBcmValidation.ts";
 import {
   DEFAULT_OSAC_NETWORKING,
   isOsacNetworkingUnset,
@@ -52,6 +50,7 @@ import { SelectFlavorStep } from "./steps/SelectFlavorStep.tsx";
 import { StorageStep } from "./steps/StorageStep.tsx";
 import { TrustManagerStep } from "./steps/TrustManagerStep.tsx";
 import { WelcomeStep } from "./steps/WelcomeStep.tsx";
+import { toWireConfig } from "./toWireConfig.ts";
 import { useWizard, WizardProvider } from "./WizardContext.tsx";
 import { wizardStyles as styles } from "./wizardStyles.ts";
 
@@ -84,7 +83,12 @@ const configNavItem = css`
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
+  width: 100%;
   padding: 0.5rem 0;
+  border: none;
+  background: none;
+  font: inherit;
+  text-align: left;
   cursor: pointer;
   color: var(--pf-t--global--text--color--subtle);
   &:hover {
@@ -230,18 +234,16 @@ function ConfigureStep({
         <nav className={configNav}>
           {subSteps.map((sub, i) => (
             <div key={sub.id}>
-              <div
+              <button
+                type="button"
                 className={`${configNavItem} ${i === activeSubStep ? configNavItemActive : ""}`}
                 onClick={() => onSubStepChange(i)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === "Enter" && onSubStepChange(i)}
               >
                 <div
                   className={`${configNavCircle} ${i === activeSubStep ? configNavCircleActive : ""}`}
                 />
                 <span>{sub.label}</span>
-              </div>
+              </button>
               {i < subSteps.length - 1 && <div className={configNavLine} />}
             </div>
           ))}
@@ -347,7 +349,7 @@ function WizardContent(): React.ReactElement {
         if (existingConfig.status === "fulfilled") {
           dispatch({
             type: "LOAD_CONFIG",
-            config: EnclaveConfigToJSON(existingConfig.value),
+            config: toWireConfig(existingConfig.value) as ConfigData,
           });
         }
 
@@ -355,7 +357,7 @@ function WizardContent(): React.ReactElement {
           const d = defaults.value;
           const loaded =
             existingConfig.status === "fulfilled"
-              ? (EnclaveConfigToJSON(existingConfig.value) as Record<
+              ? (toWireConfig(existingConfig.value) as Record<
                   string,
                   Record<string, unknown>
                 >)
@@ -724,7 +726,7 @@ function WizardContent(): React.ReactElement {
               </ul>
             </Alert>
           )}
-          <Card isRounded>
+          <Card>
             <CardBody className={styles.cardBody}>
               <StepContent
                 stepId={currentStepId ?? "welcome"}

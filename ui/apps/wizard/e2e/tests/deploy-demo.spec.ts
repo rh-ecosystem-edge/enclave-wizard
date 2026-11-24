@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { WizardPage } from "../helpers/wizard-page";
 
 test.describe("Deploy flow (demo mode)", () => {
@@ -12,7 +12,10 @@ test.describe("Deploy flow (demo mode)", () => {
     await wizard.selectFlavor("CaaS");
     await wizard.clickNext();
 
-    await wizard.fillLandingZone({ disconnected: false, lzBmcIP: "10.20.30.1" });
+    await wizard.fillLandingZone({
+      disconnected: false,
+      lzBmcIP: "10.20.30.1",
+    });
     await wizard.clickNext();
 
     await wizard.fillStorage({ quayUser: "admin", quayPassword: "quaypass" });
@@ -31,9 +34,33 @@ test.describe("Deploy flow (demo mode)", () => {
       pullSecret: '{"auths":{}}',
       sshPubKey: "ssh-rsa AAAA-deploy-demo-key",
       hosts: [
-        { name: "cp-01", macAddress: "00:00:00:00:02:01", ipAddress: "10.20.30.11", redfish: "10.20.30.1", redfishUser: "admin", redfishPassword: "pass", rootDisk: "/dev/sda" },
-        { name: "cp-02", macAddress: "00:00:00:00:02:02", ipAddress: "10.20.30.12", redfish: "10.20.30.1", redfishUser: "admin", redfishPassword: "pass", rootDisk: "/dev/sda" },
-        { name: "cp-03", macAddress: "00:00:00:00:02:03", ipAddress: "10.20.30.13", redfish: "10.20.30.1", redfishUser: "admin", redfishPassword: "pass", rootDisk: "/dev/sda" },
+        {
+          name: "cp-01",
+          macAddress: "00:00:00:00:02:01",
+          ipAddress: "10.20.30.11",
+          redfish: "10.20.30.1",
+          redfishUser: "admin",
+          redfishPassword: "pass",
+          rootDisk: "/dev/sda",
+        },
+        {
+          name: "cp-02",
+          macAddress: "00:00:00:00:02:02",
+          ipAddress: "10.20.30.12",
+          redfish: "10.20.30.1",
+          redfishUser: "admin",
+          redfishPassword: "pass",
+          rootDisk: "/dev/sda",
+        },
+        {
+          name: "cp-03",
+          macAddress: "00:00:00:00:02:03",
+          ipAddress: "10.20.30.13",
+          redfish: "10.20.30.1",
+          redfishUser: "admin",
+          redfishPassword: "pass",
+          rootDisk: "/dev/sda",
+        },
       ],
     });
     await wizard.clickNext();
@@ -55,16 +82,18 @@ test.describe("Deploy flow (demo mode)", () => {
     // If no Deploy button, a previous deployment reconnected — that's fine too
 
     // Verify deployment starts — output heading appears
-    await expect(page.getByRole("heading", { name: "Output" })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("heading", { name: "Output" })).toBeVisible({
+      timeout: 10_000,
+    });
 
     // Wait for logs to start streaming
     await expect(page.getByText("TASK")).toBeVisible({ timeout: 30_000 });
 
     // Observe for 15s to verify logs keep streaming
     const logsLocator = page.locator("[class*='logsContainer'], pre").first();
-    const initialText = await logsLocator.textContent() ?? "";
+    const initialText = (await logsLocator.textContent()) ?? "";
     await page.waitForTimeout(15_000);
-    const laterText = await logsLocator.textContent() ?? "";
+    const laterText = (await logsLocator.textContent()) ?? "";
 
     // Logs should have grown (deployment is actively running)
     expect(laterText.length).toBeGreaterThan(initialText.length);

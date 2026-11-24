@@ -12,7 +12,6 @@ import {
   ModalFooter,
   ModalHeader,
   Radio,
-  Spinner,
 } from "@patternfly/react-core";
 import type React from "react";
 import { useState } from "react";

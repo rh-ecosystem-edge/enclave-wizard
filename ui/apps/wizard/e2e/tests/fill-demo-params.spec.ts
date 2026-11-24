@@ -1,6 +1,6 @@
-import { test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { test } from "@playwright/test";
 import { WizardPage } from "../helpers/wizard-page";
 
 interface DemoParams {
@@ -152,7 +152,7 @@ test("fill wizard from demo-params.json (stop before deploy)", async ({
     }
 
     const continueBtn = page.getByRole("button", { name: "Continue" });
-    if (await continueBtn.count() > 0) {
+    if ((await continueBtn.count()) > 0) {
       await continueBtn.scrollIntoViewIfNeeded();
       await continueBtn.click();
       await page.waitForTimeout(300);

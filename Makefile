@@ -184,7 +184,7 @@ dev-ui: ensure-dev-certs ## Run API + Vite (HMR). UI: https://localhost:$(VITE_P
 		VITE_PORT=$(VITE_PORT) \
 		VITE_TLS_CERT=$(abspath $(WIZARD_TLS_CERT)) \
 		VITE_TLS_KEY=$(abspath $(WIZARD_TLS_KEY)) \
-		yarn run dev:stack
+		yarn run start
 
 dev: ## Build and run API (no-auth, enclave-mock); invoked by dev-ui for the API process.
 	$(GO) build -ldflags="$(LDFLAGS)" -tags dev -o $(BINARY) .

@@ -1,9 +1,6 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import {
-  usePluginSchema,
-  clearPluginSchemaCache,
-} from "./usePluginSchema.ts";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { clearPluginSchemaCache, usePluginSchema } from "./usePluginSchema.ts";
 
 const MOCK_SCHEMA = {
   type: "object",

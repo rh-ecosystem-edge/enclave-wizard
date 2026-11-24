@@ -1,8 +1,4 @@
-import {
-  Alert,
-  Bullseye,
-  Spinner,
-} from "@patternfly/react-core";
+import { Alert, Bullseye, Spinner } from "@patternfly/react-core";
 import type React from "react";
 import { usePluginSchema } from "../../api/usePluginSchema.ts";
 import { SchemaFormRenderer } from "../../schema/SchemaFormRenderer.tsx";
@@ -43,11 +39,7 @@ export const SchemaStep: React.FC<SchemaStepProps> = ({
       return <>{fallback}</>;
     }
     return (
-      <Alert
-        variant="info"
-        title="Plugin configuration unavailable"
-        isInline
-      >
+      <Alert variant="info" title="Plugin configuration unavailable" isInline>
         The configuration schema for &quot;{pluginName}&quot; could not be
         loaded. {error?.message}
       </Alert>
@@ -102,7 +94,10 @@ function buildMergedSchema(
 
     for (let i = 0; i < segments.length - 1; i++) {
       const seg = segments[i];
-      const props = current.properties as Record<string, Record<string, unknown>>;
+      const props = current.properties as Record<
+        string,
+        Record<string, unknown>
+      >;
       if (!props[seg]) {
         props[seg] = { type: "object", properties: {} };
       }

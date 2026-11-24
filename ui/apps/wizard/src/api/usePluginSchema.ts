@@ -32,8 +32,9 @@ export function usePluginSchema(pluginName: string): UsePluginSchemaReturn {
   const fetchedRef = useRef<string | null>(null);
 
   const fetchSchema = useCallback(async (name: string) => {
-    if (schemaCache.has(name)) {
-      setSchema(schemaCache.get(name)!);
+    const cached = schemaCache.get(name);
+    if (cached) {
+      setSchema(cached);
       setLoading(false);
       return;
     }

@@ -43,6 +43,7 @@ export const YamlEditor: React.FC<YamlEditorProps> = ({
   const suppressOnChangeRef = useRef(false);
   onChangeRef.current = onChange;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: value is synced in the next effect; recreating the editor on each edit would drop the cursor
   useEffect(() => {
     if (!containerRef.current) return;
 

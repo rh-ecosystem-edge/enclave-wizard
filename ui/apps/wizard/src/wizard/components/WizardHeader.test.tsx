@@ -3,9 +3,14 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import { WizardHeader } from "./WizardHeader.tsx";
 
+const routerFuture = {
+  v7_startTransition: true,
+  v7_relativeSplatPath: true,
+};
+
 function renderHeader(currentStep: number) {
   return render(
-    <MemoryRouter>
+    <MemoryRouter future={routerFuture}>
       <WizardHeader currentStep={currentStep} />
     </MemoryRouter>,
   );

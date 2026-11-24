@@ -17,13 +17,15 @@ function wrapper({ children }: { children: React.ReactNode }) {
 }
 
 describe("useWizardInit", () => {
-  let fetchSpy: ReturnType<typeof vi.spyOn>;
+  let fetchSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    fetchSpy = vi.spyOn(globalThis, "fetch");
+    fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
   });
 
   afterEach(() => {
+    vi.unstubAllGlobals();
     vi.restoreAllMocks();
   });
 
@@ -62,10 +64,16 @@ describe("useWizardInit", () => {
     ];
 
     fetchSpy.mockResolvedValue(
-      new Response(JSON.stringify({ $schema: "https://localhost/schemas/ExperiencesOutputBody.json", experiences: apiExperiences }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }),
+      new Response(
+        JSON.stringify({
+          $schema: "https://localhost/schemas/ExperiencesOutputBody.json",
+          experiences: apiExperiences,
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        },
+      ),
     );
 
     const { result } = renderHook(() => useTestHook(), { wrapper });
@@ -152,11 +160,16 @@ describe("useWizardInit", () => {
     expect(result.current.flavors.map((f) => f.id)).toEqual(["caas", "vmaas"]);
   });
 
-  it("starts in loading state", () => {
+  it("starts in loading state", async () => {
     fetchSpy.mockResolvedValue(new Response(null, { status: 404 }));
 
     const { result } = renderHook(() => useTestHook(), { wrapper });
 
     expect(result.current.loading).toBe(true);
+
+    // Flush the async catalog update so React does not warn about act(...).
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
   });
 });

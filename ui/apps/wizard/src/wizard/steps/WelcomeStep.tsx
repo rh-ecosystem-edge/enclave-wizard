@@ -7,8 +7,7 @@ import {
   FlexItem,
   Title,
 } from "@patternfly/react-core";
-import type { ReactNode } from "react";
-import React from "react";
+import type { FC, ReactNode } from "react";
 import { RedHatLogo } from "../../common/components/RedHatLogo.tsx";
 import {
   BootstrapGlyph,
@@ -67,11 +66,26 @@ const styles = {
     justify-content: center;
     align-items: flex-start;
     gap: 0;
-    margin-top: 2rem;
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
 
     @media (max-width: 48rem) {
       flex-direction: column;
       align-items: center;
+    }
+  `,
+  highlightEntry: css`
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    flex: 1;
+    min-width: 0;
+
+    @media (max-width: 48rem) {
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
     }
   `,
   highlightItem: css`
@@ -115,7 +129,7 @@ const styles = {
   `,
 };
 
-export const WelcomeStep: React.FC = () => {
+export const WelcomeStep: FC = () => {
   const { dispatch } = useWizard();
 
   return (
@@ -140,9 +154,9 @@ export const WelcomeStep: React.FC = () => {
         </Content>
       </FlexItem>
       <FlexItem style={{ width: "100%" }}>
-        <div className={styles.highlightList} role="list">
+        <ul className={styles.highlightList}>
           {highlights.map((h, i) => (
-            <React.Fragment key={h.title}>
+            <li key={h.title} className={styles.highlightEntry}>
               {i > 0 && (
                 <div className={styles.dividerWrap}>
                   <Divider
@@ -154,7 +168,7 @@ export const WelcomeStep: React.FC = () => {
                   />
                 </div>
               )}
-              <div className={styles.highlightItem} role="listitem">
+              <div className={styles.highlightItem}>
                 <div className={styles.highlightIcon} aria-hidden>
                   {h.icon}
                 </div>
@@ -169,9 +183,9 @@ export const WelcomeStep: React.FC = () => {
                   {h.description}
                 </Content>
               </div>
-            </React.Fragment>
+            </li>
           ))}
-        </div>
+        </ul>
       </FlexItem>
       <FlexItem className={styles.cta}>
         <Button

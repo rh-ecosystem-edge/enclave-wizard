@@ -29,7 +29,9 @@ describe("CaasStep", () => {
 
     expect(screen.getByLabelText("DNS class")).toBeInTheDocument();
     expect(screen.getByLabelText("DNS zone")).toBeInTheDocument();
-    expect(screen.getByText("These settings apply to every host registered below.")).toBeInTheDocument();
+    expect(
+      screen.getByText("These settings apply to every host registered below."),
+    ).toBeInTheDocument();
   });
 
   it("dispatches SET_FIELD for DNS class", async () => {
@@ -37,7 +39,10 @@ describe("CaasStep", () => {
     mockDispatch.mockClear();
     renderStep();
 
-    await user.selectOptions(screen.getByLabelText("DNS class"), "dns.route53.dns");
+    await user.selectOptions(
+      screen.getByLabelText("DNS class"),
+      "dns.route53.dns",
+    );
 
     expect(mockDispatch).toHaveBeenCalledWith({
       type: "SET_FIELD",

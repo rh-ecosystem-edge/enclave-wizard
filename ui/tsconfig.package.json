@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "${configDir}/.tmp/tsconfig.tsbuildinfo",
+    "rootDir": "${configDir}/src",
+    "outDir": "${configDir}/dist",
+    "declarationMap": true,
+    "emitDeclarationOnly": true
+  }
+}

@@ -88,7 +88,7 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div className={styles.root}>
-      <Card isRounded className={styles.card}>
+      <Card className={styles.card}>
         <CardBody>
           <div className={styles.logoWrap}>
             <RedHatLogo width={220} />

@@ -42,9 +42,7 @@ export function isOsacNetworkingUnset(
   );
 }
 
-export function isNetrisFabricManager(
-  networking: OsacNetworkingData,
-): boolean {
+export function isNetrisFabricManager(networking: OsacNetworkingData): boolean {
   return networking.fabricManager === "netris";
 }
 

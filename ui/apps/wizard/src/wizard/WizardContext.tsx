@@ -1,8 +1,8 @@
 import type React from "react";
 import { createContext, useContext, useReducer } from "react";
-import { FLAVORS, getFlavorPlugins, type FlavorId } from "./flavors.ts";
 import type { Experience } from "./experiences.ts";
 import { FALLBACK_EXPERIENCES } from "./experiences.ts";
+import { FLAVORS, type FlavorId, getFlavorPlugins } from "./flavors.ts";
 
 function deriveFlavorsFromPlugins(enabledPlugins: string[]): Set<FlavorId> {
   const enabled = new Set(enabledPlugins);
@@ -91,8 +91,11 @@ export function wizardReducer(
     case "TOGGLE_FLAVOR": {
       const nextFlavors = toggleFlavor(state.selectedFlavors, action.flavor);
       const allPlugins = new Set(
-        ((state.configData as Record<string, unknown>).global as Record<string, unknown> | undefined)
-          ?.enabled_plugins as string[] ?? [],
+        ((
+          (state.configData as Record<string, unknown>).global as
+            | Record<string, unknown>
+            | undefined
+        )?.enabled_plugins as string[]) ?? [],
       );
       for (const f of FLAVORS) {
         for (const p of getFlavorPlugins(f, action.experiences)) {
@@ -111,7 +114,11 @@ export function wizardReducer(
         [...allPlugins],
       );
       if (osacProfile) {
-        updated = setNestedField(updated, ["global", "osacProfile"], osacProfile);
+        updated = setNestedField(
+          updated,
+          ["global", "osacProfile"],
+          osacProfile,
+        );
       }
       const profilesList = selected.map((f) => f.id);
       if (profilesList.length > 0) {
@@ -121,7 +128,11 @@ export function wizardReducer(
           profilesList,
         );
       }
-      return { ...state, selectedFlavors: nextFlavors, configData: updated as ConfigData };
+      return {
+        ...state,
+        selectedFlavors: nextFlavors,
+        configData: updated as ConfigData,
+      };
     }
     case "SET_FIELD": {
       const keys = action.path.split(".");
@@ -141,12 +152,17 @@ export function wizardReducer(
     case "SET_SHOW_VALIDATION":
       return { ...state, showValidation: action.show };
     case "LOAD_CONFIG": {
-      const loadedPlugins = (action.config.global as Record<string, unknown> | undefined)
-        ?.enabled_plugins as string[] | undefined;
+      const loadedPlugins = (
+        action.config.global as Record<string, unknown> | undefined
+      )?.enabled_plugins as string[] | undefined;
       const derivedFlavors = loadedPlugins?.length
         ? deriveFlavorsFromPlugins(loadedPlugins)
         : state.selectedFlavors;
-      return { ...state, configData: action.config, selectedFlavors: derivedFlavors };
+      return {
+        ...state,
+        configData: action.config,
+        selectedFlavors: derivedFlavors,
+      };
     }
     default:
       return state;

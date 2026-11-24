@@ -1,14 +1,4 @@
 {
-  "compilerOptions": {
-    "tsBuildInfoFile": ".tmp/tsconfig.tsbuildinfo",
-    "composite": true,
-    "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "strict": true,
-    "skipLibCheck": true,
-    "noEmit": true,
-    "isolatedModules": true
-  },
+  "extends": "../../tsconfig.package.json",
   "include": ["src"]
 }

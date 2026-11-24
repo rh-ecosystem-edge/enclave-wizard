@@ -1,6 +1,10 @@
-import { renderHook, act, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { act, renderHook, waitFor } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useDeployment } from "./useDeployment.ts";
+
+vi.mock("../auth/AuthContext.tsx", () => ({
+  useAuth: () => ({ token: "test-token" }),
+}));
 
 // Mock useEnclaveApi
 const mockWriteConfig = vi.fn();
@@ -67,7 +71,7 @@ describe("useDeployment", () => {
     const { result } = renderHook(() => useDeployment());
 
     // Start deployment (non-awaiting to observe intermediate state)
-    let startPromise: Promise<void>;
+    let startPromise: Promise<void> | undefined;
     act(() => {
       startPromise = result.current.start({} as never);
     });
@@ -77,10 +81,15 @@ describe("useDeployment", () => {
       expect(result.current.state.phase).toBe("writing");
     });
 
+    if (!startPromise) {
+      throw new Error("deployment start did not return a promise");
+    }
+    const pendingStart = startPromise;
+
     // Resolve writeConfig and let deployment proceed
     await act(async () => {
       resolveWrite();
-      await startPromise!;
+      await pendingStart;
     });
 
     expect(result.current.state.phase).toBe("deploying");
@@ -106,10 +115,10 @@ describe("useDeployment", () => {
     mockFetch.mockImplementation((url: string, init?: RequestInit) => {
       if (url === "/api/v1/deployments" && init?.method === "POST") {
         return Promise.resolve(
-          new Response(
-            JSON.stringify({ id: "deploy-1", taskId: "task-new" }),
-            { status: 201, headers: { "Content-Type": "application/json" } },
-          ),
+          new Response(JSON.stringify({ id: "deploy-1", taskId: "task-new" }), {
+            status: 201,
+            headers: { "Content-Type": "application/json" },
+          }),
         );
       }
       if (url === "/api/v1/deployments/current") {
@@ -146,19 +155,14 @@ describe("useDeployment", () => {
     mockFetch.mockImplementation((url: string, init?: RequestInit) => {
       if (url === "/api/v1/deployments" && init?.method === "POST") {
         return Promise.resolve(
-          new Response(
-            JSON.stringify({ id: "deploy-1", taskId: "task-1" }),
-            { status: 201, headers: { "Content-Type": "application/json" } },
-          ),
+          new Response(JSON.stringify({ id: "deploy-1", taskId: "task-1" }), {
+            status: 201,
+            headers: { "Content-Type": "application/json" },
+          }),
         );
       }
-      if (
-        url === "/api/v1/deployments/deploy-1" &&
-        init?.method === "DELETE"
-      ) {
-        return Promise.resolve(
-          new Response(null, { status: 200 }),
-        );
+      if (url === "/api/v1/deployments/deploy-1" && init?.method === "DELETE") {
+        return Promise.resolve(new Response(null, { status: 200 }));
       }
       if (url === "/api/v1/deployments/current") {
         return Promise.resolve(new Response(null, { status: 404 }));

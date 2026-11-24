@@ -1,3 +1,4 @@
+import type { TaskRun } from "@enclave-wizard-ui/api-client";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -6,12 +7,23 @@ import { DeployStep } from "./DeployStep.tsx";
 
 const mockStart = vi.fn();
 const mockCancel = vi.fn();
+
+function taskRun(partial: Partial<TaskRun> & Pick<TaskRun, "status">): TaskRun {
+  return {
+    id: "task-1",
+    playbook: "deploy.yml",
+    type: "deploy",
+    startedAt: new Date(),
+    ...partial,
+  };
+}
+
 let mockDeploymentState: DeploymentState = {
   phase: "idle",
   progress: null,
   logs: "",
-  startTime: null,
   error: null,
+  deploymentId: null,
   taskId: null,
   task: null,
 };
@@ -49,8 +61,8 @@ describe("DeployStep", () => {
       phase: "idle",
       progress: null,
       logs: "",
-      startTime: null,
       error: null,
+      deploymentId: null,
       taskId: null,
       task: null,
     };
@@ -113,8 +125,7 @@ describe("DeployStep", () => {
       ...mockDeploymentState,
       phase: "deploying",
       taskId: "task-1",
-      startTime: new Date(),
-      task: { status: "running", startedAt: new Date() },
+      task: taskRun({ status: "running" }),
     };
 
     render(<DeployStep />);
@@ -128,7 +139,7 @@ describe("DeployStep", () => {
       ...mockDeploymentState,
       phase: "deploying",
       taskId: "task-1",
-      task: { status: "running", startedAt: new Date() },
+      task: taskRun({ status: "running" }),
     };
 
     render(<DeployStep />);
@@ -140,7 +151,11 @@ describe("DeployStep", () => {
       ...mockDeploymentState,
       phase: "complete",
       taskId: "task-1",
-      task: { status: "successful", startedAt: new Date(), endedAt: new Date(), exitCode: 0 },
+      task: taskRun({
+        status: "successful",
+        endedAt: new Date(),
+        exitCode: 0,
+      }),
     };
 
     render(<DeployStep />);
@@ -153,7 +168,11 @@ describe("DeployStep", () => {
       ...mockDeploymentState,
       phase: "failed",
       taskId: "task-1",
-      task: { status: "failed", startedAt: new Date(), endedAt: new Date(), exitCode: 1 },
+      task: taskRun({
+        status: "failed",
+        endedAt: new Date(),
+        exitCode: 1,
+      }),
     };
 
     render(<DeployStep />);
@@ -165,7 +184,7 @@ describe("DeployStep", () => {
       ...mockDeploymentState,
       phase: "deploying",
       taskId: "task-1",
-      task: { status: "running", startedAt: new Date() },
+      task: taskRun({ status: "running" }),
       logs: "PLAY [Setup]\nTASK [install] ok",
     };
 

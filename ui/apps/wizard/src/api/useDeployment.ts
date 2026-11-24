@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { EnclaveConfig, TaskRun } from "@enclave-wizard-ui/api-client";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../auth/AuthContext.tsx";
 import { useEnclaveApi } from "./useEnclaveApi.ts";
 import { useTasksApi } from "./useTasksApi.ts";
@@ -147,7 +147,10 @@ export function useDeployment(): UseDeploymentReturn {
               );
               if (resp) {
                 const body = await resp.json();
-                progress = { percentage: body.percentage ?? 0, currentTask: body.currentTask ?? "" };
+                progress = {
+                  percentage: body.percentage ?? 0,
+                  currentTask: body.currentTask ?? "",
+                };
               }
             } catch {
               // progress not available
@@ -165,7 +168,7 @@ export function useDeployment(): UseDeploymentReturn {
           if (!mountedRef.current) return;
 
           const isRunning = task.status === "running";
-          const isFailed = task.status === "failed" || task.status === "error";
+          const isFailed = task.status === "failed";
           const phase: DeployPhase = isRunning
             ? "deploying"
             : isFailed
@@ -176,7 +179,11 @@ export function useDeployment(): UseDeploymentReturn {
             ...prev,
             phase,
             task,
-            progress: isRunning ? progress : (isFailed ? progress : { percentage: 100, currentTask: "" }),
+            progress: isRunning
+              ? progress
+              : isFailed
+                ? progress
+                : { percentage: 100, currentTask: "" },
             logs,
             error: task?.error
               ? { message: task.error, details: [] }
@@ -194,7 +201,7 @@ export function useDeployment(): UseDeploymentReturn {
       tick();
       pollRef.current = setInterval(tick, 3000);
     },
-    [tasksApi, stopPolling, token],
+    [tasksApi, stopPolling],
   );
 
   const start = useCallback(
@@ -215,11 +222,15 @@ export function useDeployment(): UseDeploymentReturn {
         let deploymentId: string | null = null;
         let taskId: string | null = null;
 
-        const resp = await fetchWithFallback("/api/v1/deployments", tokenRef.current, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({}),
-        });
+        const resp = await fetchWithFallback(
+          "/api/v1/deployments",
+          tokenRef.current,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({}),
+          },
+        );
 
         if (resp) {
           const body = await resp.json();
@@ -251,7 +262,7 @@ export function useDeployment(): UseDeploymentReturn {
         }));
       }
     },
-    [api, tasksApi, pollDeployment, token],
+    [api, tasksApi, pollDeployment],
   );
 
   const cancel = useCallback(async () => {
@@ -288,7 +299,7 @@ export function useDeployment(): UseDeploymentReturn {
         },
       }));
     }
-  }, [state, tasksApi, stopPolling, token]);
+  }, [state, tasksApi, stopPolling]);
 
   // Reconnect to an in-progress deployment on mount (runs once after auth)
   useEffect(() => {
@@ -297,7 +308,10 @@ export function useDeployment(): UseDeploymentReturn {
 
     const reconnect = async () => {
       try {
-        const resp = await fetchWithFallback("/api/v1/deployments/current", tokenRef.current);
+        const resp = await fetchWithFallback(
+          "/api/v1/deployments/current",
+          tokenRef.current,
+        );
         if (resp) {
           const body = await resp.json();
           const deploymentId = body.id ?? null;
@@ -319,7 +333,9 @@ export function useDeployment(): UseDeploymentReturn {
 
       try {
         const resp = await fetch("/api/v1/deployment", {
-          headers: tokenRef.current ? { Authorization: `Bearer ${tokenRef.current}` } : {},
+          headers: tokenRef.current
+            ? { Authorization: `Bearer ${tokenRef.current}` }
+            : {},
         });
         if (resp.ok) {
           const body = await resp.json();
@@ -340,8 +356,5 @@ export function useDeployment(): UseDeploymentReturn {
     reconnect();
   }, [token, pollDeployment]);
 
-  return useMemo(
-    () => ({ state, start, cancel }),
-    [state, start, cancel],
-  );
+  return useMemo(() => ({ state, start, cancel }), [state, start, cancel]);
 }

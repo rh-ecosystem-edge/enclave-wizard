@@ -12,7 +12,7 @@ export const TaskTypeLabel: React.FC<TaskTypeLabelProps> = ({ type }) => {
     case "deploy-phase":
       return <Label color="purple">Phase</Label>;
     case "deploy-plugin":
-      return <Label color="cyan">Plugin</Label>;
+      return <Label color="teal">Plugin</Label>;
     default:
       return <Label>{type}</Label>;
   }

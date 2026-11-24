@@ -1,3 +1,4 @@
+// biome-ignore-all lint/a11y/noSvgWithoutTitle: decorative glyphs; each svg is aria-hidden
 import type { CSSProperties } from "react";
 
 type IconProps = { className?: string; style?: CSSProperties };

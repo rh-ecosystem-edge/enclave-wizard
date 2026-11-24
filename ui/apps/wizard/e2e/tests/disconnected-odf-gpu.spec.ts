@@ -1,14 +1,11 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { WizardPage } from "../helpers/wizard-page";
-import { WizardApi } from "../helpers/wizard-api";
 
 test.describe("Disconnected + ODF + GPU scenario", () => {
   let wizard: WizardPage;
-  let api: WizardApi;
 
-  test.beforeEach(async ({ page, request, baseURL }) => {
+  test.beforeEach(async ({ page }) => {
     wizard = new WizardPage(page);
-    api = new WizardApi(request, baseURL!);
   });
 
   test("completes full wizard flow with disconnected, ODF, and GPU enabled", async ({

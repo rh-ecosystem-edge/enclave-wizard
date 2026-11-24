@@ -4,7 +4,6 @@ import {
   FormHelperText,
   FormSelect,
   FormSelectOption,
-  NumberInput,
   TextInput,
 } from "@patternfly/react-core";
 import type React from "react";

@@ -1,5 +1,4 @@
 import { renderHook } from "@testing-library/react";
-import type React from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import {
@@ -72,20 +71,28 @@ const MOCK_SCHEMA = {
   },
 };
 
-// Mock context hooks so useStepValidation can be called via renderHook
-let mockConfigState: Record<string, unknown> = {};
-let mockCatalogState: Record<string, unknown> = {};
+// Mock wizard context so useStepValidation can be called via renderHook
+let mockWizardState: {
+  schema: unknown;
+  configData: Record<string, unknown>;
+} = { schema: null, configData: {} };
 
-vi.mock("../contexts/ConfigContext.tsx", () => ({
-  useConfig: () => ({ state: mockConfigState }),
-}));
-
-vi.mock("../contexts/CatalogContext.tsx", () => ({
-  useCatalog: () => ({ state: mockCatalogState }),
+vi.mock("../WizardContext.tsx", () => ({
+  useWizard: () => ({ state: mockWizardState, dispatch: vi.fn() }),
 }));
 
 function renderValidation(subStepId: string) {
   return renderHook(() => useStepValidation(subStepId));
+}
+
+function setWizardMocks(opts: {
+  schema?: unknown;
+  configData?: Record<string, unknown>;
+}) {
+  mockWizardState = {
+    schema: opts.schema ?? MOCK_SCHEMA,
+    configData: opts.configData ?? {},
+  };
 }
 
 describe("step validation rules", () => {
@@ -174,8 +181,7 @@ describe("step validation rules", () => {
 describe("useStepValidation custom rules", () => {
   describe("hub-cluster 3-node check", () => {
     it("requires exactly 3 control plane nodes", () => {
-      mockConfigState = { configData: { global: { agent_hosts: [] } } };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      setWizardMocks({ configData: { global: { agent_hosts: [] } } });
       const { result } = renderValidation("hub-cluster");
       const errors = result.current();
       expect(
@@ -185,11 +191,26 @@ describe("useStepValidation custom rules", () => {
 
     it("rejects 2 nodes", () => {
       const twoHosts = [
-        { name: "cp-0", macAddress: "aa", ipAddress: "10.0.0.1", redfish: "r", redfishUser: "u", redfishPassword: "p", rootDisk: "/dev/sda" },
-        { name: "cp-1", macAddress: "bb", ipAddress: "10.0.0.2", redfish: "r", redfishUser: "u", redfishPassword: "p", rootDisk: "/dev/sda" },
+        {
+          name: "cp-0",
+          macAddress: "aa",
+          ipAddress: "10.0.0.1",
+          redfish: "r",
+          redfishUser: "u",
+          redfishPassword: "p",
+          rootDisk: "/dev/sda",
+        },
+        {
+          name: "cp-1",
+          macAddress: "bb",
+          ipAddress: "10.0.0.2",
+          redfish: "r",
+          redfishUser: "u",
+          redfishPassword: "p",
+          rootDisk: "/dev/sda",
+        },
       ];
-      mockConfigState = { configData: { global: { agent_hosts: twoHosts } } };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      setWizardMocks({ configData: { global: { agent_hosts: twoHosts } } });
       const { result } = renderValidation("hub-cluster");
       const errors = result.current();
       expect(errors.some((e) => e.path === "global.agentHosts")).toBe(true);
@@ -198,34 +219,38 @@ describe("useStepValidation custom rules", () => {
 
   describe("storage ODF validation", () => {
     it("requires ODF external config when backend is odf", () => {
-      mockConfigState = {
-        configData: { global: { storage_plugin: "odf", odfExternalConfig: "" } },
-      };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      setWizardMocks({
+        configData: {
+          global: { storage_plugin: "odf", odfExternalConfig: "" },
+        },
+      });
       const { result } = renderValidation("storage");
       const errors = result.current();
-      expect(
-        errors.some((e) => e.path === "global.odfExternalConfig"),
-      ).toBe(true);
+      expect(errors.some((e) => e.path === "global.odfExternalConfig")).toBe(
+        true,
+      );
     });
   });
 
   describe("storage VAST CSI validation", () => {
     it("requires VAST fields when backend is vast-csi", () => {
-      mockConfigState = {
+      setWizardMocks({
         configData: { global: { storage_plugin: "vast-csi" } },
-      };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      });
       const { result } = renderValidation("storage");
       const errors = result.current();
       expect(errors.some((e) => e.path === "global.vastEndpoint")).toBe(true);
-      expect(errors.some((e) => e.path === "global.vastAdminUsername")).toBe(true);
-      expect(errors.some((e) => e.path === "global.vastAdminPassword")).toBe(true);
+      expect(errors.some((e) => e.path === "global.vastAdminUsername")).toBe(
+        true,
+      );
+      expect(errors.some((e) => e.path === "global.vastAdminPassword")).toBe(
+        true,
+      );
       expect(errors.some((e) => e.path === "global.vastVipPool")).toBe(true);
     });
 
     it("accepts valid VAST fields", () => {
-      mockConfigState = {
+      setWizardMocks({
         configData: {
           global: {
             storage_plugin: "vast-csi",
@@ -238,8 +263,7 @@ describe("useStepValidation custom rules", () => {
             },
           },
         },
-      };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      });
       const { result } = renderValidation("storage");
       const errors = result.current();
       const vastErrors = errors.filter(
@@ -251,20 +275,18 @@ describe("useStepValidation custom rules", () => {
 
   describe("OSAC license validation", () => {
     it("requires AAP subscription manifest for OSAC step", () => {
-      mockConfigState = { configData: { global: {} } };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      setWizardMocks({ configData: { global: {} } });
       const { result } = renderValidation("osac");
       const errors = result.current();
-      expect(
-        errors.some((e) => e.path === "global.osacAapLicenseFile"),
-      ).toBe(true);
+      expect(errors.some((e) => e.path === "global.osacAapLicenseFile")).toBe(
+        true,
+      );
     });
 
     it("passes when OSAC license is provided", () => {
-      mockConfigState = {
+      setWizardMocks({
         configData: { global: { osacAapLicenseFile: "/path/to/manifest.zip" } },
-      };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      });
       const { result } = renderValidation("osac");
       const errors = result.current();
       const osacErrors = errors.filter((e) =>
@@ -274,15 +296,14 @@ describe("useStepValidation custom rules", () => {
     });
 
     it("blocks Continue when Metal3 is enabled without a namespace", () => {
-      mockConfigState = {
+      setWizardMocks({
         configData: {
           global: {
             osacAapLicenseFile: "/path/to/manifest.zip",
             osacMetal3Enabled: true,
           },
         },
-      };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      });
       const { result } = renderValidation("osac");
       const errors = result.current();
       expect(errors.some((e) => e.path === "global.osacMetal3Namespace")).toBe(
@@ -291,15 +312,14 @@ describe("useStepValidation custom rules", () => {
     });
 
     it("blocks Continue when BCM is enabled without connection fields", () => {
-      mockConfigState = {
+      setWizardMocks({
         configData: {
           global: {
             osacAapLicenseFile: "/path/to/manifest.zip",
             osacBcmEnabled: true,
           },
         },
-      };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      });
       const { result } = renderValidation("osac");
       const errors = result.current();
       expect(errors.some((e) => e.path === "global.osacBcmUrl")).toBe(true);
@@ -308,8 +328,7 @@ describe("useStepValidation custom rules", () => {
 
   describe("AAP license validation", () => {
     it("requires AAP subscription file for standalone AAP step", () => {
-      mockConfigState = { configData: { global: { aapDefaults: {} } } };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      setWizardMocks({ configData: { global: { aapDefaults: {} } } });
       const { result } = renderValidation("aap");
       const errors = result.current();
       expect(
@@ -318,27 +337,23 @@ describe("useStepValidation custom rules", () => {
     });
 
     it("passes when AAP license is provided", () => {
-      mockConfigState = {
+      setWizardMocks({
         configData: {
           global: {
             aapDefaults: { aapLicenseFile: "/uploads/manifest.zip" },
           },
         },
-      };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      });
       const { result } = renderValidation("aap");
       const errors = result.current();
-      const aapErrors = errors.filter((e) =>
-        e.path.includes("aapLicenseFile"),
-      );
+      const aapErrors = errors.filter((e) => e.path.includes("aapLicenseFile"));
       expect(aapErrors).toHaveLength(0);
     });
   });
 
   describe("CaaS DNS validation", () => {
     it("requires DNS class and zone for CaaS step", () => {
-      mockConfigState = { configData: { global: {} } };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      setWizardMocks({ configData: { global: {} } });
       const { result } = renderValidation("caas");
       const errors = result.current();
       expect(errors.some((e) => e.path === "global.osacDnsClass")).toBe(true);
@@ -346,10 +361,9 @@ describe("useStepValidation custom rules", () => {
     });
 
     it("requires DNS zone when only class is set", () => {
-      mockConfigState = {
+      setWizardMocks({
         configData: { global: { osacDnsClass: "dns.route53.dns" } },
-      };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      });
       const { result } = renderValidation("caas");
       const errors = result.current();
       expect(errors.some((e) => e.path === "global.osacDnsClass")).toBe(false);
@@ -357,33 +371,32 @@ describe("useStepValidation custom rules", () => {
     });
 
     it("passes when DNS class and zone are provided", () => {
-      mockConfigState = {
+      setWizardMocks({
         configData: {
           global: {
             osacDnsClass: "dns.route53.dns",
             osacDnsZone: "example.com",
           },
         },
-      };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      });
       const { result } = renderValidation("caas");
       const errors = result.current();
       const dnsErrors = errors.filter(
-        (e) => e.path === "global.osacDnsClass" || e.path === "global.osacDnsZone",
+        (e) =>
+          e.path === "global.osacDnsClass" || e.path === "global.osacDnsZone",
       );
       expect(dnsErrors).toHaveLength(0);
     });
 
     it("rejects a DNS zone that is not a valid DNS name", () => {
-      mockConfigState = {
+      setWizardMocks({
         configData: {
           global: {
             osacDnsClass: "dns.route53.dns",
             osacDnsZone: "not a zone",
           },
         },
-      };
-      mockCatalogState = { schema: MOCK_SCHEMA };
+      });
       const { result } = renderValidation("caas");
       const errors = result.current();
       expect(

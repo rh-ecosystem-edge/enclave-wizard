@@ -17,6 +17,7 @@ import {
   PlusCircleIcon,
 } from "@patternfly/react-icons";
 import type React from "react";
+import { useRowKeys } from "../components/useRowKeys.ts";
 import { useWizard } from "../WizardContext.tsx";
 import { stepStyles } from "./stepStyles.ts";
 
@@ -38,6 +39,14 @@ function VipPoolEditor({
   };
   const ranges =
     pool.ip_ranges.length > 0 ? pool.ip_ranges : [{ start: "", end: "" }];
+  const { keys: rangeKeys, removeAt: removeRangeKey } = useRowKeys(
+    ranges.length,
+  );
+  const rangeRows = ranges.map((range, index) => ({
+    key: rangeKeys[index] ?? "",
+    range,
+    index,
+  }));
 
   const update = (patch: Partial<VipPool>) =>
     onChange({ ...pool, ...patch } as VipPool);
@@ -65,29 +74,29 @@ function VipPoolEditor({
         />
       </FormGroup>
       <FormGroup label="IP ranges" fieldId="vast-vip-ranges" isRequired>
-        {ranges.map((r, i) => (
+        {rangeRows.map((row) => (
           <Flex
-            key={i}
+            key={row.key}
             gap={{ default: "gapSm" }}
             alignItems={{ default: "alignItemsCenter" }}
             style={{ marginBottom: "0.5rem" }}
           >
             <FlexItem>
               <TextInput
-                id={`vast-vip-start-${i}`}
+                id={`vast-vip-start-${row.index}`}
                 placeholder="Start IP"
-                value={r.start}
-                onChange={(_e, v) => setRange(i, "start", v)}
+                value={row.range.start}
+                onChange={(_e, v) => setRange(row.index, "start", v)}
                 aria-label="Range start IP"
               />
             </FlexItem>
             <FlexItem>—</FlexItem>
             <FlexItem>
               <TextInput
-                id={`vast-vip-end-${i}`}
+                id={`vast-vip-end-${row.index}`}
                 placeholder="End IP"
-                value={r.end}
-                onChange={(_e, v) => setRange(i, "end", v)}
+                value={row.range.end}
+                onChange={(_e, v) => setRange(row.index, "end", v)}
                 aria-label="Range end IP"
               />
             </FlexItem>
@@ -95,9 +104,12 @@ function VipPoolEditor({
               <Button
                 variant="plain"
                 aria-label="Remove range"
-                onClick={() =>
-                  update({ ip_ranges: ranges.filter((_, idx) => idx !== i) })
-                }
+                onClick={() => {
+                  removeRangeKey(row.index);
+                  update({
+                    ip_ranges: ranges.filter((_, idx) => idx !== row.index),
+                  });
+                }}
                 isDisabled={ranges.length === 1}
               >
                 <MinusCircleIcon />
@@ -153,6 +165,14 @@ export const StorageStep: React.FC = () => {
   const optionalPaths: string[] = Array.isArray(deviceSelector.optionalPaths)
     ? (deviceSelector.optionalPaths as string[])
     : [];
+  const { keys: pathKeys, removeAt: removePathKey } = useRowKeys(
+    optionalPaths.length,
+  );
+  const pathRows = optionalPaths.map((path, index) => ({
+    key: pathKeys[index] ?? "",
+    path,
+    index,
+  }));
   const quayUser = (globalData.quayUser as string) ?? "";
   const quayPassword = (globalData.quayPassword as string) ?? "";
   const rgwConfig = (globalData.quayBackendRGWConfiguration ?? {}) as Record<
@@ -244,20 +264,25 @@ export const StorageStep: React.FC = () => {
             Optional. Specify disk device paths for LVMS to use. Leave empty to
             auto-discover all available block devices.
           </FormHelperText>
-          {optionalPaths.map((path, i) => (
+          {pathRows.map((row) => (
             <Flex
-              key={i}
+              key={row.key}
               gap={{ default: "gapSm" }}
               alignItems={{ default: "alignItemsCenter" }}
-              style={{ marginBottom: "0.5rem", marginTop: i === 0 ? "0.5rem" : undefined }}
+              style={{
+                marginBottom: "0.5rem",
+                marginTop: row.index === 0 ? "0.5rem" : undefined,
+              }}
             >
               <FlexItem grow={{ default: "grow" }}>
                 <TextInput
-                  id={`lvms-path-${i}`}
-                  value={path}
+                  id={`lvms-path-${row.index}`}
+                  value={row.path}
                   onChange={(_e, v) =>
                     setOptionalPaths(
-                      optionalPaths.map((p, idx) => (idx === i ? v : p)),
+                      optionalPaths.map((p, idx) =>
+                        idx === row.index ? v : p,
+                      ),
                     )
                   }
                   placeholder="/dev/sdb or /dev/disk/by-path/..."
@@ -268,11 +293,12 @@ export const StorageStep: React.FC = () => {
                 <Button
                   variant="plain"
                   aria-label="Remove disk path"
-                  onClick={() =>
+                  onClick={() => {
+                    removePathKey(row.index);
                     setOptionalPaths(
-                      optionalPaths.filter((_, idx) => idx !== i),
-                    )
-                  }
+                      optionalPaths.filter((_, idx) => idx !== row.index),
+                    );
+                  }}
                 >
                   <MinusCircleIcon />
                 </Button>

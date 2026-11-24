@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 const repoRoot = path.resolve(
@@ -30,8 +30,7 @@ function makeHttpsConfig(): { key: Buffer; cert: Buffer } | undefined {
 
 export default defineConfig((_env) => {
   const devPort = Number(process.env.VITE_PORT || 3080);
-  const proxyTarget =
-    process.env.API_PROXY_TARGET || "https://127.0.0.1:3443";
+  const proxyTarget = process.env.API_PROXY_TARGET || "https://127.0.0.1:3443";
   const https = makeHttpsConfig();
   return {
     plugins: [react()],

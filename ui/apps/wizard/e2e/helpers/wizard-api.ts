@@ -50,10 +50,9 @@ export class WizardApi {
   }
 
   async login(password: string): Promise<LoginResponse> {
-    const res = await this.request.post(
-      `${this.baseUrl}/api/v1/auth/login`,
-      { data: { username: "admin", password } },
-    );
+    const res = await this.request.post(`${this.baseUrl}/api/v1/auth/login`, {
+      data: { username: "admin", password },
+    });
     if (!res.ok()) throw new Error(`login failed: ${res.status()}`);
     const body: LoginResponse = await res.json();
     this.token = body.token;

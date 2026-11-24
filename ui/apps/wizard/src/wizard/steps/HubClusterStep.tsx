@@ -14,6 +14,7 @@ import { useState } from "react";
 import { SchemaFormRenderer } from "../../schema/SchemaFormRenderer.tsx";
 import { CertificateField } from "../components/CertificateField.tsx";
 import { type HostEntry, HostEntryCard } from "../components/HostEntryCard.tsx";
+import { useRowKeys } from "../components/useRowKeys.ts";
 import { useWizard } from "../WizardContext.tsx";
 import { stepStyles } from "./stepStyles.ts";
 
@@ -99,6 +100,12 @@ export const HubClusterStep: React.FC = () => {
 
   const hostCount = agentHosts.length;
   const canAddHost = hostCount < 3;
+  const { keys: hostKeys, removeAt: removeHostKey } = useRowKeys(hostCount);
+  const hostRows = agentHosts.map((host, index) => ({
+    key: hostKeys[index] ?? "",
+    host,
+    index,
+  }));
 
   if (!state.schema) {
     return <div>Loading schema...</div>;
@@ -210,19 +217,19 @@ export const HubClusterStep: React.FC = () => {
         gap={{ default: "gapMd" }}
         className={stepStyles.hostSection}
       >
-        {agentHosts.map((host, i) => (
-          <FlexItem key={`agent-${i}`}>
+        {hostRows.map((row) => (
+          <FlexItem key={row.key}>
             <Flex
               alignItems={{ default: "alignItemsFlexStart" }}
               gap={{ default: "gapSm" }}
             >
               <FlexItem grow={{ default: "grow" }}>
                 <HostEntryCard
-                  index={i}
-                  host={host}
+                  index={row.index}
+                  host={row.host}
                   onChange={(h) => {
                     const updated = [...agentHosts];
-                    updated[i] = h;
+                    updated[row.index] = h;
                     setAgentHosts(updated);
                   }}
                   label="Node"
@@ -231,10 +238,13 @@ export const HubClusterStep: React.FC = () => {
               <FlexItem>
                 <Button
                   variant="plain"
-                  aria-label={`Remove node ${i + 1}`}
-                  onClick={() =>
-                    setAgentHosts(agentHosts.filter((_, idx) => idx !== i))
-                  }
+                  aria-label={`Remove node ${row.index + 1}`}
+                  onClick={() => {
+                    removeHostKey(row.index);
+                    setAgentHosts(
+                      agentHosts.filter((_, idx) => idx !== row.index),
+                    );
+                  }}
                   className={stepStyles.removeButton}
                 >
                   <MinusCircleIcon />

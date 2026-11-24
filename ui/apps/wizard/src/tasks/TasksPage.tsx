@@ -1,6 +1,7 @@
 import type { TaskRun } from "@enclave-wizard-ui/api-client";
 import {
   Alert,
+  AlertActionCloseButton,
   Breadcrumb,
   BreadcrumbItem,
   Button,
@@ -119,7 +120,9 @@ function TaskDetail({
     if (follow && isRunning && logsEndRef.current) {
       logsEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [logsHtml, follow, isRunning]);
+    // logs is not read above; it retriggers follow-scroll when output grows.
+    void logs;
+  }, [logs, follow, isRunning]);
 
   if (taskLoading && !task) {
     return <Spinner aria-label="Loading task..." />;
@@ -242,6 +245,7 @@ function TaskDetail({
       <StackItem>
         <div className={styles.logsContainer}>
           {logsHtml ? (
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is local ANSI conversion of task logs, not untrusted markup
             <div dangerouslySetInnerHTML={{ __html: logsHtml }} />
           ) : isRunning ? (
             "Waiting for output..."
@@ -405,7 +409,9 @@ export const TasksPage: React.FC = () => {
             variant="danger"
             title="Failed to delete task"
             isInline
-            onClose={() => setDeleteError(null)}
+            actionClose={
+              <AlertActionCloseButton onClose={() => setDeleteError(null)} />
+            }
           >
             {deleteError}
           </Alert>
