@@ -12,8 +12,9 @@ Do not invent a different layout.
 
 1. Copy `hack/git/commit-template` to a temp file (or rely on `commit.template` if the editor opens).
 2. Fill **Subject** and **Why**. Fill **Notes** only when useful; otherwise delete that section.
-3. Commit with `git commit -F <file>` (preferred). Avoid bare `git commit -m "..."` for
-   multi-section messages — that skips the template.
+3. Commit with `git commit -F <file> --cleanup=strip` (preferred). Avoid bare
+   `git commit -m "..."` for multi-section messages — that skips the template.
+   `--cleanup=strip` drops `#` instruction lines left from the template.
 4. Do **not** add `Assisted-by` by hand. `hack/git/hooks/prepare-commit-msg` appends it.
 5. Do **not** use `Co-Authored-By` for AI attribution.
 

@@ -25,14 +25,15 @@ This configures:
 | `commit.template` | `hack/git/commit-template` | Subject / Why / Notes skeleton for editor commits |
 
 Fill [`hack/git/commit-template`](../hack/git/commit-template) (Subject + Why required;
-Notes optional). Prefer `git commit -F <file>` after editing a copy of the template.
-Bare `git commit -m "..."` skips the template.
+Notes optional). Prefer `git commit -F <file> --cleanup=strip` after editing a copy
+of the template. `--cleanup=strip` removes `#` instruction lines. Bare
+`git commit -m "..."` skips the template.
 
 Override the Assisted-by name with `ASSISTED_BY` (or `GIT_ASSISTED_BY`) if
 auto-detection is wrong:
 
 ```bash
-ASSISTED_BY='Cursor' git commit -F /tmp/commitmsg
+ASSISTED_BY='Cursor' git commit -F /tmp/commitmsg --cleanup=strip
 ```
 
 ## Project Structure
