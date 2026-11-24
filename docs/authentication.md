@@ -36,12 +36,16 @@ file (default path: `/etc/enclave-wizard/password`).
 | The password file is missing or empty | The server creates a random 16-character password, stores its bcrypt hash, and prints the plaintext password once. |
 
 On first generation, the server also writes the plaintext password to
-`/tmp/enclave-wizard-init-pass`. Deployment scripts and end-to-end (E2E) tests
-can read that file. Treat it as a temporary secret.
+`/tmp/enclave-wizard-init-pass` with mode `0600` (owner read/write only).
+Deployment scripts and end-to-end (E2E) tests can read that file only if they
+run as the same user as the wizard process (or as root). Treat it as a
+temporary secret.
 
-You must change the initial password on first successful login. Until you
-change it, the UI keeps you on the login flow and opens the change-password
-dialog.
+The UI requires you to change the initial password on first successful login.
+Until you change it, the UI keeps you on the login flow and opens the
+change-password dialog. The API does not enforce this requirement. A token
+returned by `/api/v1/auth/login` with `mustChangePassword=true` authorizes
+protected `/api/v1/` paths until the password changes.
 
 ## Sign-in flow (operator view)
 
@@ -192,8 +196,12 @@ returns to the login page.
 
 | Path | Content |
 |------|---------|
-| `/etc/enclave-wizard/password` (default) | bcrypt hash of the admin password (mode `0600`). |
+| `/etc/enclave-wizard/password` (default) | bcrypt hash of the admin password. The store creates this file with mode `0600`. |
 | `/etc/enclave-wizard/password.changed` | Marker file. Its presence means the initial password was changed. |
+
+Mode `0600` applies when the store creates or rewrites the password file. If you
+pre-create the file yourself, set `chmod 0600` on it before startup. The store
+does not change permissions on a non-empty file it only loads.
 
 You can point the process at another password file with `--password-file`.
 
@@ -204,7 +212,7 @@ enclave-wizard hash-password '<plaintext-password>'
 ```
 
 Write the printed hash into the password file before start. Do not store
-plaintext passwords in that file.
+plaintext passwords in that file. Set mode `0600` on that file.
 
 ## Development without auth
 

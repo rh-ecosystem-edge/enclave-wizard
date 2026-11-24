@@ -187,7 +187,7 @@ func main() {
 			fmt.Println("  │  (You must change it on first login)       │")
 			fmt.Println("  └────────────────────────────────────────────┘")
 			fmt.Println("")
-			os.WriteFile("/tmp/enclave-wizard-init-pass", []byte(generatedPass+"\n"), 0644)
+			os.WriteFile("/tmp/enclave-wizard-init-pass", []byte(generatedPass+"\n"), 0600)
 		}
 
 		mux := http.NewServeMux()
