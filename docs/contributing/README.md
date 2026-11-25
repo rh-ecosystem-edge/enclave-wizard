@@ -213,6 +213,7 @@ the index only points at it.
 - [Testing](testing.md) — how to run and write tests for this repo
 - [Testing patterns](enclave-testing-patterns.md) — Enclave lab test strategy and patterns
 - [Recording deployments](recording-deployment.md) — recording ansible-runner output for demo mode
+- [Architecture Decision Records](decisions/README.md) — as-built baseline (ADR-001–008)
 - [ADR-001: GitHub Actions CI](decisions/ADR-001-github-actions-ci.md) — PR and release workflow decisions
 
 ## Operator / reference docs
