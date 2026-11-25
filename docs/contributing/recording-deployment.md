@@ -90,7 +90,7 @@ After a deployment, recordings are saved as single JSON files:
 Build the wizard in dev mode and run with `--replay`:
 
 ```bash
-go build -tags dev -o bin/enclave-wizard .
+TAGS=dev make build-go
 ./bin/enclave-wizard --replay --enclave-dir ../enclave
 ```
 
