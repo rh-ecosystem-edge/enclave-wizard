@@ -14,7 +14,7 @@
       "!**/.tmp/**",
       "!**/.cache/**",
       "!**/out/**",
-      "!./packages/api-client/**"
+      "!**/packages/api-client/**"
     ]
   },
   "assist": { "actions": { "source": { "organizeImports": "on" } } },
