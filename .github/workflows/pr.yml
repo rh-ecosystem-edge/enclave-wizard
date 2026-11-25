@@ -98,14 +98,17 @@ jobs:
         run: |
           mkdir -p ui/apps/wizard/dist
           printf '%s\n' '<!DOCTYPE html><html></html>' > ui/apps/wizard/dist/index.html
+      # only-new-issues: pre-existing errcheck/staticcheck debt is #38;
+      # fail the PR only on findings introduced by the diff.
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
           version: v2.13.2
+          only-new-issues: true
       - name: Unit tests
         run: make test
       - name: Build
-        run: go build -o enclave-wizard .
+        run: make build-go
 
   # Single status for branch protection: passes when required jobs succeed or are skipped (e.g. docs-only).
   ci:

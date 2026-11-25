@@ -1,4 +1,4 @@
-enclave-wizard
+bin/
 out/
 wizard-ui.tar
 enclave-mock/
@@ -8,4 +8,4 @@ demo-params.json
 hack/tls/
 ui/apps/wizard/e2e/test-results/
 *.local.*
-
+.cursor/

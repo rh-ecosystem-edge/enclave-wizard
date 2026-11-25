@@ -1,4 +1,5 @@
-BINARY := enclave-wizard
+BIN_DIR := bin
+BINARY := $(BIN_DIR)/enclave-wizard
 GO := go
 CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
 # Keep in sync with .github/workflows/pr.yml (golangci-lint-action version).
@@ -15,19 +16,25 @@ LDFLAGS := -w -s -X main.wizardVersion=$(WIZARD_VERSION) -X main.enclaveVersion=
 help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9\/-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-.PHONY: build build-linux build-ui run test lint lint-install clean tidy deploy teardown generate generate-schema enclave-mock clean-enclave-mock run-mock preview deploy-preview bm-emulation bm-emulation-config bm-teardown test-config demo-build demo-start demo-stop demo-restart demo dev-ui
+.PHONY: build build-go build-linux build-ui run test lint lint-install clean tidy deploy teardown generate generate-schema enclave-mock clean-enclave-mock run-mock preview deploy-preview bm-emulation bm-emulation-config bm-teardown test-config demo-build demo-start demo-stop demo-restart demo dev-ui _ensure_bin_dir
 
 ##@ Build
+
+# Private: create $(BIN_DIR) before writing $(BINARY).
+_ensure_bin_dir:
+	mkdir -p $(BIN_DIR)
 
 build-ui: ## Build the frontend (Vite).
 	$(CONTAINER_RUNTIME) run --rm -v $(PWD)/ui:/app:z -w /app node:24-alpine \
 		sh -c "corepack enable && yarn install && \
 		yarn workspace @enclave-wizard-ui/wizard run -T vite build"
 
-build: build-ui ## Build UI + Go binary.
+build-go: _ensure_bin_dir ## Build Go binary only (skip UI). TAGS=dev for demo/recording.
 	$(GO) build -ldflags="$(LDFLAGS)" -tags "$(TAGS)" -o $(BINARY) .
 
-build-linux: build-ui
+build: build-ui build-go ## Build UI + Go binary.
+
+build-linux: build-ui _ensure_bin_dir
 	rm -f $(BINARY)
 	$(CONTAINER_RUNTIME) run --rm -v $(PWD):/app:z -w /app golang:latest \
 		sh -c "CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags='$(LDFLAGS)' -tags '$(TAGS)' -o $(BINARY) ."
@@ -37,11 +44,11 @@ build-linux: build-ui
 run: build ## Build and run against ../enclave.
 	./$(BINARY) --enclave-dir ../enclave --tls-cert hack/tls/server.crt --tls-key hack/tls/server.key
 
-run-demo: build-ui ## Build and run in demo mode (foreground).
+run-demo: build-ui _ensure_bin_dir ## Build and run in demo mode (foreground).
 	$(GO) build -ldflags="$(LDFLAGS)" -tags dev -o $(BINARY) .
 	./$(BINARY) --demo-deploy --enclave-dir ../enclave --tls-cert hack/tls/server.crt --tls-key hack/tls/server.key
 
-preview: build-ui
+preview: build-ui _ensure_bin_dir
 	$(CONTAINER_RUNTIME) run --rm -v $(PWD):/app:z -w /app golang:latest \
 		sh -c "CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags='$(LDFLAGS)' -tags dev -o $(BINARY) ."
 	hack/run-preview.sh $(PORT)
@@ -191,13 +198,13 @@ dev-ui: ensure-dev-certs ## Run API + Vite (HMR). UI: https://localhost:$(VITE_P
 		VITE_TLS_KEY=$(abspath $(WIZARD_TLS_KEY)) \
 		yarn run start
 
-dev: ## Build and run API (no-auth, enclave-mock); invoked by dev-ui for the API process.
+dev: _ensure_bin_dir ## Build and run API (no-auth, enclave-mock); invoked by dev-ui for the API process.
 	$(GO) build -ldflags="$(LDFLAGS)" -tags dev -o $(BINARY) .
 	./$(BINARY) $(WIZARD_DEV_FLAGS)
 
 ##@ Demo Environment
 
-demo-build: build-ui ## Build the binary for demo mode.
+demo-build: build-ui _ensure_bin_dir ## Build the binary for demo mode.
 	$(GO) build -ldflags="$(LDFLAGS)" -tags dev -o $(BINARY) .
 
 demo-start: ## Start demo in background. SPEED=10 PORT=3443 ENCLAVE_DIR=hack/enclave

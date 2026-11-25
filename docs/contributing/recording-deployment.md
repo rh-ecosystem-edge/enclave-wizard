@@ -90,8 +90,8 @@ After a deployment, recordings are saved as single JSON files:
 Build the wizard in dev mode and run with `--replay`:
 
 ```bash
-go build -tags dev -o enclave-wizard .
-./enclave-wizard --replay --enclave-dir ../enclave
+TAGS=dev make build-go
+./bin/enclave-wizard --replay --enclave-dir ../enclave
 ```
 
 Speed control: `--speed 0` (instant), `--speed 1` (real-time), `--speed 10` (10x faster).

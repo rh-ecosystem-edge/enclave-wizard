@@ -38,7 +38,7 @@ wait_for_ready() {
 }
 
 main() {
-    local binary="$ROOT_DIR/enclave-wizard"
+    local binary="$ROOT_DIR/bin/enclave-wizard"
     local enclave_dir="${ENCLAVE_DIR:-$ROOT_DIR/hack/enclave}"
     local tls_cert="$ROOT_DIR/hack/tls/server.crt"
     local tls_key="$ROOT_DIR/hack/tls/server.key"
