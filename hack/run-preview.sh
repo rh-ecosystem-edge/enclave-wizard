@@ -23,7 +23,7 @@ echo "  No auth, demo deploy mode"
 echo "  Enclave dir: $ENCLAVE_DIR"
 echo ""
 
-exec "$ROOT_DIR/enclave-wizard" \
+exec "$ROOT_DIR/bin/enclave-wizard" \
   --no-auth \
   --demo-deploy \
   --https-port "$PORT" \

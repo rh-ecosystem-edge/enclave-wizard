@@ -105,7 +105,7 @@ jobs:
       - name: Unit tests
         run: make test
       - name: Build
-        run: go build -o enclave-wizard .
+        run: make build-go
 
   # Single status for branch protection: passes when required jobs succeed or are skipped (e.g. docs-only).
   ci:

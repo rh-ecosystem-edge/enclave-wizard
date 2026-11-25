@@ -109,7 +109,7 @@ Fork PRs that introduce new workflows may need a maintainer to **Approve and run
 make lint-install              # once: golangci-lint v2.13.2 into $(go env GOPATH)/bin
 make lint
 make test
-go build -o enclave-wizard .   # needs ui/apps/wizard/dist (or run make build-ui first)
+make build                         # UI + Go binary → bin/enclave-wizard
 
 # UI (distrobox / Node 24)
 cd ui

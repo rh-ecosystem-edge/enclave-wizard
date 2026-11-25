@@ -14,6 +14,7 @@ make demo-stop      # stop the demo
 make demo-restart   # restart the demo
 make test           # run Go tests
 make build          # build UI + Go binary
+make build-go       # Go binary only (TAGS=dev for demo/recording)
 make lint           # run go vet
 ```
 
@@ -69,10 +70,10 @@ The UI is embedded in the Go binary at build time via `//go:embed`. Changing UI 
 ### Backend only (Go changes)
 
 ```bash
-go build -tags dev -o enclave-wizard .
+TAGS=dev make build-go
 ```
 
-Skip `build-ui` when only Go code changed. Use `dev` tag if you need demo/recording features.
+Skips the UI build. Use `TAGS=dev` when you need demo/recording features; omit it for a production-style binary.
 
 ### Linux cross-compile (for deployment)
 

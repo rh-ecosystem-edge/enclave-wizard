@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-BINARY="$ROOT_DIR/enclave-wizard"
+BINARY="$ROOT_DIR/bin/enclave-wizard"
 
 if [ $# -lt 1 ]; then
   echo "Usage: $0 <user@host> [PORT]"
@@ -23,8 +23,9 @@ SCP="scp -o StrictHostKeyChecking=no -q"
 if [ ! -f "$BINARY" ]; then
   echo "Binary not found. Building..."
   make -C "$ROOT_DIR" build-ui
+  mkdir -p "$ROOT_DIR/bin"
   podman run --rm -v "$ROOT_DIR:/app:z" -w /app golang:latest \
-    sh -c "CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags='-w -s' -tags dev -o enclave-wizard ."
+    sh -c "CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags='-w -s' -tags dev -o bin/enclave-wizard ."
 fi
 
 echo "=== Deploying preview to ${TARGET} on port ${PORT} ==="

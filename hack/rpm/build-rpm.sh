@@ -26,7 +26,7 @@ podman run --rm \
         RPMBUILD_DIR=$(mktemp -d)
         mkdir -p ${RPMBUILD_DIR}/{SOURCES,SPECS,RPMS,BUILD,SRPMS}
 
-        cp /src/enclave-wizard                          ${RPMBUILD_DIR}/SOURCES/enclave-wizard
+        cp /src/bin/enclave-wizard                      ${RPMBUILD_DIR}/SOURCES/enclave-wizard
         cp /src/hack/systemd/enclave-wizard.service     ${RPMBUILD_DIR}/SOURCES/enclave-wizard.service
         cp /src/hack/rpm/enclave-wizard.spec             ${RPMBUILD_DIR}/SPECS/
 
