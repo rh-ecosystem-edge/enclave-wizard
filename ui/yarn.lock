@@ -501,14 +501,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@enclave-wizard-ui/ioc@workspace:*, @enclave-wizard-ui/ioc@workspace:packages/ioc":
-  version: 0.0.0-use.local
-  resolution: "@enclave-wizard-ui/ioc@workspace:packages/ioc"
-  peerDependencies:
-    react: ^18.0.0
-  languageName: unknown
-  linkType: soft
-
 "@enclave-wizard-ui/wizard@workspace:apps/wizard":
   version: 0.0.0-use.local
   resolution: "@enclave-wizard-ui/wizard@workspace:apps/wizard"
@@ -518,7 +510,6 @@ __metadata:
     "@codemirror/view": "npm:^6.36.0"
     "@emotion/css": "npm:^11.13.0"
     "@enclave-wizard-ui/api-client": "workspace:*"
-    "@enclave-wizard-ui/ioc": "workspace:*"
     "@patternfly/react-core": "npm:^6.4.0"
     "@patternfly/react-icons": "npm:^6.4.0"
     "@patternfly/react-table": "npm:^6.4.0"
@@ -528,6 +519,7 @@ __metadata:
     "@testing-library/react": "npm:^16.0.0"
     "@testing-library/user-event": "npm:^14.0.0"
     "@types/js-yaml": "npm:^4.0.9"
+    "@y0n1/react-ioc": "npm:@jsr/y0n1__react-ioc@^0.3.0"
     ansi_up: "npm:^6.0.6"
     codemirror: "npm:^6.0.0"
     js-yaml: "npm:^4.1.0"
@@ -1044,6 +1036,15 @@ __metadata:
   version: 5.1.1
   resolution: "@vitest/spy@npm:5.1.1"
   checksum: 10c0/bcafafb7bcd975b776c41c07b89452baf1dd441aba8e4214e610722e2d927f697db46fc68b07db5434ea0883772d6378ad21668e9c694528b970e1f43cf88165
+  languageName: node
+  linkType: hard
+
+"@y0n1/react-ioc@npm:@jsr/y0n1__react-ioc@^0.3.0":
+  version: 0.3.0
+  resolution: "@jsr/y0n1__react-ioc@npm:0.3.0::__archiveUrl=https%3A%2F%2Fnpm.jsr.io%2F~%2F11%2F%40jsr%2Fy0n1__react-ioc%2F0.3.0.tgz"
+  dependencies:
+    react: "npm:^18.3.0"
+  checksum: 10c0/a6602c2579a96f719baf1724e7aa8bf90f9f879a83052064c79fd63a4a4be62e2e7b9881877304ee55e41d4914c4695f10f1d82bb238e67b9c67feae7e11b0c7
   languageName: node
   linkType: hard
 
@@ -2348,7 +2349,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^18.3.1":
+"react@npm:^18.3.0, react@npm:^18.3.1":
   version: 18.3.1
   resolution: "react@npm:18.3.1"
   dependencies:

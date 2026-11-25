@@ -29,7 +29,7 @@ A web-based install wizard for Red Hat Sovereign Enclave (RHSE), running on the 
 | Linting | Biome |
 | Routing | react-router-dom v6 |
 | API client | openapi-generator typescript-fetch |
-| DI | IoC container (packages/ioc) |
+| DI | `@y0n1/react-ioc` |
 | Testing | Vitest + @testing-library/react |
 | Containers | Podman, Containerfile, compose.yaml |
 
@@ -48,16 +48,10 @@ enclave-wizard-ui/
 ├── compose.yaml                    # wizard-ui + wizard-api stack
 ├── nginx.conf                      # production proxy config
 ├── packages/
-│   ├── api-client/                 # generated TypeScript fetch client
-│   │   ├── src/apis/              # ConfigApi, DefaultsApi, PluginsApi
-│   │   ├── src/models/            # EnclaveConfig, GlobalConfig, etc.
-│   │   └── api/openapi.yaml       # source spec from enclave-wizard
-│   └── ioc/                        # IoC container (from migration-planner)
-│       └── src/
-│           ├── Container.ts
-│           ├── Context.tsx
-│           ├── Provider.tsx
-│           └── hooks/UseInjection.ts
+│   └── api-client/                 # generated TypeScript fetch client
+│       ├── src/apis/              # ConfigApi, DefaultsApi, PluginsApi
+│       ├── src/models/            # EnclaveConfig, GlobalConfig, etc.
+│       └── api/openapi.yaml       # source spec from enclave-wizard
 ├── apps/
 │   └── wizard/
 │       ├── index.html

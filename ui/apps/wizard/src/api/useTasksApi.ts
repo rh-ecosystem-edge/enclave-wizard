@@ -4,7 +4,7 @@ import type {
   TaskRun,
   TasksApiInterface,
 } from "@enclave-wizard-ui/api-client";
-import { useInjection } from "@enclave-wizard-ui/ioc";
+import { useInjection } from "@y0n1/react-ioc";
 import { useCallback } from "react";
 import { Symbols } from "../main/Symbols.ts";
 
