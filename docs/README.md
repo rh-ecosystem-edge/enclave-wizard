@@ -25,4 +25,4 @@ Start at [Contributing](contributing/README.md).
 | [How to add an API endpoint](contributing/how-to/add-api-endpoint.md) | New REST endpoint |
 | [Recording deployments](contributing/recording-deployment.md) | Demo-mode ansible-runner recordings |
 | [Enclave testing patterns](contributing/enclave-testing-patterns.md) | Lab test strategy in the Enclave repo |
-| [Decisions (ADRs)](contributing/decisions/) | Architecture Decision Records |
+| [Decisions (ADRs)](contributing/decisions/) | As-built architecture decisions (ADR-001–008) |
