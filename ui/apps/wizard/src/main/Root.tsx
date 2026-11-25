@@ -7,11 +7,11 @@ import {
   PluginsApi,
   TasksApi,
 } from "@enclave-wizard-ui/api-client";
+import { Spinner } from "@patternfly/react-core";
 import {
   Container,
   Provider as DependencyInjectionProvider,
-} from "@enclave-wizard-ui/ioc";
-import { Spinner } from "@patternfly/react-core";
+} from "@y0n1/react-ioc";
 import React, { useCallback, useMemo } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
@@ -47,12 +47,11 @@ function AuthenticatedApp(): React.ReactElement {
       fetchApi: (url, init) => fetch(url, { ...init, cache: "no-store" }),
     });
 
-    const c = new Container();
-    c.register(Symbols.ConfigApi, new ConfigApi(apiConfig));
-    c.register(Symbols.DefaultsApi, new DefaultsApi(apiConfig));
-    c.register(Symbols.PluginsApi, new PluginsApi(apiConfig));
-    c.register(Symbols.TasksApi, new TasksApi(apiConfig));
-    return c;
+    return new Container()
+      .register(Symbols.ConfigApi, new ConfigApi(apiConfig))
+      .register(Symbols.DefaultsApi, new DefaultsApi(apiConfig))
+      .register(Symbols.PluginsApi, new PluginsApi(apiConfig))
+      .register(Symbols.TasksApi, new TasksApi(apiConfig));
   }, [token, handleUnauthorized]);
 
   return (
