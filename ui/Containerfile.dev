@@ -6,7 +6,6 @@ WORKDIR /app
 
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn/ .yarn/
-COPY packages/ioc/package.json packages/ioc/
 COPY packages/api-client/package.json packages/api-client/
 COPY apps/wizard/package.json apps/wizard/
 

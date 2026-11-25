@@ -13,8 +13,5 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
-  "references": [
-    { "path": "../../packages/ioc" },
-    { "path": "../../packages/api-client" }
-  ]
+  "references": [{ "path": "../../packages/api-client" }]
 }
