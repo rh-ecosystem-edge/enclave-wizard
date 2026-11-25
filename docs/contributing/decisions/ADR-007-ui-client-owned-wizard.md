@@ -32,8 +32,11 @@ task/deploy execution. There is no server-side wizard session store.
 ### Semi-dynamic forms
 
 - Wizard **steps and groupings** are defined in the UI (hardcoded flow).
-- **Fields within steps** are driven from API/OpenAPI (JSON Schema) metadata
-  where applicable, so new API fields can appear without a full UI redesign.
+- **Field rendering** uses API/OpenAPI (JSON Schema) metadata where applicable:
+  labels, widget types, and validation come from the schema.
+- **Field membership** is hardcoded per step (for example `LZ_FIELDS`,
+  `CLUSTER_FIELDS`, `NETWORK_FIELDS`, `TRUST_MANAGER_FIELDS`). A new API field
+  appears in a step only after its path is added to that step’s list.
 - Client-side checks run per step; server validate runs before commit/review
   paths that require Enclave-backed validation.
 
@@ -93,8 +96,9 @@ gate, forced password change in the UI when required.
 ## Consequences
 
 - Refactors that move wizard draft state to the server challenge this ADR.
-- API model changes should flow OpenAPI → generated client → schema-driven UI
-  with minimal hand mapping; step map updates remain a deliberate UI change.
+- API model changes should flow OpenAPI → generated client → schema-driven
+  rendering; adding a field to a step still requires updating that step’s
+  hardcoded path list (and any step map changes remain deliberate UI work).
 - Experience/plugin product changes start in Enclave; UI fallbacks must be
   updated when mock/offline flows matter.
 - UI unit tests (Vitest / Testing Library) guard components; they do not
