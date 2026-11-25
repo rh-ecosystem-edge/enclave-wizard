@@ -2,6 +2,7 @@ import type React from "react";
 import { createContext, useContext, useReducer } from "react";
 import type { Experience } from "./experiences.ts";
 import { FALLBACK_EXPERIENCES } from "./experiences.ts";
+import { shouldRefuseFlavorToggle } from "./flavorConstraints.ts";
 import { FLAVORS, type FlavorId, getFlavorPlugins } from "./flavors.ts";
 
 function deriveFlavorsFromPlugins(enabledPlugins: string[]): Set<FlavorId> {
@@ -89,6 +90,9 @@ export function wizardReducer(
     case "SET_STEP":
       return { ...state, currentStep: action.step };
     case "TOGGLE_FLAVOR": {
+      if (shouldRefuseFlavorToggle(state.selectedFlavors, action.flavor)) {
+        return state;
+      }
       const nextFlavors = toggleFlavor(state.selectedFlavors, action.flavor);
       const allPlugins = new Set(
         ((

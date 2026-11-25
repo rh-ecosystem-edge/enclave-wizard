@@ -30,6 +30,45 @@ describe("wizardReducer", () => {
     expect(state.selectedFlavors.has("caas")).toBe(false);
   });
 
+  it("refuses clearing the last companion while CaaS remains", () => {
+    let state = wizardReducer(initialWizardState, {
+      type: "TOGGLE_FLAVOR",
+      flavor: "caas",
+    });
+    state = wizardReducer(state, {
+      type: "TOGGLE_FLAVOR",
+      flavor: "vmaas",
+    });
+    const refused = wizardReducer(state, {
+      type: "TOGGLE_FLAVOR",
+      flavor: "vmaas",
+    });
+    expect(refused.selectedFlavors.has("caas")).toBe(true);
+    expect(refused.selectedFlavors.has("vmaas")).toBe(true);
+  });
+
+  it("allows CaaS + VMaaS and CaaS + BMaaS", () => {
+    let withVmaas = wizardReducer(initialWizardState, {
+      type: "TOGGLE_FLAVOR",
+      flavor: "caas",
+    });
+    withVmaas = wizardReducer(withVmaas, {
+      type: "TOGGLE_FLAVOR",
+      flavor: "vmaas",
+    });
+    expect([...withVmaas.selectedFlavors].sort()).toEqual(["caas", "vmaas"]);
+
+    let withBmaas = wizardReducer(initialWizardState, {
+      type: "TOGGLE_FLAVOR",
+      flavor: "caas",
+    });
+    withBmaas = wizardReducer(withBmaas, {
+      type: "TOGGLE_FLAVOR",
+      flavor: "bmaas",
+    });
+    expect([...withBmaas.selectedFlavors].sort()).toEqual(["bmaas", "caas"]);
+  });
+
   it("sets a top-level config field via dot path", () => {
     const state = wizardReducer(initialWizardState, {
       type: "SET_FIELD",
