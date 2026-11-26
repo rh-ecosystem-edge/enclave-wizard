@@ -182,6 +182,29 @@ describe("configReducer", () => {
       expect(state.selectedFlavors.has("caas")).toBe(false);
     });
 
+    it("allows clearing the last companion while CaaS remains", () => {
+      let state = configReducer(initialConfigState, {
+        type: "TOGGLE_FLAVOR",
+        flavor: "caas",
+        experiences: EXPERIENCES,
+        flavors: FLAVORS,
+      });
+      state = configReducer(state, {
+        type: "TOGGLE_FLAVOR",
+        flavor: "vmaas",
+        experiences: EXPERIENCES,
+        flavors: FLAVORS,
+      });
+      state = configReducer(state, {
+        type: "TOGGLE_FLAVOR",
+        flavor: "vmaas",
+        experiences: EXPERIENCES,
+        flavors: FLAVORS,
+      });
+      expect(state.selectedFlavors.has("caas")).toBe(true);
+      expect(state.selectedFlavors.has("vmaas")).toBe(false);
+    });
+
     it("clears osacProfile when all flavors are deselected", () => {
       let state = configReducer(initialConfigState, {
         type: "TOGGLE_FLAVOR",

@@ -30,6 +30,7 @@ import { useOpenApiSchema } from "../schema/useOpenApiSchema.ts";
 import { CatalogProvider } from "./contexts/CatalogContext.tsx";
 import type { ConfigData } from "./contexts/ConfigContext.tsx";
 import { isValidDnsZone } from "./dnsZone.ts";
+import { isValidFlavorSelection } from "./flavorConstraints.ts";
 import { useWizardInit } from "./hooks/useWizardInit.ts";
 import { validateOsacInventoryBackends } from "./osacBcmValidation.ts";
 import {
@@ -419,6 +420,9 @@ function WizardContent(): React.ReactElement {
   const isFirst = state.currentStep === 0;
   const isLast = state.currentStep === TOP_STEPS.length - 1;
   const isConfigure = currentStepId === "configure";
+  const isFlavorStep = currentStepId === "flavor";
+  const flavorSelectionInvalid =
+    isFlavorStep && !isValidFlavorSelection(state.selectedFlavors);
   const isLastSubStep = activeSubStep === configSubSteps.length - 1;
   const isFirstSubStep = activeSubStep === 0;
 
@@ -624,6 +628,10 @@ function WizardContent(): React.ReactElement {
   }, [currentSubStepId, state.schema, state.configData]);
 
   const goNext = useCallback(() => {
+    if (isFlavorStep && !isValidFlavorSelection(state.selectedFlavors)) {
+      return;
+    }
+
     if (isConfigure) {
       const errors = validateCurrentSubStep();
       if (errors.length > 0) {
@@ -654,9 +662,11 @@ function WizardContent(): React.ReactElement {
       setActiveSubStep(0);
     }
   }, [
+    isFlavorStep,
     isConfigure,
     isLastSubStep,
     state.currentStep,
+    state.selectedFlavors,
     dispatch,
     validateCurrentSubStep,
   ]);
@@ -753,7 +763,11 @@ function WizardContent(): React.ReactElement {
                 </Button>
               </FlexItem>
               <FlexItem>
-                <Button variant="primary" onClick={goNext} isDisabled={isLast}>
+                <Button
+                  variant="primary"
+                  onClick={goNext}
+                  isDisabled={isLast || flavorSelectionInvalid}
+                >
                   {isConfigure && !isLastSubStep ? "Continue" : "Next"}
                 </Button>
               </FlexItem>

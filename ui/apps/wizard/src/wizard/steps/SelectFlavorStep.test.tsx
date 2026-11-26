@@ -3,6 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { createElement } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { FALLBACK_EXPERIENCES } from "../experiences.ts";
+import {
+  CAAS_REQUIRES_COMPANION_MESSAGE,
+  SELECT_AT_LEAST_ONE_SERVICE_MESSAGE,
+} from "../flavorConstraints.ts";
 import { FALLBACK_FLAVORS } from "../flavors.ts";
 import { SelectFlavorStep } from "./SelectFlavorStep.tsx";
 
@@ -16,6 +20,11 @@ const mockState = {
   schema: null,
   plugins: [],
 };
+
+function resetMockState(selected: string[] = []) {
+  mockState.selectedFlavors = new Set(selected);
+  mockDispatch.mockClear();
+}
 
 vi.mock("../WizardContext.tsx", () => ({
   useWizard: () => ({ state: mockState, dispatch: mockDispatch }),
@@ -66,7 +75,7 @@ describe("SelectFlavorStep", () => {
 
   it("dispatches TOGGLE_FLAVOR with experiences on click", async () => {
     const user = userEvent.setup();
-    mockDispatch.mockClear();
+    resetMockState();
     renderStep();
 
     const caasCard = screen.getByText("CaaS").closest("[role='button']");
@@ -83,7 +92,7 @@ describe("SelectFlavorStep", () => {
   });
 
   it("marks selected flavors as pressed", () => {
-    mockState.selectedFlavors = new Set(["vmaas"]);
+    resetMockState(["vmaas"]);
     renderStep();
 
     const cards = screen.getAllByRole("button");
@@ -93,6 +102,61 @@ describe("SelectFlavorStep", () => {
     const caasCard = cards.find((c) => within(c).queryByText("CaaS"));
     expect(caasCard).toHaveAttribute("aria-pressed", "false");
 
-    mockState.selectedFlavors = new Set();
+    resetMockState();
+  });
+
+  it("hides the empty-selection message while the step is pristine", () => {
+    resetMockState([]);
+    renderStep();
+
+    expect(
+      screen.queryByText(SELECT_AT_LEAST_ONE_SERVICE_MESSAGE),
+    ).not.toBeInTheDocument();
+    resetMockState();
+  });
+
+  it("shows the empty-selection message after the user interacts with an empty selection", async () => {
+    const user = userEvent.setup();
+    // Mock selection stays empty after dispatch; clicking still marks the step touched.
+    resetMockState([]);
+    renderStep();
+
+    const vmaasCard = screen.getByText("VMaaS").closest("[role='button']");
+    if (!vmaasCard) {
+      throw new Error("VMaaS card not found");
+    }
+    await user.click(vmaasCard);
+
+    expect(
+      screen.getByText(SELECT_AT_LEAST_ONE_SERVICE_MESSAGE),
+    ).toBeInTheDocument();
+    resetMockState();
+  });
+
+  it("shows an inline message when CaaS is selected alone", () => {
+    resetMockState(["caas"]);
+    renderStep();
+
+    expect(
+      screen.getByText(CAAS_REQUIRES_COMPANION_MESSAGE),
+    ).toBeInTheDocument();
+    resetMockState();
+  });
+
+  it("dispatches when clearing the last companion while CaaS remains", async () => {
+    const user = userEvent.setup();
+    resetMockState(["caas", "vmaas"]);
+    renderStep();
+
+    const vmaasCard = screen.getByText("VMaaS").closest("[role='button']");
+    if (!vmaasCard) {
+      throw new Error("VMaaS card not found");
+    }
+    await user.click(vmaasCard);
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({ type: "TOGGLE_FLAVOR", flavor: "vmaas" }),
+    );
+    resetMockState();
   });
 });
