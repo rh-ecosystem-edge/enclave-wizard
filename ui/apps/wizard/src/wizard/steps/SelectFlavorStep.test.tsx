@@ -3,7 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { createElement } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { FALLBACK_EXPERIENCES } from "../experiences.ts";
-import { CAAS_REQUIRES_COMPANION_MESSAGE } from "../flavorConstraints.ts";
+import {
+  CAAS_REQUIRES_COMPANION_MESSAGE,
+  SELECT_AT_LEAST_ONE_SERVICE_MESSAGE,
+} from "../flavorConstraints.ts";
 import { FALLBACK_FLAVORS } from "../flavors.ts";
 import { SelectFlavorStep } from "./SelectFlavorStep.tsx";
 
@@ -99,6 +102,34 @@ describe("SelectFlavorStep", () => {
     const caasCard = cards.find((c) => within(c).queryByText("CaaS"));
     expect(caasCard).toHaveAttribute("aria-pressed", "false");
 
+    resetMockState();
+  });
+
+  it("hides the empty-selection message while the step is pristine", () => {
+    resetMockState([]);
+    renderStep();
+
+    expect(
+      screen.queryByText(SELECT_AT_LEAST_ONE_SERVICE_MESSAGE),
+    ).not.toBeInTheDocument();
+    resetMockState();
+  });
+
+  it("shows the empty-selection message after the user interacts with an empty selection", async () => {
+    const user = userEvent.setup();
+    // Mock selection stays empty after dispatch; clicking still marks the step touched.
+    resetMockState([]);
+    renderStep();
+
+    const vmaasCard = screen.getByText("VMaaS").closest("[role='button']");
+    if (!vmaasCard) {
+      throw new Error("VMaaS card not found");
+    }
+    await user.click(vmaasCard);
+
+    expect(
+      screen.getByText(SELECT_AT_LEAST_ONE_SERVICE_MESSAGE),
+    ).toBeInTheDocument();
     resetMockState();
   });
 
