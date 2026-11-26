@@ -1,13 +1,12 @@
 import { Alert, Content, Flex, FlexItem, Title } from "@patternfly/react-core";
 import { ClusterIcon, CubesIcon, ServerIcon } from "@patternfly/react-icons";
 import type React from "react";
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { FlavorCard } from "../components/FlavorCard.tsx";
 import { useCatalog } from "../contexts/CatalogContext.tsx";
 import {
   CAAS_REQUIRES_COMPANION_MESSAGE,
   isValidFlavorSelection,
-  shouldRefuseFlavorToggle,
 } from "../flavorConstraints.ts";
 import type { FlavorId } from "../flavors.ts";
 import { useWizard } from "../WizardContext.tsx";
@@ -22,19 +21,13 @@ const FLAVOR_ICONS: Record<FlavorId, ReactNode> = {
 export const SelectFlavorStep: React.FC = () => {
   const { state, dispatch } = useWizard();
   const { flavors, experiences } = useCatalog();
-  const [refusedMessage, setRefusedMessage] = useState<string | null>(null);
 
   const selectionInvalid = !isValidFlavorSelection(state.selectedFlavors);
   const constraintMessage = selectionInvalid
     ? CAAS_REQUIRES_COMPANION_MESSAGE
-    : refusedMessage;
+    : null;
 
   const onSelectFlavor = (flavorId: FlavorId) => {
-    if (shouldRefuseFlavorToggle(state.selectedFlavors, flavorId)) {
-      setRefusedMessage(CAAS_REQUIRES_COMPANION_MESSAGE);
-      return;
-    }
-    setRefusedMessage(null);
     dispatch({
       type: "TOGGLE_FLAVOR",
       flavor: flavorId,

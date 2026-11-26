@@ -30,7 +30,7 @@ describe("wizardReducer", () => {
     expect(state.selectedFlavors.has("caas")).toBe(false);
   });
 
-  it("refuses clearing the last companion while CaaS remains", () => {
+  it("allows clearing the last companion while CaaS remains", () => {
     let state = wizardReducer(initialWizardState, {
       type: "TOGGLE_FLAVOR",
       flavor: "caas",
@@ -39,12 +39,12 @@ describe("wizardReducer", () => {
       type: "TOGGLE_FLAVOR",
       flavor: "vmaas",
     });
-    const refused = wizardReducer(state, {
+    state = wizardReducer(state, {
       type: "TOGGLE_FLAVOR",
       flavor: "vmaas",
     });
-    expect(refused.selectedFlavors.has("caas")).toBe(true);
-    expect(refused.selectedFlavors.has("vmaas")).toBe(true);
+    expect(state.selectedFlavors.has("caas")).toBe(true);
+    expect(state.selectedFlavors.has("vmaas")).toBe(false);
   });
 
   it("allows CaaS + VMaaS and CaaS + BMaaS", () => {

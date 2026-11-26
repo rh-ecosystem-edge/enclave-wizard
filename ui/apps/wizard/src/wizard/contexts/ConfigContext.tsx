@@ -1,7 +1,6 @@
 import type React from "react";
 import { createContext, useContext, useReducer } from "react";
 import type { Experience } from "../experiences.ts";
-import { shouldRefuseFlavorToggle } from "../flavorConstraints.ts";
 import type { FlavorDefinition } from "../flavors.ts";
 
 export interface ConfigData {
@@ -60,9 +59,6 @@ export function configReducer(
 ): ConfigState {
   switch (action.type) {
     case "TOGGLE_FLAVOR": {
-      if (shouldRefuseFlavorToggle(state.selectedFlavors, action.flavor)) {
-        return state;
-      }
       const nextFlavors = toggleFlavor(state.selectedFlavors, action.flavor);
 
       // Collect all plugins that should NOT be auto-managed (those not from any flavor)

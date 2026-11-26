@@ -2,8 +2,6 @@ import { describe, expect, it } from "vitest";
 import {
   CAAS_REQUIRES_COMPANION_MESSAGE,
   isValidFlavorSelection,
-  previewFlavorToggle,
-  shouldRefuseFlavorToggle,
 } from "./flavorConstraints.ts";
 
 describe("isValidFlavorSelection", () => {
@@ -35,47 +33,6 @@ describe("isValidFlavorSelection", () => {
     expect(isValidFlavorSelection(new Set(["caas", "vmaas", "bmaas"]))).toBe(
       true,
     );
-  });
-});
-
-describe("shouldRefuseFlavorToggle", () => {
-  it("allows selecting CaaS alone", () => {
-    expect(shouldRefuseFlavorToggle(new Set(), "caas")).toBe(false);
-  });
-
-  it("allows clearing CaaS when it is alone", () => {
-    expect(shouldRefuseFlavorToggle(new Set(["caas"]), "caas")).toBe(false);
-  });
-
-  it("refuses clearing the last companion while CaaS remains", () => {
-    expect(
-      shouldRefuseFlavorToggle(new Set(["caas", "vmaas"]), "vmaas"),
-    ).toBe(true);
-    expect(
-      shouldRefuseFlavorToggle(new Set(["caas", "bmaas"]), "bmaas"),
-    ).toBe(true);
-  });
-
-  it("allows clearing one companion when another remains with CaaS", () => {
-    expect(
-      shouldRefuseFlavorToggle(
-        new Set(["caas", "vmaas", "bmaas"]),
-        "vmaas",
-      ),
-    ).toBe(false);
-  });
-
-  it("allows clearing CaaS while companions remain", () => {
-    expect(
-      shouldRefuseFlavorToggle(new Set(["caas", "vmaas"]), "caas"),
-    ).toBe(false);
-  });
-});
-
-describe("previewFlavorToggle", () => {
-  it("adds and removes flavors", () => {
-    expect([...previewFlavorToggle(new Set(), "caas")]).toEqual(["caas"]);
-    expect([...previewFlavorToggle(new Set(["caas"]), "caas")]).toEqual([]);
   });
 });
 

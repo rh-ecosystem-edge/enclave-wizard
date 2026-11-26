@@ -106,11 +106,13 @@ describe("SelectFlavorStep", () => {
     resetMockState(["caas"]);
     renderStep();
 
-    expect(screen.getByText(CAAS_REQUIRES_COMPANION_MESSAGE)).toBeInTheDocument();
+    expect(
+      screen.getByText(CAAS_REQUIRES_COMPANION_MESSAGE),
+    ).toBeInTheDocument();
     resetMockState();
   });
 
-  it("refuses clearing the last companion while CaaS remains", async () => {
+  it("dispatches when clearing the last companion while CaaS remains", async () => {
     const user = userEvent.setup();
     resetMockState(["caas", "vmaas"]);
     renderStep();
@@ -121,8 +123,9 @@ describe("SelectFlavorStep", () => {
     }
     await user.click(vmaasCard);
 
-    expect(mockDispatch).not.toHaveBeenCalled();
-    expect(screen.getByText(CAAS_REQUIRES_COMPANION_MESSAGE)).toBeInTheDocument();
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({ type: "TOGGLE_FLAVOR", flavor: "vmaas" }),
+    );
     resetMockState();
   });
 });
