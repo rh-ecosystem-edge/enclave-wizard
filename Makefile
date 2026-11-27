@@ -2,6 +2,8 @@ BIN_DIR := bin
 BINARY := $(BIN_DIR)/enclave-wizard
 GO := go
 CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
+# Override or clear for networks that block public DNS (e.g. make build-ui BUILD_UI_DNS_FLAGS=).
+BUILD_UI_DNS_FLAGS ?= --dns=1.1.1.1 --dns=8.8.8.8 --dns-search=.
 # Keep in sync with .github/workflows/pr.yml (golangci-lint-action version).
 GOLANGCI_LINT_VERSION ?= v2.13.2
 WIZARD_VERSION ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo dev)
@@ -25,7 +27,7 @@ _ensure_bin_dir:
 	mkdir -p $(BIN_DIR)
 
 build-ui: ## Build the frontend (Vite).
-	$(CONTAINER_RUNTIME) run --rm -v $(PWD)/ui:/app:z -w /app node:24-alpine \
+	$(CONTAINER_RUNTIME) run --rm $(BUILD_UI_DNS_FLAGS) -v $(PWD)/ui:/app:z -w /app node:24-alpine \
 		sh -c "corepack enable && yarn install && \
 		yarn workspace @enclave-wizard-ui/wizard run -T vite build"
 
