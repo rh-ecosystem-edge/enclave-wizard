@@ -25,7 +25,7 @@ _ensure_bin_dir:
 	mkdir -p $(BIN_DIR)
 
 build-ui: ## Build the frontend (Vite).
-	$(CONTAINER_RUNTIME) run --rm -v $(PWD)/ui:/app:z -w /app node:24-alpine \
+	$(CONTAINER_RUNTIME) run --rm --dns=1.1.1.1 --dns=8.8.8.8 --dns-search=. -v $(PWD)/ui:/app:z -w /app node:24-alpine \
 		sh -c "corepack enable && yarn install && \
 		yarn workspace @enclave-wizard-ui/wizard run -T vite build"
 
